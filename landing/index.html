@@ -856,6 +856,56 @@
     }
 
     /* ===================== RESPONSIVE ===================== */
+    /* ===================== APP PREVIEW ===================== */
+    .app-preview {
+      background: var(--bg-secondary);
+      overflow: hidden;
+    }
+
+    .app-preview .container {
+      text-align: center;
+    }
+
+    .phones {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 56px;
+    }
+
+    .phone {
+      width: 240px;
+      flex-shrink: 0;
+      transition: transform 0.4s;
+    }
+
+    .phone img {
+      width: 100%;
+      height: auto;
+      border-radius: 24px;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 30px rgba(99, 102, 241, 0.1));
+    }
+
+    .phone:hover {
+      transform: translateY(-10px);
+    }
+
+    .phone:nth-child(1) { transform: rotate(-3deg); }
+    .phone:nth-child(2) { transform: translateY(-20px); z-index: 2; }
+    .phone:nth-child(3) { transform: translateY(-10px); }
+    .phone:nth-child(4) { transform: rotate(3deg); }
+    .phone:nth-child(1):hover { transform: rotate(-3deg) translateY(-10px); }
+    .phone:nth-child(2):hover { transform: translateY(-30px); }
+    .phone:nth-child(3):hover { transform: translateY(-20px); }
+    .phone:nth-child(4):hover { transform: rotate(3deg) translateY(-10px); }
+
+    .phone-label {
+      margin-top: 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
     @media (max-width: 1024px) {
       .features-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -865,6 +915,22 @@
     @media (max-width: 768px) {
       .nav-links { display: none; }
       .mobile-toggle { display: block; }
+
+      .phones {
+        flex-wrap: wrap;
+        gap: 24px;
+      }
+
+      .phone { width: 160px; }
+
+      .phone:nth-child(1),
+      .phone:nth-child(2),
+      .phone:nth-child(3),
+      .phone:nth-child(4) { transform: none; }
+      .phone:nth-child(1):hover,
+      .phone:nth-child(2):hover,
+      .phone:nth-child(3):hover,
+      .phone:nth-child(4):hover { transform: translateY(-8px); }
 
       section { padding: 72px 0; }
 
@@ -1039,6 +1105,36 @@
           </div>
           <h3>Offline First</h3>
           <p>Your data stays on your device. Works without internet — always available, always private.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP PREVIEW -->
+  <section class="app-preview" id="app-preview">
+    <div class="container">
+      <div class="fade-in">
+        <span class="section-label">App Preview</span>
+        <h2 class="section-title">Designed for clarity</h2>
+        <p class="section-desc" style="margin: 0 auto;">A clean, intuitive interface that puts your financial future front and center.</p>
+      </div>
+
+      <div class="phones">
+        <div class="phone fade-in">
+          <img src="images/screen-dashboard.png" alt="AnticiFi Dashboard — balance overview and transactions" loading="lazy">
+          <div class="phone-label">Dashboard</div>
+        </div>
+        <div class="phone fade-in">
+          <img src="images/screen-oracle.png" alt="Oracle AI — ask about your future balance" loading="lazy">
+          <div class="phone-label">Oracle AI</div>
+        </div>
+        <div class="phone fade-in">
+          <img src="images/screen-alerts.png" alt="Predictive Alerts — get warned before balance drops" loading="lazy">
+          <div class="phone-label">Alerts</div>
+        </div>
+        <div class="phone fade-in">
+          <img src="images/screen-import.png" alt="Import Transactions — CSV upload and receipt scanning" loading="lazy">
+          <div class="phone-label">Import</div>
         </div>
       </div>
     </div>
