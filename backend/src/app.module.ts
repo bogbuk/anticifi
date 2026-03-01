@@ -9,18 +9,22 @@ import { AccountsModule } from './modules/accounts/accounts.module.js';
 import { TransactionsModule } from './modules/transactions/transactions.module.js';
 import { CategoriesModule } from './modules/categories/categories.module.js';
 import { ImportModule } from './modules/import/import.module.js';
+import { DashboardModule } from './modules/dashboard/dashboard.module.js';
+import { EventsModule } from './modules/events/events.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     SequelizeModule.forRootAsync(databaseConfig),
+    EventsModule,
     AuthModule,
     UsersModule,
     AccountsModule,
     TransactionsModule,
     CategoriesModule,
     ImportModule,
+    DashboardModule,
   ],
   providers: [
     {

@@ -24,6 +24,9 @@ class ApiEndpoints {
   // Categories
   static const String categories = '/categories';
 
+  // Dashboard
+  static const String dashboard = '/dashboard';
+
   // Import
   static const String importCsv = '/import/csv';
   static const String importJobs = '/import/jobs';

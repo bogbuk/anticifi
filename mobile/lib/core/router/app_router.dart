@@ -14,6 +14,7 @@ import '../../features/transactions/presentation/pages/transactions_page.dart';
 import '../../features/transactions/presentation/pages/transaction_form_page.dart';
 import '../../features/transactions/presentation/bloc/transactions_bloc.dart';
 import '../../features/transactions/domain/entities/transaction_entity.dart';
+import '../../features/dashboard/presentation/bloc/dashboard_cubit.dart';
 import '../../features/oracle/presentation/pages/oracle_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/accounts/presentation/pages/accounts_page.dart';
@@ -70,8 +71,11 @@ GoRouter createAppRouter(AuthBloc authBloc) {
         routes: [
           GoRoute(
             path: '/dashboard',
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: DashboardPage(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (_) => getIt<DashboardCubit>(),
+                child: const DashboardPage(),
+              ),
             ),
           ),
           GoRoute(

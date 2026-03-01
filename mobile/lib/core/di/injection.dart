@@ -17,6 +17,11 @@ import '../../features/transactions/data/repositories/transactions_repository_im
 import '../../features/transactions/domain/repositories/transactions_repository.dart';
 import '../../features/transactions/presentation/bloc/transactions_bloc.dart';
 
+import '../../features/dashboard/data/datasources/dashboard_remote_datasource.dart';
+import '../../features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import '../../features/dashboard/domain/repositories/dashboard_repository.dart';
+import '../../features/dashboard/presentation/bloc/dashboard_cubit.dart';
+
 import '../../features/import/presentation/bloc/import_cubit.dart';
 
 final getIt = GetIt.instance;
@@ -83,6 +88,23 @@ Future<void> setupDI() async {
   // BLoCs
   getIt.registerFactory<TransactionsBloc>(
     () => TransactionsBloc(getIt<TransactionsRepository>()),
+  );
+
+  // ── Dashboard ────────────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<DashboardRemoteDataSource>(
+    DashboardRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<DashboardRepository>(
+    DashboardRepositoryImpl(getIt<DashboardRemoteDataSource>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<DashboardCubit>(
+    () => DashboardCubit(getIt<DashboardRepository>()),
   );
 
   // ── Import ────────────────────────────────────────────
