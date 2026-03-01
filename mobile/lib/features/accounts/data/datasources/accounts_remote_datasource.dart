@@ -32,7 +32,7 @@ class AccountsRemoteDataSource {
 
   Future<AccountModel> updateAccount(
       String id, Map<String, dynamic> params) async {
-    final response = await dioClient.dio.put(
+    final response = await dioClient.dio.patch(
       '${ApiEndpoints.accounts}/$id',
       data: params,
     );

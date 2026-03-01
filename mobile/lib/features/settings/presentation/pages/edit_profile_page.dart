@@ -33,12 +33,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void _initFields(SettingsState state) {
     if (_initialized) return;
     if (state is SettingsLoaded) {
-      _nameController.text = state.profile.name;
+      _nameController.text = state.profile.fullName;
       _emailController.text = state.profile.email;
       _selectedCurrency = state.profile.currency;
       _initialized = true;
     } else if (state is SettingsUpdated) {
-      _nameController.text = state.profile.name;
+      _nameController.text = state.profile.fullName;
       _emailController.text = state.profile.email;
       _selectedCurrency = state.profile.currency;
       _initialized = true;

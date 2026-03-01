@@ -17,7 +17,10 @@ import { UpdateScheduledPaymentDto } from './dto/update-scheduled-payment.dto.js
 import { QueryScheduledPaymentDto } from './dto/query-scheduled-payment.dto.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Scheduled Payments')
+@ApiBearerAuth()
 @Controller('scheduled-payments')
 @UseGuards(JwtAuthGuard)
 export class ScheduledPaymentsController {

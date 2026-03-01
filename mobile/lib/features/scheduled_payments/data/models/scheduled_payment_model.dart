@@ -19,10 +19,12 @@ class ScheduledPaymentModel extends ScheduledPaymentEntity {
   });
 
   factory ScheduledPaymentModel.fromJson(Map<String, dynamic> json) {
+    final account = json['account'] as Map<String, dynamic>?;
+
     return ScheduledPaymentModel(
       id: json['id'] as String,
-      accountId: json['accountId'] as String,
-      accountName: json['accountName'] as String? ?? '',
+      accountId: json['accountId'] as String? ?? account?['id'] as String? ?? '',
+      accountName: json['accountName'] as String? ?? account?['name'] as String? ?? '',
       categoryId: json['categoryId'] as String?,
       name: json['name'] as String,
       amount: (json['amount'] as num).toDouble(),

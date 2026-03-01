@@ -61,7 +61,7 @@ class TransactionsRemoteDataSource {
 
   Future<TransactionModel> updateTransaction(
       String id, Map<String, dynamic> params) async {
-    final response = await dioClient.dio.put(
+    final response = await dioClient.dio.patch(
       '${ApiEndpoints.transactions}/$id',
       data: params,
     );

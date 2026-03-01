@@ -17,7 +17,10 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto.js';
 import { QueryTransactionDto } from './dto/query-transaction.dto.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Transactions')
+@ApiBearerAuth()
 @Controller('transactions')
 @UseGuards(JwtAuthGuard)
 export class TransactionsController {

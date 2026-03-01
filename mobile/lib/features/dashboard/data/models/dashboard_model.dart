@@ -1,5 +1,5 @@
 import '../../domain/entities/dashboard_entity.dart';
-import '../../../transactions/data/models/transaction_model.dart';
+import '../../../transactions/domain/entities/transaction_entity.dart';
 
 class AccountSummaryModel extends AccountSummary {
   const AccountSummaryModel({
@@ -33,8 +33,34 @@ class CategorySpendingModel extends CategorySpending {
     return CategorySpendingModel(
       categoryId: json['categoryId'] as String? ?? '',
       categoryName: json['categoryName'] as String? ?? 'Other',
-      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
-      color: json['color'] as String? ?? '#6366F1',
+      amount: (json['total'] as num?)?.toDouble() ?? 0.0,
+      color: json['categoryColor'] as String? ?? '#6366F1',
+    );
+  }
+}
+
+class DashboardTransactionModel extends TransactionEntity {
+  const DashboardTransactionModel({
+    required super.id,
+    required super.accountId,
+    required super.amount,
+    required super.type,
+    super.description,
+    super.categoryId,
+    super.categoryName,
+    required super.date,
+  });
+
+  factory DashboardTransactionModel.fromJson(Map<String, dynamic> json) {
+    return DashboardTransactionModel(
+      id: json['id'] as String,
+      accountId: json['accountId'] as String? ?? '',
+      amount: (json['amount'] as num).toDouble(),
+      type: json['type'] as String,
+      description: json['description'] as String?,
+      categoryId: json['categoryId'] as String?,
+      categoryName: json['categoryName'] as String?,
+      date: DateTime.parse(json['date'] as String),
     );
   }
 }
@@ -66,18 +92,23 @@ class DashboardModel extends DashboardEntity {
 
     final transactionsList = (json['recentTransactions'] as List<dynamic>?)
             ?.map((e) =>
-                TransactionModel.fromJson(e as Map<String, dynamic>))
+                DashboardTransactionModel.fromJson(e as Map<String, dynamic>))
             .toList() ??
         [];
 
+    final currentMonth = json['currentMonth'] as Map<String, dynamic>?;
+    final previousMonth = json['previousMonth'] as Map<String, dynamic>?;
+
     return DashboardModel(
       totalBalance: (json['totalBalance'] as num?)?.toDouble() ?? 0.0,
-      monthlyIncome: (json['monthlyIncome'] as num?)?.toDouble() ?? 0.0,
-      monthlyExpense: (json['monthlyExpense'] as num?)?.toDouble() ?? 0.0,
+      monthlyIncome:
+          (currentMonth?['income'] as num?)?.toDouble() ?? 0.0,
+      monthlyExpense:
+          (currentMonth?['expense'] as num?)?.toDouble() ?? 0.0,
       previousMonthIncome:
-          (json['previousMonthIncome'] as num?)?.toDouble() ?? 0.0,
+          (previousMonth?['income'] as num?)?.toDouble() ?? 0.0,
       previousMonthExpense:
-          (json['previousMonthExpense'] as num?)?.toDouble() ?? 0.0,
+          (previousMonth?['expense'] as num?)?.toDouble() ?? 0.0,
       accounts: accountsList,
       spendingByCategory: spendingList,
       recentTransactions: transactionsList,

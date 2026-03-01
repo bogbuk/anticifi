@@ -235,8 +235,8 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             child: Center(
               child: Text(
-                (profile.name as String).isNotEmpty
-                    ? (profile.name as String)[0].toUpperCase()
+                profile.fullName.isNotEmpty
+                    ? profile.fullName[0].toUpperCase()
                     : '?',
                 style: const TextStyle(
                   color: Colors.white,
@@ -252,7 +252,7 @@ class _SettingsPageState extends State<SettingsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  profile.name as String,
+                  profile.fullName,
                   style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 18,
@@ -276,9 +276,9 @@ class _SettingsPageState extends State<SettingsPage> {
               color: AppColors.primary.withOpacity(0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Text(
-              (profile.plan as String).toUpperCase(),
-              style: const TextStyle(
+            child: const Text(
+              'FREE',
+              style: TextStyle(
                 color: AppColors.primaryLight,
                 fontSize: 11,
                 fontWeight: FontWeight.w600,

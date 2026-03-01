@@ -37,7 +37,7 @@ class ScheduledPaymentsRemoteDataSource {
 
   Future<ScheduledPaymentModel> updateScheduledPayment(
       String id, Map<String, dynamic> params) async {
-    final response = await dioClient.dio.put(
+    final response = await dioClient.dio.patch(
       '${ApiEndpoints.scheduledPayments}/$id',
       data: params,
     );

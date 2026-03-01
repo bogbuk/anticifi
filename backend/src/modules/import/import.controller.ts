@@ -17,7 +17,10 @@ import { ImportCsvDto } from './dto/import-csv.dto.js';
 import { ImportFormat } from './import-job.model.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Import')
+@ApiBearerAuth()
 @Controller('import')
 @UseGuards(JwtAuthGuard)
 export class ImportController {

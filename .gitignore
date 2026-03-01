@@ -3,6 +3,8 @@ node_modules/
 
 # Environment
 .env
+.env.local
+.env.*.local
 
 # Build output
 dist/
@@ -14,11 +16,29 @@ build/
 # IDE
 *.iml
 .idea/
+.vscode/
 
 # OS
 .DS_Store
+Thumbs.db
 
 # Python
 *.pyc
 __pycache__/
 .venv/
+
+# Docker
+docker-compose.override.yml
+
+# SSL certificates
+nginx/ssl/
+
+# Uploads
+uploads/
+
+# Coverage
+coverage/
+
+# Logs
+*.log
+logs/
