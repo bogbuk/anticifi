@@ -1,4 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsInt, Min, Max } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class PredictionRequestDto {
   @IsOptional()
@@ -10,6 +11,7 @@ export class PredictionRequestDto {
   targetDate?: string;
 
   @IsOptional()
+  @Transform(({ value }) => parseInt(value, 10))
   @IsInt()
   @Min(1)
   @Max(365)
@@ -23,6 +25,7 @@ export class ChatPredictionRequestDto {
 
 export class ForecastQueryDto {
   @IsOptional()
+  @Transform(({ value }) => parseInt(value, 10))
   @IsInt()
   @Min(1)
   @Max(365)
