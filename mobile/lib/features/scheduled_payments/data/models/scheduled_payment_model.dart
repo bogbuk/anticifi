@@ -1,5 +1,11 @@
 import '../../domain/entities/scheduled_payment_entity.dart';
 
+double _toDouble(dynamic value) {
+  if (value == null) return 0.0;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString()) ?? 0.0;
+}
+
 class ScheduledPaymentModel extends ScheduledPaymentEntity {
   const ScheduledPaymentModel({
     required super.id,
@@ -27,7 +33,7 @@ class ScheduledPaymentModel extends ScheduledPaymentEntity {
       accountName: json['accountName'] as String? ?? account?['name'] as String? ?? '',
       categoryId: json['categoryId'] as String?,
       name: json['name'] as String,
-      amount: (json['amount'] as num).toDouble(),
+      amount: _toDouble(json['amount']),
       type: json['type'] as String,
       frequency: json['frequency'] as String,
       startDate: DateTime.parse(json['startDate'] as String),

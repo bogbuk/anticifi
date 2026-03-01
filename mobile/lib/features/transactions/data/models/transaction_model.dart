@@ -13,14 +13,21 @@ class TransactionModel extends TransactionEntity {
   });
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
+    final rawAmount = json['amount'];
+    final amount = rawAmount is num
+        ? rawAmount.toDouble()
+        : double.tryParse(rawAmount.toString()) ?? 0.0;
+
+    final category = json['category'] as Map<String, dynamic>?;
+
     return TransactionModel(
       id: json['id'] as String,
-      accountId: json['accountId'] as String,
-      amount: (json['amount'] as num).toDouble(),
+      accountId: json['accountId'] as String? ?? '',
+      amount: amount,
       type: json['type'] as String,
       description: json['description'] as String?,
-      categoryId: json['categoryId'] as String?,
-      categoryName: json['categoryName'] as String?,
+      categoryId: json['categoryId'] as String? ?? category?['id'] as String?,
+      categoryName: json['categoryName'] as String? ?? category?['name'] as String?,
       date: DateTime.parse(json['date'] as String),
     );
   }

@@ -1,6 +1,12 @@
 import '../../domain/entities/dashboard_entity.dart';
 import '../../../transactions/domain/entities/transaction_entity.dart';
 
+double _toDouble(dynamic value) {
+  if (value == null) return 0.0;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString()) ?? 0.0;
+}
+
 class AccountSummaryModel extends AccountSummary {
   const AccountSummaryModel({
     required super.id,
@@ -15,7 +21,7 @@ class AccountSummaryModel extends AccountSummary {
       id: json['id'] as String,
       name: json['name'] as String,
       type: json['type'] as String,
-      balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
+      balance: _toDouble(json['balance']),
       currency: json['currency'] as String? ?? 'USD',
     );
   }
@@ -33,7 +39,7 @@ class CategorySpendingModel extends CategorySpending {
     return CategorySpendingModel(
       categoryId: json['categoryId'] as String? ?? '',
       categoryName: json['categoryName'] as String? ?? 'Other',
-      amount: (json['total'] as num?)?.toDouble() ?? 0.0,
+      amount: _toDouble(json['total']),
       color: json['categoryColor'] as String? ?? '#6366F1',
     );
   }
@@ -55,7 +61,7 @@ class DashboardTransactionModel extends TransactionEntity {
     return DashboardTransactionModel(
       id: json['id'] as String,
       accountId: json['accountId'] as String? ?? '',
-      amount: (json['amount'] as num).toDouble(),
+      amount: _toDouble(json['amount']),
       type: json['type'] as String,
       description: json['description'] as String?,
       categoryId: json['categoryId'] as String?,
@@ -100,15 +106,11 @@ class DashboardModel extends DashboardEntity {
     final previousMonth = json['previousMonth'] as Map<String, dynamic>?;
 
     return DashboardModel(
-      totalBalance: (json['totalBalance'] as num?)?.toDouble() ?? 0.0,
-      monthlyIncome:
-          (currentMonth?['income'] as num?)?.toDouble() ?? 0.0,
-      monthlyExpense:
-          (currentMonth?['expense'] as num?)?.toDouble() ?? 0.0,
-      previousMonthIncome:
-          (previousMonth?['income'] as num?)?.toDouble() ?? 0.0,
-      previousMonthExpense:
-          (previousMonth?['expense'] as num?)?.toDouble() ?? 0.0,
+      totalBalance: _toDouble(json['totalBalance']),
+      monthlyIncome: _toDouble(currentMonth?['income']),
+      monthlyExpense: _toDouble(currentMonth?['expense']),
+      previousMonthIncome: _toDouble(previousMonth?['income']),
+      previousMonthExpense: _toDouble(previousMonth?['expense']),
       accounts: accountsList,
       spendingByCategory: spendingList,
       recentTransactions: transactionsList,

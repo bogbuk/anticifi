@@ -1,5 +1,11 @@
 import '../../domain/entities/prediction_entity.dart';
 
+double _toDouble(dynamic value) {
+  if (value == null) return 0.0;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString()) ?? 0.0;
+}
+
 class PredictionModel extends PredictionEntity {
   const PredictionModel({
     required super.date,
@@ -11,10 +17,9 @@ class PredictionModel extends PredictionEntity {
   factory PredictionModel.fromJson(Map<String, dynamic> json) {
     return PredictionModel(
       date: DateTime.parse(json['date'] as String),
-      predictedBalance:
-          (json['predictedBalance'] as num?)?.toDouble() ?? 0.0,
-      lowerBound: (json['lowerBound'] as num?)?.toDouble() ?? 0.0,
-      upperBound: (json['upperBound'] as num?)?.toDouble() ?? 0.0,
+      predictedBalance: _toDouble(json['predictedBalance']),
+      lowerBound: _toDouble(json['lowerBound']),
+      upperBound: _toDouble(json['upperBound']),
     );
   }
 }
@@ -56,9 +61,8 @@ class ForecastModel extends ForecastEntity {
 
     return ForecastModel(
       predictions: predictions,
-      currentBalance:
-          (json['currentBalance'] as num?)?.toDouble() ?? 0.0,
-      confidence: (json['confidence'] as num?)?.toDouble() ?? 0.0,
+      currentBalance: _toDouble(json['currentBalance']),
+      confidence: _toDouble(json['confidence']),
     );
   }
 }

@@ -1,5 +1,11 @@
 import '../../domain/entities/account_entity.dart';
 
+double _toDouble(dynamic value) {
+  if (value == null) return 0.0;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString()) ?? 0.0;
+}
+
 class AccountModel extends AccountEntity {
   const AccountModel({
     required super.id,
@@ -20,8 +26,8 @@ class AccountModel extends AccountEntity {
       type: json['type'] as String,
       bank: json['bank'] as String?,
       currency: json['currency'] as String? ?? 'USD',
-      balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
-      initialBalance: (json['initialBalance'] as num?)?.toDouble() ?? 0.0,
+      balance: _toDouble(json['balance']),
+      initialBalance: _toDouble(json['initialBalance']),
     );
   }
 
