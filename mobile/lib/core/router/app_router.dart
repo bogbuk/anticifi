@@ -18,6 +18,10 @@ import '../../features/dashboard/presentation/bloc/dashboard_cubit.dart';
 import '../../features/oracle/presentation/pages/oracle_page.dart';
 import '../../features/oracle/presentation/bloc/oracle_cubit.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
+import '../../features/settings/presentation/pages/edit_profile_page.dart';
+import '../../features/settings/presentation/bloc/settings_cubit.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
+import '../../features/notifications/presentation/bloc/notifications_cubit.dart';
 import '../../features/accounts/presentation/pages/accounts_page.dart';
 import '../../features/accounts/presentation/pages/account_form_page.dart';
 import '../../features/accounts/presentation/bloc/accounts_cubit.dart';
@@ -72,7 +76,10 @@ GoRouter createAppRouter(AuthBloc authBloc) {
         builder: (context, state) => const RegisterPage(),
       ),
       ShellRoute(
-        builder: (context, state, child) => HomePage(child: child),
+        builder: (context, state, child) => BlocProvider(
+          create: (_) => getIt<NotificationsCubit>(),
+          child: HomePage(child: child),
+        ),
         routes: [
           GoRoute(
             path: '/dashboard',
@@ -103,8 +110,11 @@ GoRouter createAppRouter(AuthBloc authBloc) {
           ),
           GoRoute(
             path: '/settings',
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: SettingsPage(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (_) => getIt<SettingsCubit>(),
+                child: const SettingsPage(),
+              ),
             ),
           ),
         ],
@@ -198,6 +208,24 @@ GoRouter createAppRouter(AuthBloc authBloc) {
             child: ScheduledPaymentFormPage(payment: payment),
           );
         },
+      ),
+
+      // ── Notifications route ────────────────────────────
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<NotificationsCubit>(),
+          child: const NotificationsPage(),
+        ),
+      ),
+
+      // ── Settings: Edit Profile route ───────────────────
+      GoRoute(
+        path: '/settings/edit-profile',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<SettingsCubit>()..loadProfile(),
+          child: const EditProfilePage(),
+        ),
       ),
     ],
   );

@@ -13,6 +13,12 @@ import {
   DeletedAt,
 } from 'sequelize-typescript';
 
+export enum UserTheme {
+  DARK = 'dark',
+  LIGHT = 'light',
+  SYSTEM = 'system',
+}
+
 @Table({
   tableName: 'users',
   timestamps: true,
@@ -50,6 +56,21 @@ export class User extends Model {
   @AllowNull(false)
   @Column(DataType.STRING(3))
   declare currency: string;
+
+  @Default('en')
+  @AllowNull(false)
+  @Column(DataType.STRING(10))
+  declare locale: string;
+
+  @Default(true)
+  @AllowNull(false)
+  @Column(DataType.BOOLEAN)
+  declare notificationsEnabled: boolean;
+
+  @Default(UserTheme.SYSTEM)
+  @AllowNull(false)
+  @Column(DataType.ENUM(...Object.values(UserTheme)))
+  declare theme: UserTheme;
 
   @Default(false)
   @AllowNull(false)

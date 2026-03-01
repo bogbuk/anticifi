@@ -38,4 +38,13 @@ class ApiEndpoints {
   static const String predictions = '/predictions';
   static const String predictionChat = '/predictions/chat';
   static const String predictionForecast = '/predictions/forecast';
+
+  // User Profile
+  static const String userProfile = '/users/profile';
+  static const String userAccount = '/users/account';
+
+  // Notifications
+  static const String notifications = '/notifications';
+  static const String notificationsUnreadCount = '/notifications/unread-count';
+  static const String notificationsReadAll = '/notifications/read-all';
 }

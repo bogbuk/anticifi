@@ -171,7 +171,12 @@ export class ScheduledPaymentsService {
     return payment;
   }
 
-  async executeScheduledPayments(): Promise<{ executed: number; errors: number }> {
+  async executeScheduledPayments(): Promise<{
+    executed: number;
+    errors: number;
+    executedPayments: Array<{ id: string; userId: string; name: string; amount: number }>;
+    failedPayments: Array<{ id: string; userId: string; name: string }>;
+  }> {
     const today = new Date().toISOString().split('T')[0]!;
 
     const duePayments = await this.scheduledPaymentModel.findAll({
@@ -183,6 +188,8 @@ export class ScheduledPaymentsService {
 
     let executed = 0;
     let errors = 0;
+    const executedPayments: Array<{ id: string; userId: string; name: string; amount: number }> = [];
+    const failedPayments: Array<{ id: string; userId: string; name: string }> = [];
 
     for (const payment of duePayments) {
       try {
@@ -217,16 +224,28 @@ export class ScheduledPaymentsService {
           payment.toJSON(),
         );
 
+        executedPayments.push({
+          id: payment.id,
+          userId: payment.userId,
+          name: payment.name,
+          amount: payment.amount,
+        });
+
         executed++;
       } catch (error) {
         this.logger.error(
           `Failed to execute scheduled payment ${payment.id}: ${error}`,
         );
+        failedPayments.push({
+          id: payment.id,
+          userId: payment.userId,
+          name: payment.name,
+        });
         errors++;
       }
     }
 
-    return { executed, errors };
+    return { executed, errors, executedPayments, failedPayments };
   }
 
   calculateNextDate(currentDate: string, frequency: PaymentFrequency): string {

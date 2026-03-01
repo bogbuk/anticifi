@@ -34,6 +34,16 @@ import '../../features/oracle/data/repositories/oracle_repository_impl.dart';
 import '../../features/oracle/domain/repositories/oracle_repository.dart';
 import '../../features/oracle/presentation/bloc/oracle_cubit.dart';
 
+import '../../features/settings/data/datasources/settings_remote_datasource.dart';
+import '../../features/settings/data/repositories/settings_repository_impl.dart';
+import '../../features/settings/domain/repositories/settings_repository.dart';
+import '../../features/settings/presentation/bloc/settings_cubit.dart';
+
+import '../../features/notifications/data/datasources/notifications_remote_datasource.dart';
+import '../../features/notifications/data/repositories/notifications_repository_impl.dart';
+import '../../features/notifications/domain/repositories/notifications_repository.dart';
+import '../../features/notifications/presentation/bloc/notifications_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupDI() async {
@@ -156,5 +166,39 @@ Future<void> setupDI() async {
   // Cubits
   getIt.registerFactory<OracleCubit>(
     () => OracleCubit(getIt<OracleRepository>()),
+  );
+
+  // ── Settings ──────────────────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<SettingsRemoteDataSource>(
+    SettingsRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<SettingsRepository>(
+    SettingsRepositoryImpl(getIt<SettingsRemoteDataSource>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<SettingsCubit>(
+    () => SettingsCubit(getIt<SettingsRepository>()),
+  );
+
+  // ── Notifications ─────────────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<NotificationsRemoteDataSource>(
+    NotificationsRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<NotificationsRepository>(
+    NotificationsRepositoryImpl(getIt<NotificationsRemoteDataSource>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<NotificationsCubit>(
+    () => NotificationsCubit(getIt<NotificationsRepository>()),
   );
 }

@@ -13,6 +13,8 @@ import { DashboardModule } from './modules/dashboard/dashboard.module.js';
 import { EventsModule } from './modules/events/events.module.js';
 import { ScheduledPaymentsModule } from './modules/scheduled-payments/scheduled-payments.module.js';
 import { PredictionModule } from './modules/predictions/prediction.module.js';
+import { NotificationsModule } from './modules/notifications/notifications.module.js';
+import { HealthModule } from './modules/health/health.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 
 @Module({
@@ -29,6 +31,8 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
     DashboardModule,
     ScheduledPaymentsModule,
     PredictionModule,
+    NotificationsModule,
+    HealthModule,
   ],
   providers: [
     {

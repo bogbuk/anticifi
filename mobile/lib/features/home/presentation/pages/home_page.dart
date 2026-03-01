@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../notifications/presentation/bloc/notifications_cubit.dart';
+import '../../../notifications/presentation/bloc/notifications_state.dart';
 
 class HomePage extends StatefulWidget {
   final Widget child;
@@ -21,6 +24,12 @@ class _HomePageState extends State<HomePage> {
     '/oracle',
     '/settings',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<NotificationsCubit>().loadUnreadCount();
+  }
 
   @override
   void didChangeDependencies() {
@@ -74,6 +83,56 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      floatingActionButton: _buildNotificationBell(),
+    );
+  }
+
+  Widget _buildNotificationBell() {
+    return BlocBuilder<NotificationsCubit, NotificationsState>(
+      builder: (context, state) {
+        final unreadCount =
+            state is NotificationsLoaded ? state.unreadCount : 0;
+
+        return FloatingActionButton.small(
+          onPressed: () => context.push('/notifications'),
+          backgroundColor: AppColors.card,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              const Icon(
+                Icons.notifications_outlined,
+                color: AppColors.textSecondary,
+                size: 22,
+              ),
+              if (unreadCount > 0)
+                Positioned(
+                  right: -6,
+                  top: -6,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: AppColors.error,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      unreadCount > 99 ? '99+' : '$unreadCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

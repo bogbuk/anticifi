@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model.js';
+import { UpdateUserDto } from './dto/update-user.dto.js';
 
 @Injectable()
 export class UsersService {
@@ -24,5 +25,39 @@ export class UsersService {
     lastName?: string;
   }): Promise<User> {
     return this.userModel.create(data as any);
+  }
+
+  async getProfile(userId: string): Promise<Omit<User, 'passwordHash'>> {
+    const user = await this.userModel.findByPk(userId, {
+      attributes: { exclude: ['passwordHash'] },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+  async updateProfile(userId: string, dto: UpdateUserDto): Promise<Omit<User, 'passwordHash'>> {
+    const user = await this.userModel.findByPk(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await user.update(dto);
+
+    // Return without passwordHash
+    const updated = await this.userModel.findByPk(userId, {
+      attributes: { exclude: ['passwordHash'] },
+    });
+    return updated!;
+  }
+
+  async deleteAccount(userId: string): Promise<void> {
+    const user = await this.userModel.findByPk(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    // Soft delete (paranoid mode is enabled on the model)
+    await user.destroy();
   }
 }
