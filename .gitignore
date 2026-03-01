@@ -22,6 +22,9 @@ build/
 .DS_Store
 Thumbs.db
 
+# Local notes
+work.txt
+
 # Python
 *.pyc
 __pycache__/
