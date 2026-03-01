@@ -29,6 +29,11 @@ import '../../features/scheduled_payments/data/repositories/scheduled_payments_r
 import '../../features/scheduled_payments/domain/repositories/scheduled_payments_repository.dart';
 import '../../features/scheduled_payments/presentation/bloc/scheduled_payments_cubit.dart';
 
+import '../../features/oracle/data/datasources/oracle_remote_datasource.dart';
+import '../../features/oracle/data/repositories/oracle_repository_impl.dart';
+import '../../features/oracle/domain/repositories/oracle_repository.dart';
+import '../../features/oracle/presentation/bloc/oracle_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupDI() async {
@@ -134,5 +139,22 @@ Future<void> setupDI() async {
   // Cubits
   getIt.registerFactory<ScheduledPaymentsCubit>(
     () => ScheduledPaymentsCubit(getIt<ScheduledPaymentsRepository>()),
+  );
+
+  // ── Oracle ──────────────────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<OracleRemoteDataSource>(
+    OracleRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<OracleRepository>(
+    OracleRepositoryImpl(getIt<OracleRemoteDataSource>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<OracleCubit>(
+    () => OracleCubit(getIt<OracleRepository>()),
   );
 }

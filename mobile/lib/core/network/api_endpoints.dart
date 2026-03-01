@@ -33,4 +33,9 @@ class ApiEndpoints {
 
   // Scheduled Payments
   static const String scheduledPayments = '/scheduled-payments';
+
+  // Predictions / Oracle
+  static const String predictions = '/predictions';
+  static const String predictionChat = '/predictions/chat';
+  static const String predictionForecast = '/predictions/forecast';
 }

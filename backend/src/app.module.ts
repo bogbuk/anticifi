@@ -12,6 +12,7 @@ import { ImportModule } from './modules/import/import.module.js';
 import { DashboardModule } from './modules/dashboard/dashboard.module.js';
 import { EventsModule } from './modules/events/events.module.js';
 import { ScheduledPaymentsModule } from './modules/scheduled-payments/scheduled-payments.module.js';
+import { PredictionModule } from './modules/predictions/prediction.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 
 @Module({
@@ -27,6 +28,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
     ImportModule,
     DashboardModule,
     ScheduledPaymentsModule,
+    PredictionModule,
   ],
   providers: [
     {

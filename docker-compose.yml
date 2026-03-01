@@ -52,6 +52,17 @@ services:
       timeout: 5s
       retries: 5
 
+  ml-service:
+    build: ./ml-service
+    container_name: anticifi-ml-service
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+    networks:
+      - anticifi-network
+    restart: unless-stopped
+
 volumes:
   pgdata:
     driver: local

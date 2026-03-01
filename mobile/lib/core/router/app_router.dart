@@ -16,6 +16,7 @@ import '../../features/transactions/presentation/bloc/transactions_bloc.dart';
 import '../../features/transactions/domain/entities/transaction_entity.dart';
 import '../../features/dashboard/presentation/bloc/dashboard_cubit.dart';
 import '../../features/oracle/presentation/pages/oracle_page.dart';
+import '../../features/oracle/presentation/bloc/oracle_cubit.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/accounts/presentation/pages/accounts_page.dart';
 import '../../features/accounts/presentation/pages/account_form_page.dart';
@@ -93,8 +94,11 @@ GoRouter createAppRouter(AuthBloc authBloc) {
           ),
           GoRoute(
             path: '/oracle',
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: OraclePage(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (_) => getIt<OracleCubit>(),
+                child: const OraclePage(),
+              ),
             ),
           ),
           GoRoute(
