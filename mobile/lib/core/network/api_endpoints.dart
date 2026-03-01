@@ -14,4 +14,17 @@ class ApiEndpoints {
   static const String refresh = '/auth/refresh';
   static const String logout = '/auth/logout';
   static const String profile = '/auth/profile';
+
+  // Accounts
+  static const String accounts = '/accounts';
+
+  // Transactions
+  static const String transactions = '/transactions';
+
+  // Categories
+  static const String categories = '/categories';
+
+  // Import
+  static const String importCsv = '/import/csv';
+  static const String importJobs = '/import/jobs';
 }

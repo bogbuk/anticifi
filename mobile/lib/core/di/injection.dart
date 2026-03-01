@@ -7,6 +7,18 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
+import '../../features/accounts/data/datasources/accounts_remote_datasource.dart';
+import '../../features/accounts/data/repositories/accounts_repository_impl.dart';
+import '../../features/accounts/domain/repositories/accounts_repository.dart';
+import '../../features/accounts/presentation/bloc/accounts_cubit.dart';
+
+import '../../features/transactions/data/datasources/transactions_remote_datasource.dart';
+import '../../features/transactions/data/repositories/transactions_repository_impl.dart';
+import '../../features/transactions/domain/repositories/transactions_repository.dart';
+import '../../features/transactions/presentation/bloc/transactions_bloc.dart';
+
+import '../../features/import/presentation/bloc/import_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupDI() async {
@@ -18,6 +30,8 @@ Future<void> setupDI() async {
   getIt.registerSingleton<DioClient>(
     DioClient(getIt<FlutterSecureStorage>()),
   );
+
+  // ── Auth ──────────────────────────────────────────────
 
   // Data sources
   getIt.registerSingleton<AuthRemoteDataSource>(
@@ -35,5 +49,45 @@ Future<void> setupDI() async {
   // BLoCs
   getIt.registerFactory<AuthBloc>(
     () => AuthBloc(getIt<AuthRepository>()),
+  );
+
+  // ── Accounts ──────────────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<AccountsRemoteDataSource>(
+    AccountsRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<AccountsRepository>(
+    AccountsRepositoryImpl(getIt<AccountsRemoteDataSource>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<AccountsCubit>(
+    () => AccountsCubit(getIt<AccountsRepository>()),
+  );
+
+  // ── Transactions ──────────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<TransactionsRemoteDataSource>(
+    TransactionsRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<TransactionsRepository>(
+    TransactionsRepositoryImpl(getIt<TransactionsRemoteDataSource>()),
+  );
+
+  // BLoCs
+  getIt.registerFactory<TransactionsBloc>(
+    () => TransactionsBloc(getIt<TransactionsRepository>()),
+  );
+
+  // ── Import ────────────────────────────────────────────
+
+  getIt.registerFactory<ImportCubit>(
+    () => ImportCubit(getIt<DioClient>()),
   );
 }

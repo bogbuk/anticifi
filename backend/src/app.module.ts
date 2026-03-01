@@ -6,6 +6,9 @@ import { databaseConfig } from './config/database.config.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 import { AccountsModule } from './modules/accounts/accounts.module.js';
+import { TransactionsModule } from './modules/transactions/transactions.module.js';
+import { CategoriesModule } from './modules/categories/categories.module.js';
+import { ImportModule } from './modules/import/import.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 
 @Module({
@@ -15,6 +18,9 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
     AuthModule,
     UsersModule,
     AccountsModule,
+    TransactionsModule,
+    CategoriesModule,
+    ImportModule,
   ],
   providers: [
     {

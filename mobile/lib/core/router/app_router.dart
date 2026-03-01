@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../di/injection.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/bloc/auth_state.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -9,8 +11,17 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/transactions/presentation/pages/transactions_page.dart';
+import '../../features/transactions/presentation/pages/transaction_form_page.dart';
+import '../../features/transactions/presentation/bloc/transactions_bloc.dart';
+import '../../features/transactions/domain/entities/transaction_entity.dart';
 import '../../features/oracle/presentation/pages/oracle_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
+import '../../features/accounts/presentation/pages/accounts_page.dart';
+import '../../features/accounts/presentation/pages/account_form_page.dart';
+import '../../features/accounts/presentation/bloc/accounts_cubit.dart';
+import '../../features/accounts/domain/entities/account_entity.dart';
+import '../../features/import/presentation/pages/import_page.dart';
+import '../../features/import/presentation/bloc/import_cubit.dart';
 
 GoRouter createAppRouter(AuthBloc authBloc) {
   return GoRouter(
@@ -65,8 +76,11 @@ GoRouter createAppRouter(AuthBloc authBloc) {
           ),
           GoRoute(
             path: '/transactions',
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: TransactionsPage(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (_) => getIt<TransactionsBloc>(),
+                child: const TransactionsPage(),
+              ),
             ),
           ),
           GoRoute(
@@ -82,6 +96,63 @@ GoRouter createAppRouter(AuthBloc authBloc) {
             ),
           ),
         ],
+      ),
+
+      // ── Accounts routes ──────────────────────────────
+      GoRoute(
+        path: '/accounts',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<AccountsCubit>(),
+          child: const AccountsPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/accounts/add',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<AccountsCubit>(),
+          child: const AccountFormPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/accounts/:id/edit',
+        builder: (context, state) {
+          final account = state.extra as AccountEntity?;
+          return BlocProvider(
+            create: (_) => getIt<AccountsCubit>(),
+            child: AccountFormPage(account: account),
+          );
+        },
+      ),
+
+      // ── Transaction form routes ──────────────────────
+      GoRoute(
+        path: '/transactions/add',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<TransactionsBloc>(),
+          child: const TransactionFormPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/transactions/:id/edit',
+        builder: (context, state) {
+          final transaction = state.extra as TransactionEntity?;
+          return BlocProvider(
+            create: (_) => getIt<TransactionsBloc>(),
+            child: TransactionFormPage(transaction: transaction),
+          );
+        },
+      ),
+
+      // ── Import route ─────────────────────────────────
+      GoRoute(
+        path: '/import',
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => getIt<ImportCubit>()),
+            BlocProvider(create: (_) => getIt<AccountsCubit>()),
+          ],
+          child: const ImportPage(),
+        ),
       ),
     ],
   );
