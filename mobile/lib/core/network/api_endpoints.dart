@@ -30,4 +30,7 @@ class ApiEndpoints {
   // Import
   static const String importCsv = '/import/csv';
   static const String importJobs = '/import/jobs';
+
+  // Scheduled Payments
+  static const String scheduledPayments = '/scheduled-payments';
 }

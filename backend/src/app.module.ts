@@ -11,6 +11,7 @@ import { CategoriesModule } from './modules/categories/categories.module.js';
 import { ImportModule } from './modules/import/import.module.js';
 import { DashboardModule } from './modules/dashboard/dashboard.module.js';
 import { EventsModule } from './modules/events/events.module.js';
+import { ScheduledPaymentsModule } from './modules/scheduled-payments/scheduled-payments.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 
 @Module({
@@ -25,6 +26,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
     CategoriesModule,
     ImportModule,
     DashboardModule,
+    ScheduledPaymentsModule,
   ],
   providers: [
     {

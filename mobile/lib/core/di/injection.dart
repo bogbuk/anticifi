@@ -24,6 +24,11 @@ import '../../features/dashboard/presentation/bloc/dashboard_cubit.dart';
 
 import '../../features/import/presentation/bloc/import_cubit.dart';
 
+import '../../features/scheduled_payments/data/datasources/scheduled_payments_remote_datasource.dart';
+import '../../features/scheduled_payments/data/repositories/scheduled_payments_repository_impl.dart';
+import '../../features/scheduled_payments/domain/repositories/scheduled_payments_repository.dart';
+import '../../features/scheduled_payments/presentation/bloc/scheduled_payments_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupDI() async {
@@ -111,5 +116,23 @@ Future<void> setupDI() async {
 
   getIt.registerFactory<ImportCubit>(
     () => ImportCubit(getIt<DioClient>()),
+  );
+
+  // ── Scheduled Payments ─────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<ScheduledPaymentsRemoteDataSource>(
+    ScheduledPaymentsRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<ScheduledPaymentsRepository>(
+    ScheduledPaymentsRepositoryImpl(
+        getIt<ScheduledPaymentsRemoteDataSource>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<ScheduledPaymentsCubit>(
+    () => ScheduledPaymentsCubit(getIt<ScheduledPaymentsRepository>()),
   );
 }

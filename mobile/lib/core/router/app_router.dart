@@ -23,6 +23,10 @@ import '../../features/accounts/presentation/bloc/accounts_cubit.dart';
 import '../../features/accounts/domain/entities/account_entity.dart';
 import '../../features/import/presentation/pages/import_page.dart';
 import '../../features/import/presentation/bloc/import_cubit.dart';
+import '../../features/scheduled_payments/presentation/pages/scheduled_payments_page.dart';
+import '../../features/scheduled_payments/presentation/pages/scheduled_payment_form_page.dart';
+import '../../features/scheduled_payments/presentation/bloc/scheduled_payments_cubit.dart';
+import '../../features/scheduled_payments/domain/entities/scheduled_payment_entity.dart';
 
 GoRouter createAppRouter(AuthBloc authBloc) {
   return GoRouter(
@@ -157,6 +161,39 @@ GoRouter createAppRouter(AuthBloc authBloc) {
           ],
           child: const ImportPage(),
         ),
+      ),
+
+      // ── Scheduled Payments routes ──────────────────────
+      GoRoute(
+        path: '/scheduled-payments',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<ScheduledPaymentsCubit>(),
+          child: const ScheduledPaymentsPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/scheduled-payments/add',
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => getIt<ScheduledPaymentsCubit>()),
+            BlocProvider(create: (_) => getIt<AccountsCubit>()),
+          ],
+          child: const ScheduledPaymentFormPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/scheduled-payments/:id/edit',
+        builder: (context, state) {
+          final payment = state.extra as ScheduledPaymentEntity?;
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                  create: (_) => getIt<ScheduledPaymentsCubit>()),
+              BlocProvider(create: (_) => getIt<AccountsCubit>()),
+            ],
+            child: ScheduledPaymentFormPage(payment: payment),
+          );
+        },
       ),
     ],
   );
