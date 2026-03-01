@@ -46,3 +46,9 @@ app.*.map.json
 # CocoaPods
 **/ios/Podfile.lock
 **/macos/Podfile.lock
+
+# Xcode
+**/ios/Runner.xcodeproj/
+**/ios/Runner.xcworkspace/
+**/macos/Runner.xcodeproj/
+**/macos/Runner.xcworkspace/
