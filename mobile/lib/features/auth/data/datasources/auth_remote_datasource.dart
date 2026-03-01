@@ -1,12 +1,11 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import '../../../../core/storage/secure_storage.dart';
 import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/network/dio_client.dart';
 import '../models/user_model.dart';
 
 class AuthRemoteDataSource {
   final DioClient dioClient;
-  final FlutterSecureStorage storage;
+  final SecureStorage storage;
 
   AuthRemoteDataSource({
     required this.dioClient,
@@ -30,10 +29,12 @@ class AuthRemoteDataSource {
 
   Future<UserModel> register(
       String name, String email, String password) async {
+    final nameParts = name.trim().split(' ');
     final response = await dioClient.dio.post(
       ApiEndpoints.register,
       data: {
-        'name': name,
+        'firstName': nameParts.first,
+        'lastName': nameParts.length > 1 ? nameParts.sublist(1).join(' ') : null,
         'email': email,
         'password': password,
       },

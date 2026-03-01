@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../storage/secure_storage.dart';
 import 'api_endpoints.dart';
 
 class DioClient {
   final Dio dio;
-  final FlutterSecureStorage _storage;
+  final SecureStorage _storage;
 
   DioClient(this._storage)
       : dio = Dio(

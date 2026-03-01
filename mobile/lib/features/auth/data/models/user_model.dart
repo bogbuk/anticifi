@@ -8,9 +8,11 @@ class UserModel extends UserEntity {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final firstName = json['firstName'] as String? ?? '';
+    final lastName = json['lastName'] as String? ?? '';
     return UserModel(
       id: json['id'] as String,
-      name: json['name'] as String,
+      name: '$firstName $lastName'.trim(),
       email: json['email'] as String,
     );
   }

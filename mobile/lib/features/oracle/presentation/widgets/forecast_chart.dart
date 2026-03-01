@@ -59,7 +59,7 @@ class ForecastChart extends StatelessWidget {
           gridData: FlGridData(
             show: true,
             drawVerticalLine: false,
-            horizontalInterval: (maxY - minY) / 4,
+            horizontalInterval: maxY == minY ? 1 : (maxY - minY) / 4,
             getDrawingHorizontalLine: (value) {
               return FlLine(
                 color: AppColors.border,

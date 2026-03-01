@@ -237,8 +237,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _onSave() {
     if (!_formKey.currentState!.validate()) return;
+    final nameParts = _nameController.text.trim().split(' ');
     context.read<SettingsCubit>().updateProfile({
-      'name': _nameController.text.trim(),
+      'firstName': nameParts.first,
+      'lastName': nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '',
       'currency': _selectedCurrency,
     });
   }

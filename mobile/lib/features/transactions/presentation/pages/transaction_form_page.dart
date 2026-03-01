@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/di/injection.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
+import '../../../accounts/domain/repositories/accounts_repository.dart';
+import '../../../accounts/domain/entities/account_entity.dart';
 import '../../domain/entities/transaction_entity.dart';
 import '../bloc/transactions_bloc.dart';
 import '../bloc/transactions_event.dart';
@@ -25,6 +28,8 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
   late String _selectedType;
   late DateTime _selectedDate;
   bool _isSaving = false;
+  List<AccountEntity> _accounts = [];
+  String? _selectedAccountId;
 
   bool get _isEditing => widget.transaction != null;
 
@@ -39,6 +44,20 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
     );
     _selectedType = widget.transaction?.type ?? 'expense';
     _selectedDate = widget.transaction?.date ?? DateTime.now();
+    _selectedAccountId = widget.transaction?.accountId;
+    _loadAccounts();
+  }
+
+  Future<void> _loadAccounts() async {
+    try {
+      final accounts = await getIt<AccountsRepository>().getAccounts();
+      if (mounted) {
+        setState(() {
+          _accounts = accounts;
+          _selectedAccountId ??= accounts.isNotEmpty ? accounts.first.id : null;
+        });
+      }
+    } catch (_) {}
   }
 
   @override
@@ -86,13 +105,25 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
 
     setState(() => _isSaving = true);
 
+    if (_selectedAccountId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please create an account first'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      setState(() => _isSaving = false);
+      return;
+    }
+
     final params = {
+      'accountId': _selectedAccountId,
       'amount': double.parse(_amountController.text.trim()),
       'type': _selectedType,
       'description': _descriptionController.text.trim().isEmpty
           ? null
           : _descriptionController.text.trim(),
-      'date': _selectedDate.toIso8601String(),
+      'date': _selectedDate.toIso8601String().split('T').first,
     };
 
     try {
@@ -230,7 +261,31 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
+
+                // Account selector
+                if (_accounts.isNotEmpty)
+                  DropdownButtonFormField<String>(
+                    value: _selectedAccountId,
+                    items: _accounts.map((a) {
+                      return DropdownMenuItem(
+                        value: a.id,
+                        child: Text(
+                          '${a.name} (${a.currency})',
+                          style: const TextStyle(color: AppColors.textPrimary),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() => _selectedAccountId = value);
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Account',
+                      prefixIcon: Icon(Icons.account_balance, color: AppColors.textMuted),
+                    ),
+                    dropdownColor: AppColors.card,
+                  ),
+                const SizedBox(height: 16),
 
                 // Amount
                 TextFormField(

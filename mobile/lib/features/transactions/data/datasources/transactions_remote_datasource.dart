@@ -29,16 +29,16 @@ class TransactionsRemoteDataSource {
     );
 
     final data = response.data as Map<String, dynamic>;
-    final list = data['transactions'] as List<dynamic>;
+    final list = (data['data'] as List<dynamic>?) ?? [];
     final total = data['total'] as int? ?? 0;
-    final hasMore = data['hasMore'] as bool? ?? false;
+    final totalPages = data['totalPages'] as int? ?? 1;
 
     return TransactionsResponse(
       transactions: list
           .map((e) => TransactionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       total: total,
-      hasMore: hasMore,
+      hasMore: page < totalPages,
     );
   }
 

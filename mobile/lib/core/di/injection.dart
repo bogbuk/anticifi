@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
+import '../storage/secure_storage.dart';
 import '../network/dio_client.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
@@ -52,8 +53,12 @@ Future<void> setupDI() async {
     const FlutterSecureStorage(),
   );
 
+  getIt.registerSingleton<SecureStorage>(
+    SecureStorage(getIt<FlutterSecureStorage>()),
+  );
+
   getIt.registerSingleton<DioClient>(
-    DioClient(getIt<FlutterSecureStorage>()),
+    DioClient(getIt<SecureStorage>()),
   );
 
   // ── Auth ──────────────────────────────────────────────
@@ -62,7 +67,7 @@ Future<void> setupDI() async {
   getIt.registerSingleton<AuthRemoteDataSource>(
     AuthRemoteDataSource(
       dioClient: getIt<DioClient>(),
-      storage: getIt<FlutterSecureStorage>(),
+      storage: getIt<SecureStorage>(),
     ),
   );
 
