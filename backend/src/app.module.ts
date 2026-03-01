@@ -1,0 +1,26 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { APP_FILTER } from '@nestjs/core';
+import { databaseConfig } from './config/database.config.js';
+import { AuthModule } from './modules/auth/auth.module.js';
+import { UsersModule } from './modules/users/users.module.js';
+import { AccountsModule } from './modules/accounts/accounts.module.js';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    SequelizeModule.forRootAsync(databaseConfig),
+    AuthModule,
+    UsersModule,
+    AccountsModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
+})
+export class AppModule {}

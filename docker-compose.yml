@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: anticifi-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME:-anticifi_dev}
+      POSTGRES_USER: ${DB_USER:-anticifi}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-anticifi_secret}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - anticifi-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-anticifi} -d ${DB_NAME:-anticifi_dev}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: anticifi-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - anticifi-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nats:
+    image: nats:2-alpine
+    container_name: anticifi-nats
+    restart: unless-stopped
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    networks:
+      - anticifi-network
+    healthcheck:
+      test: ["CMD", "nats-server", "--help"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+    driver: local
+  redisdata:
+    driver: local
+
+networks:
+  anticifi-network:
+    driver: bridge

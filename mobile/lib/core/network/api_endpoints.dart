@@ -1,0 +1,17 @@
+import 'dart:io' show Platform;
+
+class ApiEndpoints {
+  static String get baseUrl {
+    if (Platform.isAndroid) {
+      return 'http://10.0.2.2:3000/api';
+    }
+    return 'http://localhost:3000/api';
+  }
+
+  // Auth
+  static const String login = '/auth/login';
+  static const String register = '/auth/register';
+  static const String refresh = '/auth/refresh';
+  static const String logout = '/auth/logout';
+  static const String profile = '/auth/profile';
+}
