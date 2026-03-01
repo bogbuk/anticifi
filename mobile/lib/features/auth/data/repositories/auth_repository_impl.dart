@@ -38,6 +38,15 @@ class AuthRepositoryImpl implements AuthRepository {
     return await _remoteDataSource.isAuthenticated();
   }
 
+  @override
+  Future<UserEntity> getUserProfile() async {
+    try {
+      return await _remoteDataSource.getUserProfile();
+    } on DioException catch (e) {
+      throw Exception(_parseError(e, fallback: 'Failed to get profile'));
+    }
+  }
+
   String _parseError(DioException e, {required String fallback}) {
     final statusCode = e.response?.statusCode;
     final data = e.response?.data;

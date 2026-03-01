@@ -5,4 +5,5 @@ abstract class AuthRepository {
   Future<UserEntity> register(String name, String email, String password);
   Future<void> logout();
   Future<bool> isAuthenticated();
+  Future<UserEntity> getUserProfile();
 }

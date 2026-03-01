@@ -10,7 +10,7 @@ class NotificationsRemoteDataSource {
   Future<List<NotificationModel>> getNotifications() async {
     final response = await dioClient.dio.get(ApiEndpoints.notifications);
     final data = response.data as Map<String, dynamic>;
-    final list = data['notifications'] as List<dynamic>;
+    final list = data['data'] as List<dynamic>;
     return list
         .map((e) => NotificationModel.fromJson(e as Map<String, dynamic>))
         .toList();

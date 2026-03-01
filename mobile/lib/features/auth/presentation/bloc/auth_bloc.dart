@@ -65,9 +65,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final isAuth = await _authRepository.isAuthenticated();
       if (isAuth) {
-        // Token exists, but we need user data. For now emit a placeholder.
-        // In production, we'd call getUserProfile here.
-        emit(const AuthUnauthenticated());
+        final user = await _authRepository.getUserProfile();
+        emit(AuthAuthenticated(user));
       } else {
         emit(const AuthUnauthenticated());
       }

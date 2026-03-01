@@ -9,8 +9,7 @@ class AccountsRemoteDataSource {
 
   Future<List<AccountModel>> getAccounts() async {
     final response = await dioClient.dio.get(ApiEndpoints.accounts);
-    final data = response.data as Map<String, dynamic>;
-    final list = data['accounts'] as List<dynamic>;
+    final list = response.data as List<dynamic>;
     return list
         .map((e) => AccountModel.fromJson(e as Map<String, dynamic>))
         .toList();

@@ -62,7 +62,7 @@ class AuthRemoteDataSource {
   }
 
   Future<UserModel> getUserProfile() async {
-    final response = await dioClient.dio.get(ApiEndpoints.profile);
+    final response = await dioClient.dio.get(ApiEndpoints.userProfile);
     final data = response.data as Map<String, dynamic>;
     return UserModel.fromJson(data);
   }

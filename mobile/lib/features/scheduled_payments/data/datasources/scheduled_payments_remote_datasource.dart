@@ -11,7 +11,7 @@ class ScheduledPaymentsRemoteDataSource {
     final response =
         await dioClient.dio.get(ApiEndpoints.scheduledPayments);
     final data = response.data as Map<String, dynamic>;
-    final list = data['scheduledPayments'] as List<dynamic>;
+    final list = data['data'] as List<dynamic>;
     return list
         .map((e) =>
             ScheduledPaymentModel.fromJson(e as Map<String, dynamic>))
