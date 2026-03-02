@@ -3,16 +3,21 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:anticifi/features/accounts/domain/entities/account_entity.dart';
 import 'package:anticifi/features/accounts/domain/repositories/accounts_repository.dart';
+import 'package:anticifi/features/accounts/data/datasources/plaid_remote_datasource.dart';
 import 'package:anticifi/features/accounts/presentation/bloc/accounts_cubit.dart';
 import 'package:anticifi/features/accounts/presentation/bloc/accounts_state.dart';
 
 class MockAccountsRepository extends Mock implements AccountsRepository {}
 
+class MockPlaidRemoteDataSource extends Mock implements PlaidRemoteDataSource {}
+
 void main() {
   late MockAccountsRepository mockRepository;
+  late MockPlaidRemoteDataSource mockPlaidDataSource;
 
   setUp(() {
     mockRepository = MockAccountsRepository();
+    mockPlaidDataSource = MockPlaidRemoteDataSource();
   });
 
   const testAccounts = [
@@ -38,7 +43,7 @@ void main() {
 
   group('AccountsCubit', () {
     test('initial state is AccountsInitial', () {
-      final cubit = AccountsCubit(mockRepository);
+      final cubit = AccountsCubit(mockRepository, mockPlaidDataSource);
       expect(cubit.state, const AccountsInitial());
       cubit.close();
     });
@@ -49,7 +54,7 @@ void main() {
         build: () {
           when(() => mockRepository.getAccounts())
               .thenAnswer((_) async => testAccounts);
-          return AccountsCubit(mockRepository);
+          return AccountsCubit(mockRepository, mockPlaidDataSource);
         },
         act: (cubit) => cubit.loadAccounts(),
         expect: () => [
@@ -63,7 +68,7 @@ void main() {
         build: () {
           when(() => mockRepository.getAccounts())
               .thenThrow(Exception('Failed to load accounts'));
-          return AccountsCubit(mockRepository);
+          return AccountsCubit(mockRepository, mockPlaidDataSource);
         },
         act: (cubit) => cubit.loadAccounts(),
         expect: () => [
@@ -81,7 +86,7 @@ void main() {
               .thenAnswer((_) async => testAccounts.first);
           when(() => mockRepository.getAccounts())
               .thenAnswer((_) async => testAccounts);
-          return AccountsCubit(mockRepository);
+          return AccountsCubit(mockRepository, mockPlaidDataSource);
         },
         act: (cubit) => cubit.createAccount({
           'name': 'New Account',
@@ -107,7 +112,7 @@ void main() {
               .thenAnswer((_) async {});
           when(() => mockRepository.getAccounts())
               .thenAnswer((_) async => [testAccounts[1]]);
-          return AccountsCubit(mockRepository);
+          return AccountsCubit(mockRepository, mockPlaidDataSource);
         },
         act: (cubit) => cubit.deleteAccount('acc-1'),
         expect: () => [

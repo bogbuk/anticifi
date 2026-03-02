@@ -34,3 +34,25 @@ class AccountsError extends AccountsState {
   @override
   List<Object?> get props => [message];
 }
+
+class PlaidLinkLoading extends AccountsState {
+  const PlaidLinkLoading();
+}
+
+class PlaidLinkSuccess extends AccountsState {
+  final List<AccountEntity> linkedAccounts;
+
+  const PlaidLinkSuccess(this.linkedAccounts);
+
+  @override
+  List<Object?> get props => [linkedAccounts];
+}
+
+class PlaidLinkError extends AccountsState {
+  final String message;
+
+  const PlaidLinkError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

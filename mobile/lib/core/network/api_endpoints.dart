@@ -43,6 +43,12 @@ class ApiEndpoints {
   static const String userProfile = '/users/profile';
   static const String userAccount = '/users/account';
 
+  // Plaid
+  static const String plaidLinkToken = '/plaid/link-token';
+  static const String plaidExchangeToken = '/plaid/exchange-token';
+  static const String plaidItems = '/plaid/items';
+  static const String plaidSync = '/plaid/sync';
+
   // Notifications
   static const String notifications = '/notifications';
   static const String notificationsUnreadCount = '/notifications/unread-count';

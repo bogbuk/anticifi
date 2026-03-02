@@ -15,6 +15,7 @@ import { ScheduledPaymentsModule } from './modules/scheduled-payments/scheduled-
 import { PredictionModule } from './modules/predictions/prediction.module.js';
 import { NotificationsModule } from './modules/notifications/notifications.module.js';
 import { HealthModule } from './modules/health/health.module.js';
+import { PlaidModule } from './modules/plaid/plaid.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 
 @Module({
@@ -32,6 +33,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
     ScheduledPaymentsModule,
     PredictionModule,
     NotificationsModule,
+    PlaidModule,
     HealthModule,
   ],
   providers: [

@@ -24,6 +24,7 @@ import '../../features/notifications/presentation/pages/notifications_page.dart'
 import '../../features/notifications/presentation/bloc/notifications_cubit.dart';
 import '../../features/accounts/presentation/pages/accounts_page.dart';
 import '../../features/accounts/presentation/pages/account_form_page.dart';
+import '../../features/accounts/presentation/pages/link_bank_page.dart';
 import '../../features/accounts/presentation/bloc/accounts_cubit.dart';
 import '../../features/accounts/domain/entities/account_entity.dart';
 import '../../features/import/presentation/pages/import_page.dart';
@@ -133,6 +134,13 @@ GoRouter createAppRouter(AuthBloc authBloc) {
         builder: (context, state) => BlocProvider(
           create: (_) => getIt<AccountsCubit>(),
           child: const AccountFormPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/accounts/link-bank',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<AccountsCubit>(),
+          child: const LinkBankPage(),
         ),
       ),
       GoRoute(

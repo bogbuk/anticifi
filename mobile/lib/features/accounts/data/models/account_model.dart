@@ -16,6 +16,10 @@ class AccountModel extends AccountEntity {
     required super.currency,
     required super.balance,
     required super.initialBalance,
+    super.connectionType = 'manual',
+    super.plaidAccountId,
+    super.mask,
+    super.institutionName,
   });
 
   factory AccountModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +32,10 @@ class AccountModel extends AccountEntity {
       currency: json['currency'] as String? ?? 'USD',
       balance: _toDouble(json['balance']),
       initialBalance: _toDouble(json['initialBalance']),
+      connectionType: json['connectionType'] as String? ?? 'manual',
+      plaidAccountId: json['plaidAccountId'] as String?,
+      mask: json['mask'] as String?,
+      institutionName: json['institutionName'] as String? ?? json['bank'] as String?,
     );
   }
 
@@ -41,6 +49,10 @@ class AccountModel extends AccountEntity {
       'currency': currency,
       'balance': balance,
       'initialBalance': initialBalance,
+      'connectionType': connectionType,
+      'plaidAccountId': plaidAccountId,
+      'mask': mask,
+      'institutionName': institutionName,
     };
   }
 }

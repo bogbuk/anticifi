@@ -9,6 +9,10 @@ class AccountEntity extends Equatable {
   final String currency;
   final double balance;
   final double initialBalance;
+  final String connectionType; // manual, plaid
+  final String? plaidAccountId;
+  final String? mask;
+  final String? institutionName;
 
   const AccountEntity({
     required this.id,
@@ -19,7 +23,13 @@ class AccountEntity extends Equatable {
     required this.currency,
     required this.balance,
     required this.initialBalance,
+    this.connectionType = 'manual',
+    this.plaidAccountId,
+    this.mask,
+    this.institutionName,
   });
+
+  bool get isLinked => connectionType == 'plaid';
 
   @override
   List<Object?> get props => [
@@ -31,5 +41,9 @@ class AccountEntity extends Equatable {
         currency,
         balance,
         initialBalance,
+        connectionType,
+        plaidAccountId,
+        mask,
+        institutionName,
       ];
 }

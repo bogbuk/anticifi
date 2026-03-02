@@ -9,6 +9,7 @@ import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
 import '../../features/accounts/data/datasources/accounts_remote_datasource.dart';
+import '../../features/accounts/data/datasources/plaid_remote_datasource.dart';
 import '../../features/accounts/data/repositories/accounts_repository_impl.dart';
 import '../../features/accounts/domain/repositories/accounts_repository.dart';
 import '../../features/accounts/presentation/bloc/accounts_cubit.dart';
@@ -88,6 +89,10 @@ Future<void> setupDI() async {
     AccountsRemoteDataSource(dioClient: getIt<DioClient>()),
   );
 
+  getIt.registerSingleton<PlaidRemoteDataSource>(
+    PlaidRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
   // Repositories
   getIt.registerSingleton<AccountsRepository>(
     AccountsRepositoryImpl(getIt<AccountsRemoteDataSource>()),
@@ -95,7 +100,10 @@ Future<void> setupDI() async {
 
   // Cubits
   getIt.registerFactory<AccountsCubit>(
-    () => AccountsCubit(getIt<AccountsRepository>()),
+    () => AccountsCubit(
+      getIt<AccountsRepository>(),
+      getIt<PlaidRemoteDataSource>(),
+    ),
   );
 
   // ── Transactions ──────────────────────────────────────

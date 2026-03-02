@@ -12,6 +12,12 @@ import {
   UpdatedAt,
 } from 'sequelize-typescript';
 import { User } from '../users/user.model.js';
+import { PlaidItem } from '../plaid/plaid-item.model.js';
+
+export enum ConnectionType {
+  MANUAL = 'manual',
+  PLAID = 'plaid',
+}
 
 export enum AccountType {
   CHECKING = 'checking',
@@ -68,6 +74,24 @@ export class Account extends Model {
   @Column(DataType.BOOLEAN)
   declare isActive: boolean;
 
+  @Default(ConnectionType.MANUAL)
+  @AllowNull(false)
+  @Column(DataType.ENUM(...Object.values(ConnectionType)))
+  declare connectionType: ConnectionType;
+
+  @AllowNull(true)
+  @Column(DataType.STRING(100))
+  declare plaidAccountId: string | null;
+
+  @ForeignKey(() => PlaidItem)
+  @AllowNull(true)
+  @Column(DataType.UUID)
+  declare plaidItemId: string | null;
+
+  @AllowNull(true)
+  @Column(DataType.STRING(4))
+  declare mask: string | null;
+
   @CreatedAt
   declare createdAt: Date;
 
@@ -76,4 +100,7 @@ export class Account extends Model {
 
   @BelongsTo(() => User)
   declare user: User;
+
+  @BelongsTo(() => PlaidItem)
+  declare plaidItem: PlaidItem;
 }

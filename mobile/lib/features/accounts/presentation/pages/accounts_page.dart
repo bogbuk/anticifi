@@ -27,6 +27,18 @@ class _AccountsPageState extends State<AccountsPage> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Accounts'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_balance),
+            tooltip: 'Connect Bank',
+            onPressed: () async {
+              final result = await context.push('/accounts/link-bank');
+              if (result == true && mounted) {
+                context.read<AccountsCubit>().loadAccounts();
+              }
+            },
+          ),
+        ],
       ),
       body: BlocConsumer<AccountsCubit, AccountsState>(
         listener: (context, state) {
