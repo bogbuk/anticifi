@@ -26,4 +26,4 @@ Status: done
 ### Verification
 - [x] build (`npm run build` — 0 ошибок)
 - [x] flutter analyze — No issues found!
-- [ ] commit & push
+- [x] commit & push (`bdf4936`)

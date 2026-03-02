@@ -56,6 +56,8 @@ import '../../features/notifications/data/repositories/notifications_repository_
 import '../../features/notifications/domain/repositories/notifications_repository.dart';
 import '../../features/notifications/presentation/bloc/notifications_cubit.dart';
 
+import '../services/fcm_service.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupDI() async {
@@ -257,5 +259,11 @@ Future<void> setupDI() async {
   // Cubits
   getIt.registerFactory<NotificationsCubit>(
     () => NotificationsCubit(getIt<NotificationsRepository>()),
+  );
+
+  // ── FCM Service ─────────────────────────────────────────
+
+  getIt.registerSingleton<FcmService>(
+    FcmService(dataSource: getIt<NotificationsRemoteDataSource>()),
   );
 }

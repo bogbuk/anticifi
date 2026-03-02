@@ -121,6 +121,10 @@ class NotificationCard extends StatelessWidget {
         return Icons.schedule;
       case 'prediction_alert':
         return Icons.auto_awesome;
+      case 'budget_alert':
+        return Icons.pie_chart_outline;
+      case 'debt_payment_due':
+        return Icons.money_off;
       default:
         return Icons.info_outline;
     }
@@ -134,6 +138,10 @@ class NotificationCard extends StatelessWidget {
         return AppColors.primary;
       case 'prediction_alert':
         return AppColors.accent;
+      case 'budget_alert':
+        return AppColors.warning;
+      case 'debt_payment_due':
+        return AppColors.error;
       default:
         return AppColors.textSecondary;
     }

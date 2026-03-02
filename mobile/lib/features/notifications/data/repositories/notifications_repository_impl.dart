@@ -26,4 +26,14 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
   Future<void> markAllAsRead() async {
     await _remoteDataSource.markAllAsRead();
   }
+
+  @override
+  Future<void> registerFcmToken(String token) async {
+    await _remoteDataSource.registerFcmToken(token);
+  }
+
+  @override
+  Future<void> removeFcmToken() async {
+    await _remoteDataSource.removeFcmToken();
+  }
 }

@@ -78,6 +78,10 @@ export class User extends Model {
   declare isEmailVerified: boolean;
 
   @AllowNull(true)
+  @Column(DataType.STRING(500))
+  declare fcmToken: string | null;
+
+  @AllowNull(true)
   @Column(DataType.DATE)
   declare lastLoginAt: Date | null;
 

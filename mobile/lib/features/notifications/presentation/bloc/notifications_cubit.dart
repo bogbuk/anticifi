@@ -40,6 +40,14 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     }
   }
 
+  Future<void> registerFcmToken(String token) async {
+    try {
+      await _repository.registerFcmToken(token);
+    } catch (_) {
+      // Silently fail — token registration is not critical for UX
+    }
+  }
+
   Future<void> loadUnreadCount() async {
     try {
       final count = await _repository.getUnreadCount();

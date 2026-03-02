@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "294067863294",
+    "project_id": "anticifi",
+    "storage_bucket": "anticifi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294067863294:android:5e14ccfc7a2ac92f256faf",
+        "android_client_info": {
+          "package_name": "com.anticifi.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANMmtbwnTPeJXCjOR0k4WlZ6KHwM_yScY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -30,4 +30,12 @@ class NotificationsRemoteDataSource {
   Future<void> markAllAsRead() async {
     await dioClient.dio.patch(ApiEndpoints.notificationsReadAll);
   }
+
+  Future<void> registerFcmToken(String token) async {
+    await dioClient.dio.post(ApiEndpoints.fcmToken, data: {'token': token});
+  }
+
+  Future<void> removeFcmToken() async {
+    await dioClient.dio.delete(ApiEndpoints.fcmToken);
+  }
 }

@@ -1,7 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, WhereOptions } from 'sequelize';
+import * as admin from 'firebase-admin';
 import { Notification, NotificationType } from './notification.model.js';
+import { User } from '../users/user.model.js';
 import { EventsGateway } from '../events/events.gateway.js';
 import { QueryNotificationDto } from './dto/query-notification.dto.js';
 
@@ -20,7 +22,11 @@ export class NotificationsService {
   constructor(
     @InjectModel(Notification)
     private readonly notificationModel: typeof Notification,
+    @InjectModel(User)
+    private readonly userModel: typeof User,
     private readonly eventsGateway: EventsGateway,
+    @Inject('FIREBASE_ADMIN') @Optional()
+    private readonly firebaseApp: admin.app.App | null,
   ) {}
 
   async getNotifications(
@@ -107,6 +113,10 @@ export class NotificationsService {
       notification.toJSON(),
     );
 
+    this.sendPushNotification(userId, title, body, metadata).catch((err) => {
+      this.logger.warn(`Failed to send push notification: ${err.message}`);
+    });
+
     return notification;
   }
 
@@ -130,5 +140,66 @@ export class NotificationsService {
 
     this.logger.log(`Deleted ${deleted} old notifications (older than ${daysOld} days)`);
     return deleted;
+  }
+
+  async registerFcmToken(userId: string, token: string): Promise<{ success: boolean }> {
+    await this.userModel.update({ fcmToken: token }, { where: { id: userId } });
+    this.logger.log(`FCM token registered for user ${userId}`);
+    return { success: true };
+  }
+
+  async removeFcmToken(userId: string): Promise<{ success: boolean }> {
+    await this.userModel.update({ fcmToken: null }, { where: { id: userId } });
+    this.logger.log(`FCM token removed for user ${userId}`);
+    return { success: true };
+  }
+
+  private async sendPushNotification(
+    userId: string,
+    title: string,
+    body: string,
+    metadata?: Record<string, unknown>,
+  ): Promise<void> {
+    if (!this.firebaseApp) {
+      return;
+    }
+
+    const user = await this.userModel.findByPk(userId);
+    if (!user?.fcmToken || !user.notificationsEnabled) {
+      return;
+    }
+
+    const { count: unreadCount } = await this.getUnreadCount(userId);
+
+    const message: admin.messaging.Message = {
+      token: user.fcmToken,
+      notification: { title, body },
+      data: metadata
+        ? Object.fromEntries(
+            Object.entries(metadata).map(([k, v]) => [k, String(v)]),
+          )
+        : undefined,
+      android: {
+        priority: 'high',
+        notification: { channelId: 'anticifi_notifications' },
+      },
+      apns: {
+        payload: { aps: { sound: 'default', badge: unreadCount } },
+      },
+    };
+
+    try {
+      await admin.messaging(this.firebaseApp).send(message);
+      this.logger.debug(`Push notification sent to user ${userId}`);
+    } catch (err: any) {
+      if (
+        err.code === 'messaging/registration-token-not-registered' ||
+        err.code === 'messaging/invalid-registration-token'
+      ) {
+        await this.userModel.update({ fcmToken: null }, { where: { id: userId } });
+        this.logger.warn(`Removed invalid FCM token for user ${userId}`);
+      }
+      throw err;
+    }
   }
 }

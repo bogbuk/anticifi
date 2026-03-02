@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/di/injection.dart';
+import '../../../../core/services/fcm_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../notifications/presentation/bloc/notifications_cubit.dart';
 import '../../../notifications/presentation/bloc/notifications_state.dart';
@@ -17,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  StreamSubscription? _fcmSub;
 
   static const _tabs = [
     '/dashboard',
@@ -29,6 +34,15 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<NotificationsCubit>().loadUnreadCount();
+    _fcmSub = getIt<FcmService>().onForegroundNotification.listen((_) {
+      context.read<NotificationsCubit>().loadUnreadCount();
+    });
+  }
+
+  @override
+  void dispose() {
+    _fcmSub?.cancel();
+    super.dispose();
   }
 
   @override
