@@ -10,6 +10,7 @@ class UserProfileModel extends UserProfileEntity {
     required super.locale,
     required super.notificationsEnabled,
     required super.theme,
+    super.onboardingCompleted,
     required super.createdAt,
   });
 
@@ -23,6 +24,7 @@ class UserProfileModel extends UserProfileEntity {
       locale: json['locale'] as String? ?? 'en',
       notificationsEnabled: json['notificationsEnabled'] as bool? ?? true,
       theme: json['theme'] as String? ?? 'system',
+      onboardingCompleted: json['onboardingCompleted'] as bool? ?? false,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : DateTime.now(),

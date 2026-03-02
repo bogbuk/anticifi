@@ -81,6 +81,11 @@ export class User extends Model {
   @Column(DataType.STRING(500))
   declare fcmToken: string | null;
 
+  @Default(false)
+  @AllowNull(false)
+  @Column(DataType.BOOLEAN)
+  declare onboardingCompleted: boolean;
+
   @AllowNull(true)
   @Column(DataType.DATE)
   declare lastLoginAt: Date | null;

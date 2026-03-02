@@ -1,8 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:local_auth/local_auth.dart';
 
 import '../storage/secure_storage.dart';
 import '../network/dio_client.dart';
+import '../services/biometric_service.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
@@ -74,6 +76,18 @@ Future<void> setupDI() async {
     DioClient(getIt<SecureStorage>()),
   );
 
+  // ── Biometric ──────────────────────────────────────────
+  getIt.registerSingleton<LocalAuthentication>(
+    LocalAuthentication(),
+  );
+
+  getIt.registerSingleton<BiometricService>(
+    BiometricService(
+      localAuth: getIt<LocalAuthentication>(),
+      storage: getIt<SecureStorage>(),
+    ),
+  );
+
   // ── Auth ──────────────────────────────────────────────
 
   // Data sources
@@ -91,7 +105,7 @@ Future<void> setupDI() async {
 
   // BLoCs
   getIt.registerFactory<AuthBloc>(
-    () => AuthBloc(getIt<AuthRepository>()),
+    () => AuthBloc(getIt<AuthRepository>(), getIt<BiometricService>()),
   );
 
   // ── Accounts ──────────────────────────────────────────

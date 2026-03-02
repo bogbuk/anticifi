@@ -43,6 +43,7 @@ import '../../features/debts/presentation/pages/debt_form_page.dart';
 import '../../features/debts/presentation/pages/debt_payment_form_page.dart';
 import '../../features/debts/presentation/bloc/debts_cubit.dart';
 import '../../features/debts/domain/entities/debt_entity.dart';
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 
 GoRouter createAppRouter(AuthBloc authBloc) {
   return GoRouter(
@@ -52,11 +53,17 @@ GoRouter createAppRouter(AuthBloc authBloc) {
       final authState = authBloc.state;
       final isOnAuthPage = state.location.startsWith('/auth');
       final isSplash = state.location == '/';
+      final isOnboarding = state.location == '/onboarding';
 
       if (authState is AuthInitial || authState is AuthLoading) {
         // Still checking auth, stay on splash
         if (isSplash) return null;
         return '/';
+      }
+
+      if (authState is AuthLoginSuccessState) {
+        // Login success but biometric dialog pending — stay on current page
+        return null;
       }
 
       if (authState is AuthUnauthenticated || authState is AuthError) {
@@ -66,8 +73,13 @@ GoRouter createAppRouter(AuthBloc authBloc) {
       }
 
       if (authState is AuthAuthenticated) {
-        // Authenticated — redirect away from auth/splash
-        if (isSplash || isOnAuthPage) return '/dashboard';
+        // Check onboarding
+        if (!authState.user.onboardingCompleted) {
+          if (isOnboarding) return null;
+          return '/onboarding';
+        }
+        // Authenticated — redirect away from auth/splash/onboarding
+        if (isSplash || isOnAuthPage || isOnboarding) return '/dashboard';
         return null;
       }
 
@@ -77,6 +89,10 @@ GoRouter createAppRouter(AuthBloc authBloc) {
       GoRoute(
         path: '/',
         builder: (context, state) => const SplashPage(),
+      ),
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingPage(),
       ),
       GoRoute(
         path: '/auth/login',

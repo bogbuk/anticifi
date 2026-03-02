@@ -29,4 +29,8 @@ export class UpdateUserDto {
   @IsOptional()
   @IsEnum(UserTheme)
   theme?: UserTheme;
+
+  @IsOptional()
+  @IsBoolean()
+  onboardingCompleted?: boolean;
 }

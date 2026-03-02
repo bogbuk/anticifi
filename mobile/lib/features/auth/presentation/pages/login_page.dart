@@ -31,8 +31,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthAuthenticated) {
-          context.go('/dashboard');
+        if (state is AuthLoginSuccessState) {
+          _showBiometricDialog(context, state.user);
         } else if (state is AuthError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -143,5 +143,57 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  Future<void> _showBiometricDialog(
+      BuildContext context, dynamic user) async {
+    final authBloc = context.read<AuthBloc>();
+    final biometricService = authBloc.biometricService;
+
+    final isSupported = await biometricService.isDeviceSupported();
+    final alreadyEnabled = await biometricService.isBiometricEnabled();
+
+    if (!mounted) return;
+
+    if (isSupported && !alreadyEnabled) {
+      final result = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          backgroundColor: AppColors.surface,
+          title: const Text(
+            'Enable Biometric Login?',
+            style: TextStyle(color: AppColors.textPrimary),
+          ),
+          content: const Text(
+            'Use Face ID or Touch ID for faster access next time.',
+            style: TextStyle(color: AppColors.textSecondary),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text(
+                'Not Now',
+                style: TextStyle(color: AppColors.textSecondary),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text(
+                'Enable',
+                style: TextStyle(color: AppColors.primary),
+              ),
+            ),
+          ],
+        ),
+      );
+
+      if (result == true) {
+        await biometricService.setBiometricEnabled(true);
+      }
+    }
+
+    if (!mounted) return;
+    authBloc.add(AuthConfirmLogin(user));
   }
 }

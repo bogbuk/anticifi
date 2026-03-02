@@ -9,6 +9,7 @@ class UserProfileEntity extends Equatable {
   final String locale;
   final bool notificationsEnabled;
   final String theme;
+  final bool onboardingCompleted;
   final DateTime createdAt;
 
   const UserProfileEntity({
@@ -20,6 +21,7 @@ class UserProfileEntity extends Equatable {
     required this.locale,
     required this.notificationsEnabled,
     required this.theme,
+    this.onboardingCompleted = false,
     required this.createdAt,
   });
 
@@ -38,6 +40,7 @@ class UserProfileEntity extends Equatable {
         locale,
         notificationsEnabled,
         theme,
+        onboardingCompleted,
         createdAt,
       ];
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/di/injection.dart';
+import '../../../../core/services/biometric_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
@@ -16,10 +18,26 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  bool _biometricSupported = false;
+  bool _biometricEnabled = false;
+
   @override
   void initState() {
     super.initState();
     context.read<SettingsCubit>().loadProfile();
+    _loadBiometricState();
+  }
+
+  Future<void> _loadBiometricState() async {
+    final biometricService = getIt<BiometricService>();
+    final supported = await biometricService.isDeviceSupported();
+    final enabled = await biometricService.isBiometricEnabled();
+    if (mounted) {
+      setState(() {
+        _biometricSupported = supported;
+        _biometricEnabled = enabled;
+      });
+    }
   }
 
   @override
@@ -118,6 +136,30 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 onTap: () => _showThemePicker(context),
               ),
+              if (_biometricSupported)
+                _buildSwitchTile(
+                  icon: Icons.fingerprint,
+                  title: 'Biometric Login',
+                  value: _biometricEnabled,
+                  onChanged: (value) async {
+                    final biometricService = getIt<BiometricService>();
+                    if (value) {
+                      final authenticated =
+                          await biometricService.authenticate();
+                      if (authenticated) {
+                        await biometricService.setBiometricEnabled(true);
+                        if (mounted) {
+                          setState(() => _biometricEnabled = true);
+                        }
+                      }
+                    } else {
+                      await biometricService.setBiometricEnabled(false);
+                      if (mounted) {
+                        setState(() => _biometricEnabled = false);
+                      }
+                    }
+                  },
+                ),
               _buildListTile(
                 icon: Icons.language,
                 title: 'Language',
