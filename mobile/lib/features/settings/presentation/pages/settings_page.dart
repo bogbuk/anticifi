@@ -163,6 +163,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: 'Budgets',
                 onTap: () => context.push('/budgets'),
               ),
+              _buildListTile(
+                icon: Icons.money_off,
+                title: 'Debts',
+                onTap: () => context.push('/debts'),
+              ),
               _buildDivider(),
 
               // About section

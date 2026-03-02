@@ -18,6 +18,7 @@ export enum NotificationType {
   PAYMENT_REMINDER = 'payment_reminder',
   PREDICTION_ALERT = 'prediction_alert',
   BUDGET_ALERT = 'budget_alert',
+  DEBT_PAYMENT_DUE = 'debt_payment_due',
   SYSTEM = 'system',
 }
 

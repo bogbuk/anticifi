@@ -53,6 +53,10 @@ class ApiEndpoints {
   static const String budgets = '/budgets';
   static const String budgetsSummary = '/budgets/summary';
 
+  // Debts
+  static const String debts = '/debts';
+  static const String debtsSummary = '/debts/summary';
+
   // Notifications
   static const String notifications = '/notifications';
   static const String notificationsUnreadCount = '/notifications/unread-count';

@@ -37,6 +37,12 @@ import '../../features/budgets/presentation/pages/budgets_page.dart';
 import '../../features/budgets/presentation/pages/budget_form_page.dart';
 import '../../features/budgets/presentation/bloc/budgets_cubit.dart';
 import '../../features/budgets/domain/entities/budget_entity.dart';
+import '../../features/debts/presentation/pages/debts_page.dart';
+import '../../features/debts/presentation/pages/debt_detail_page.dart';
+import '../../features/debts/presentation/pages/debt_form_page.dart';
+import '../../features/debts/presentation/pages/debt_payment_form_page.dart';
+import '../../features/debts/presentation/bloc/debts_cubit.dart';
+import '../../features/debts/domain/entities/debt_entity.dart';
 
 GoRouter createAppRouter(AuthBloc authBloc) {
   return GoRouter(
@@ -244,6 +250,52 @@ GoRouter createAppRouter(AuthBloc authBloc) {
           return BlocProvider(
             create: (_) => getIt<BudgetsCubit>(),
             child: BudgetFormPage(budget: budget),
+          );
+        },
+      ),
+
+      // ── Debts routes ────────────────────────────────────
+      GoRoute(
+        path: '/debts',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<DebtsCubit>(),
+          child: const DebtsPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/debts/add',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<DebtsCubit>(),
+          child: const DebtFormPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/debts/:id',
+        builder: (context, state) {
+          final id = state.params['id']!;
+          return BlocProvider(
+            create: (_) => getIt<DebtsCubit>(),
+            child: DebtDetailPage(debtId: id),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/debts/:id/edit',
+        builder: (context, state) {
+          final debt = state.extra as DebtEntity?;
+          return BlocProvider(
+            create: (_) => getIt<DebtsCubit>(),
+            child: DebtFormPage(debt: debt),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/debts/:id/pay',
+        builder: (context, state) {
+          final debt = state.extra as DebtEntity;
+          return BlocProvider(
+            create: (_) => getIt<DebtsCubit>(),
+            child: DebtPaymentFormPage(debt: debt),
           );
         },
       ),
