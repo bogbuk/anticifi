@@ -158,6 +158,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: 'Scheduled Payments',
                 onTap: () => context.push('/scheduled-payments'),
               ),
+              _buildListTile(
+                icon: Icons.account_balance_wallet_outlined,
+                title: 'Budgets',
+                onTap: () => context.push('/budgets'),
+              ),
               _buildDivider(),
 
               // About section

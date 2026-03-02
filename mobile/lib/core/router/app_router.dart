@@ -33,6 +33,10 @@ import '../../features/scheduled_payments/presentation/pages/scheduled_payments_
 import '../../features/scheduled_payments/presentation/pages/scheduled_payment_form_page.dart';
 import '../../features/scheduled_payments/presentation/bloc/scheduled_payments_cubit.dart';
 import '../../features/scheduled_payments/domain/entities/scheduled_payment_entity.dart';
+import '../../features/budgets/presentation/pages/budgets_page.dart';
+import '../../features/budgets/presentation/pages/budget_form_page.dart';
+import '../../features/budgets/presentation/bloc/budgets_cubit.dart';
+import '../../features/budgets/domain/entities/budget_entity.dart';
 
 GoRouter createAppRouter(AuthBloc authBloc) {
   return GoRouter(
@@ -214,6 +218,32 @@ GoRouter createAppRouter(AuthBloc authBloc) {
               BlocProvider(create: (_) => getIt<AccountsCubit>()),
             ],
             child: ScheduledPaymentFormPage(payment: payment),
+          );
+        },
+      ),
+
+      // ── Budgets routes ────────────────────────────────────
+      GoRoute(
+        path: '/budgets',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<BudgetsCubit>(),
+          child: const BudgetsPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/budgets/add',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<BudgetsCubit>(),
+          child: const BudgetFormPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/budgets/:id/edit',
+        builder: (context, state) {
+          final budget = state.extra as BudgetEntity?;
+          return BlocProvider(
+            create: (_) => getIt<BudgetsCubit>(),
+            child: BudgetFormPage(budget: budget),
           );
         },
       ),

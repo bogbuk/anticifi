@@ -41,6 +41,11 @@ import '../../features/settings/data/repositories/settings_repository_impl.dart'
 import '../../features/settings/domain/repositories/settings_repository.dart';
 import '../../features/settings/presentation/bloc/settings_cubit.dart';
 
+import '../../features/budgets/data/datasources/budgets_remote_datasource.dart';
+import '../../features/budgets/data/repositories/budgets_repository_impl.dart';
+import '../../features/budgets/domain/repositories/budgets_repository.dart';
+import '../../features/budgets/presentation/bloc/budgets_cubit.dart';
+
 import '../../features/notifications/data/datasources/notifications_remote_datasource.dart';
 import '../../features/notifications/data/repositories/notifications_repository_impl.dart';
 import '../../features/notifications/domain/repositories/notifications_repository.dart';
@@ -162,6 +167,23 @@ Future<void> setupDI() async {
   // Cubits
   getIt.registerFactory<ScheduledPaymentsCubit>(
     () => ScheduledPaymentsCubit(getIt<ScheduledPaymentsRepository>()),
+  );
+
+  // ── Budgets ──────────────────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<BudgetsRemoteDataSource>(
+    BudgetsRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<BudgetsRepository>(
+    BudgetsRepositoryImpl(getIt<BudgetsRemoteDataSource>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<BudgetsCubit>(
+    () => BudgetsCubit(getIt<BudgetsRepository>()),
   );
 
   // ── Oracle ──────────────────────────────────────────────

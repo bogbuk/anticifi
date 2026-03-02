@@ -49,6 +49,10 @@ class ApiEndpoints {
   static const String plaidItems = '/plaid/items';
   static const String plaidSync = '/plaid/sync';
 
+  // Budgets
+  static const String budgets = '/budgets';
+  static const String budgetsSummary = '/budgets/summary';
+
   // Notifications
   static const String notifications = '/notifications';
   static const String notificationsUnreadCount = '/notifications/unread-count';
