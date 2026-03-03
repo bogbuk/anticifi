@@ -18,6 +18,10 @@ import { HealthModule } from './modules/health/health.module.js';
 import { PlaidModule } from './modules/plaid/plaid.module.js';
 import { BudgetsModule } from './modules/budgets/budgets.module.js';
 import { DebtsModule } from './modules/debts/debts.module.js';
+import { CurrencyModule } from './modules/currency/currency.module.js';
+import { ReceiptsModule } from './modules/receipts/receipt.module.js';
+import { ExportModule } from './modules/export/export.module.js';
+import { CategorizationModule } from './modules/categorization/categorization.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 
 @Module({
@@ -25,6 +29,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
     ConfigModule.forRoot({ isGlobal: true }),
     SequelizeModule.forRootAsync(databaseConfig),
     EventsModule,
+    CategorizationModule,
     AuthModule,
     UsersModule,
     AccountsModule,
@@ -38,6 +43,9 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
     PlaidModule,
     BudgetsModule,
     DebtsModule,
+    CurrencyModule,
+    ReceiptsModule,
+    ExportModule,
     HealthModule,
   ],
   providers: [

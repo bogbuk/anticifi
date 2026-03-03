@@ -1,5 +1,28 @@
 import 'package:equatable/equatable.dart';
 
+class CategorySuggestion extends Equatable {
+  final String categoryId;
+  final String categoryName;
+  final double confidence;
+
+  const CategorySuggestion({
+    required this.categoryId,
+    required this.categoryName,
+    required this.confidence,
+  });
+
+  factory CategorySuggestion.fromJson(Map<String, dynamic> json) {
+    return CategorySuggestion(
+      categoryId: json['categoryId'] as String,
+      categoryName: json['categoryName'] as String,
+      confidence: (json['confidence'] as num).toDouble(),
+    );
+  }
+
+  @override
+  List<Object?> get props => [categoryId, categoryName, confidence];
+}
+
 class TransactionEntity extends Equatable {
   final String id;
   final String accountId;

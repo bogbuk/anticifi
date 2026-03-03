@@ -44,6 +44,10 @@ import '../../features/debts/presentation/pages/debt_payment_form_page.dart';
 import '../../features/debts/presentation/bloc/debts_cubit.dart';
 import '../../features/debts/domain/entities/debt_entity.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/receipts/presentation/pages/receipt_scan_page.dart';
+import '../../features/receipts/presentation/bloc/receipt_cubit.dart';
+import '../../features/export/presentation/pages/export_page.dart';
+import '../../features/export/presentation/bloc/export_cubit.dart';
 
 GoRouter createAppRouter(AuthBloc authBloc) {
   return GoRouter(
@@ -331,6 +335,24 @@ GoRouter createAppRouter(AuthBloc authBloc) {
         builder: (context, state) => BlocProvider(
           create: (_) => getIt<SettingsCubit>()..loadProfile(),
           child: const EditProfilePage(),
+        ),
+      ),
+
+      // ── Receipt Scan route ────────────────────────────
+      GoRoute(
+        path: '/receipts/scan',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<ReceiptCubit>(),
+          child: const ReceiptScanPage(),
+        ),
+      ),
+
+      // ── Export route ──────────────────────────────────
+      GoRoute(
+        path: '/export',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<ExportCubit>(),
+          child: const ExportPage(),
         ),
       ),
     ],

@@ -55,3 +55,18 @@ class DeleteTransaction extends TransactionsEvent {
   @override
   List<Object?> get props => [id];
 }
+
+class SuggestCategory extends TransactionsEvent {
+  final String description;
+  final String? type;
+  final double? amount;
+
+  const SuggestCategory({
+    required this.description,
+    this.type,
+    this.amount,
+  });
+
+  @override
+  List<Object?> get props => [description, type, amount];
+}

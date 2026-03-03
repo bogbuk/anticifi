@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/repositories/transactions_repository.dart';
@@ -6,6 +8,7 @@ import 'transactions_state.dart';
 
 class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
   final TransactionsRepository _repository;
+  Timer? _debounceTimer;
 
   TransactionsBloc(this._repository) : super(const TransactionsInitial()) {
     on<LoadTransactions>(_onLoadTransactions);
@@ -13,6 +16,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
     on<CreateTransaction>(_onCreateTransaction);
     on<UpdateTransaction>(_onUpdateTransaction);
     on<DeleteTransaction>(_onDeleteTransaction);
+    on<SuggestCategory>(_onSuggestCategory);
   }
 
   Future<void> _onLoadTransactions(
@@ -112,5 +116,33 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
     } catch (e) {
       emit(TransactionsError(e.toString()));
     }
+  }
+
+  Future<void> _onSuggestCategory(
+    SuggestCategory event,
+    Emitter<TransactionsState> emit,
+  ) async {
+    _debounceTimer?.cancel();
+    final completer = Completer<void>();
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () async {
+      try {
+        final suggestions = await _repository.suggestCategory(
+          description: event.description,
+          type: event.type,
+          amount: event.amount,
+        );
+        emit(CategorySuggestionsLoaded(suggestions));
+      } catch (_) {
+        // Silently fail for suggestions
+      }
+      completer.complete();
+    });
+    await completer.future;
+  }
+
+  @override
+  Future<void> close() {
+    _debounceTimer?.cancel();
+    return super.close();
   }
 }

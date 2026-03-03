@@ -62,4 +62,19 @@ class ApiEndpoints {
   static const String notificationsUnreadCount = '/notifications/unread-count';
   static const String notificationsReadAll = '/notifications/read-all';
   static const String fcmToken = '/notifications/fcm-token';
+
+  // Receipts
+  static const String receipts = '/receipts';
+  static const String receiptsScan = '/receipts/scan';
+
+  // Currency
+  static const String currencyRates = '/currencies/rates';
+  static const String currencyConvert = '/currencies/convert';
+
+  // Export
+  static const String exportCsv = '/export/csv';
+  static const String exportPdf = '/export/pdf';
+
+  // Categorization
+  static const String transactionsCategorize = '/transactions/categorize';
 }

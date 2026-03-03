@@ -25,4 +25,9 @@ abstract class TransactionsRepository {
   Future<TransactionEntity> updateTransaction(
       String id, Map<String, dynamic> params);
   Future<void> deleteTransaction(String id);
+  Future<List<Map<String, dynamic>>> suggestCategory({
+    required String description,
+    String? type,
+    double? amount,
+  });
 }

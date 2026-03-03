@@ -60,6 +60,16 @@ import '../../features/notifications/presentation/bloc/notifications_cubit.dart'
 
 import '../services/fcm_service.dart';
 
+import '../../features/receipts/data/datasources/receipt_remote_datasource.dart';
+import '../../features/receipts/data/repositories/receipt_repository_impl.dart';
+import '../../features/receipts/domain/repositories/receipt_repository.dart';
+import '../../features/receipts/presentation/bloc/receipt_cubit.dart';
+
+import '../../features/export/data/datasources/export_remote_datasource.dart';
+import '../../features/export/data/repositories/export_repository_impl.dart';
+import '../../features/export/domain/repositories/export_repository.dart';
+import '../../features/export/presentation/bloc/export_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupDI() async {
@@ -273,6 +283,40 @@ Future<void> setupDI() async {
   // Cubits
   getIt.registerFactory<NotificationsCubit>(
     () => NotificationsCubit(getIt<NotificationsRepository>()),
+  );
+
+  // ── Receipts ──────────────────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<ReceiptRemoteDataSource>(
+    ReceiptRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<ReceiptRepository>(
+    ReceiptRepositoryImpl(getIt<ReceiptRemoteDataSource>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<ReceiptCubit>(
+    () => ReceiptCubit(getIt<ReceiptRepository>()),
+  );
+
+  // ── Export ──────────────────────────────────────────────
+
+  // Data sources
+  getIt.registerSingleton<ExportRemoteDataSource>(
+    ExportRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  // Repositories
+  getIt.registerSingleton<ExportRepository>(
+    ExportRepositoryImpl(getIt<ExportRemoteDataSource>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<ExportCubit>(
+    () => ExportCubit(getIt<ExportRepository>()),
   );
 
   // ── FCM Service ─────────────────────────────────────────

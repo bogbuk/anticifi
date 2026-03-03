@@ -81,3 +81,12 @@ class TransactionsError extends TransactionsState {
   @override
   List<Object?> get props => [message];
 }
+
+class CategorySuggestionsLoaded extends TransactionsState {
+  final List<Map<String, dynamic>> suggestions;
+
+  const CategorySuggestionsLoaded(this.suggestions);
+
+  @override
+  List<Object?> get props => [suggestions];
+}

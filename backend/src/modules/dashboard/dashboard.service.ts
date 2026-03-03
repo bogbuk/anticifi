@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AccountsService } from '../accounts/accounts.service.js';
 import { TransactionsService } from '../transactions/transactions.service.js';
+import { CurrencyService } from '../currency/currency.service.js';
 import {
   DashboardResponse,
   RecentTransaction,
@@ -11,6 +12,7 @@ export class DashboardService {
   constructor(
     private readonly accountsService: AccountsService,
     private readonly transactionsService: TransactionsService,
+    private readonly currencyService: CurrencyService,
   ) {}
 
   async getDashboard(userId: string): Promise<DashboardResponse> {
@@ -33,6 +35,15 @@ export class DashboardService {
       this.transactionsService.getRecentTransactions(userId, 10),
       this.transactionsService.getSpendingByCategory(userId, currentYear, currentMonth),
     ]);
+
+    const baseCurrency = 'USD';
+    const convertedTotalBalance = await this.currencyService.convertAllToBase(
+      accounts.map((acc) => ({
+        balance: Number(acc.balance),
+        currency: acc.currency,
+      })),
+      baseCurrency,
+    );
 
     const totalBalance = accounts.reduce(
       (sum, acc) => sum + Number(acc.balance),
@@ -59,6 +70,8 @@ export class DashboardService {
 
     return {
       totalBalance,
+      convertedTotalBalance,
+      baseCurrency,
       currentMonth: currentMonthStats,
       previousMonth: previousMonthStats,
       recentTransactions,

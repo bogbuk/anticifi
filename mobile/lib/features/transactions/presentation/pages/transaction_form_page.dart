@@ -30,6 +30,8 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
   bool _isSaving = false;
   List<AccountEntity> _accounts = [];
   String? _selectedAccountId;
+  List<Map<String, dynamic>> _categorySuggestions = [];
+  String? _selectedCategoryId;
 
   bool get _isEditing => widget.transaction != null;
 
@@ -45,7 +47,19 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
     _selectedType = widget.transaction?.type ?? 'expense';
     _selectedDate = widget.transaction?.date ?? DateTime.now();
     _selectedAccountId = widget.transaction?.accountId;
+    _selectedCategoryId = widget.transaction?.categoryId;
     _loadAccounts();
+    _descriptionController.addListener(_onDescriptionChanged);
+  }
+
+  void _onDescriptionChanged() {
+    final text = _descriptionController.text.trim();
+    if (text.length >= 3 && !_isEditing) {
+      context.read<TransactionsBloc>().add(SuggestCategory(
+            description: text,
+            type: _selectedType,
+          ));
+    }
   }
 
   Future<void> _loadAccounts() async {
@@ -62,6 +76,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
 
   @override
   void dispose() {
+    _descriptionController.removeListener(_onDescriptionChanged);
     _amountController.dispose();
     _descriptionController.dispose();
     super.dispose();
@@ -124,6 +139,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
           ? null
           : _descriptionController.text.trim(),
       'date': _selectedDate.toIso8601String().split('T').first,
+      if (_selectedCategoryId != null) 'categoryId': _selectedCategoryId,
     };
 
     try {
@@ -157,6 +173,9 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
       listener: (context, state) {
         if (state is TransactionsError) {
           setState(() => _isSaving = false);
+        }
+        if (state is CategorySuggestionsLoaded) {
+          setState(() => _categorySuggestions = state.suggestions);
         }
       },
       child: Scaffold(
@@ -327,6 +346,48 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                         Icon(Icons.notes_outlined, color: AppColors.textMuted),
                   ),
                 ),
+                // Category suggestions
+                if (_categorySuggestions.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    children: _categorySuggestions.map((s) {
+                      final catId = s['categoryId'] as String;
+                      final catName = s['categoryName'] as String;
+                      final confidence = (s['confidence'] as num).toDouble();
+                      final isSelected = _selectedCategoryId == catId;
+                      return ActionChip(
+                        label: Text(
+                          '$catName (${(confidence * 100).toInt()}%)',
+                          style: TextStyle(
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                        backgroundColor: isSelected
+                            ? AppColors.primary
+                            : AppColors.card,
+                        side: BorderSide(
+                          color: isSelected
+                              ? AppColors.primary
+                              : AppColors.border,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            if (isSelected) {
+                              _selectedCategoryId = null;
+                            } else {
+                              _selectedCategoryId = catId;
+                            }
+                          });
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ],
                 const SizedBox(height: 16),
 
                 // Date picker

@@ -31,6 +31,8 @@ export interface RecentTransaction {
 
 export interface DashboardResponse {
   totalBalance: number;
+  convertedTotalBalance: number;
+  baseCurrency: string;
   currentMonth: MonthlyStats;
   previousMonth: MonthlyStats;
   recentTransactions: RecentTransaction[];

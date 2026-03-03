@@ -191,9 +191,19 @@ class _SettingsPageState extends State<SettingsPage> {
               // Data section
               _buildSectionHeader('Data'),
               _buildListTile(
+                icon: Icons.receipt_long,
+                title: 'Scan Receipt',
+                onTap: () => context.push('/receipts/scan'),
+              ),
+              _buildListTile(
                 icon: Icons.upload_file,
                 title: 'Import Transactions',
                 onTap: () => context.push('/import'),
+              ),
+              _buildListTile(
+                icon: Icons.download,
+                title: 'Export Data',
+                onTap: () => context.push('/export'),
               ),
               _buildListTile(
                 icon: Icons.schedule,

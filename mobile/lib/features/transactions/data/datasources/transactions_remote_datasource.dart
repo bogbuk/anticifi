@@ -72,4 +72,24 @@ class TransactionsRemoteDataSource {
   Future<void> deleteTransaction(String id) async {
     await dioClient.dio.delete('${ApiEndpoints.transactions}/$id');
   }
+
+  Future<List<Map<String, dynamic>>> suggestCategory({
+    required String description,
+    String? type,
+    double? amount,
+  }) async {
+    final response = await dioClient.dio.post(
+      ApiEndpoints.transactionsCategorize,
+      data: {
+        'description': description,
+        if (type != null) 'type': type,
+        if (amount != null) 'amount': amount,
+      },
+    );
+    final data = response.data as Map<String, dynamic>;
+    final suggestions = data['suggestions'] as List<dynamic>? ?? [];
+    return suggestions
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
+  }
 }

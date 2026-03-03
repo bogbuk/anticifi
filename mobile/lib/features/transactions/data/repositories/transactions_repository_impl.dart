@@ -45,4 +45,17 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
   Future<void> deleteTransaction(String id) async {
     await _remoteDataSource.deleteTransaction(id);
   }
+
+  @override
+  Future<List<Map<String, dynamic>>> suggestCategory({
+    required String description,
+    String? type,
+    double? amount,
+  }) async {
+    return await _remoteDataSource.suggestCategory(
+      description: description,
+      type: type,
+      amount: amount,
+    );
+  }
 }
