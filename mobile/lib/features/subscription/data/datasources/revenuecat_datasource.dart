@@ -5,7 +5,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 class RevenueCatDataSource {
   static const _apiKeyIos = String.fromEnvironment('REVENUECAT_IOS_KEY');
   static const _apiKeyAndroid = String.fromEnvironment('REVENUECAT_ANDROID_KEY');
-  static const _entitlementId = 'premium';
+  static const _entitlementId = 'AnticiFi Pro';
 
   Future<void> initialize(String userId) async {
     final apiKey = Platform.isIOS ? _apiKeyIos : _apiKeyAndroid;

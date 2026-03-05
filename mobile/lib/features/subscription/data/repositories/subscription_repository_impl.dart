@@ -45,11 +45,11 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
 
   Future<void> _syncToBackend(CustomerInfo customerInfo) async {
     final isPremium =
-        customerInfo.entitlements.all['premium']?.isActive ?? false;
+        customerInfo.entitlements.all['AnticiFi Pro']?.isActive ?? false;
     final expiresAt =
-        customerInfo.entitlements.all['premium']?.expirationDate;
+        customerInfo.entitlements.all['AnticiFi Pro']?.expirationDate;
     final productId =
-        customerInfo.entitlements.all['premium']?.productIdentifier;
+        customerInfo.entitlements.all['AnticiFi Pro']?.productIdentifier;
     final rcUserId = await _revenueCatDataSource.getAppUserId();
 
     await _remoteDataSource.syncSubscription(
