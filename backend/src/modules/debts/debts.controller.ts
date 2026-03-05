@@ -18,13 +18,14 @@ import { QueryDebtDto } from './dto/query-debt.dto.js';
 import { CreateDebtPaymentDto } from './dto/create-debt-payment.dto.js';
 import { QueryDebtPaymentDto } from './dto/query-debt-payment.dto.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
+import { PremiumGuard } from '../../common/guards/premium.guard.js';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Debts')
 @ApiBearerAuth()
 @Controller('debts')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PremiumGuard)
 export class DebtsController {
   constructor(private readonly debtsService: DebtsService) {}
 

@@ -3,12 +3,14 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Account } from './account.model.js';
 import { CreateAccountDto } from './dto/create-account.dto.js';
 import { UpdateAccountDto } from './dto/update-account.dto.js';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service.js';
 
 @Injectable()
 export class AccountsService {
   constructor(
     @InjectModel(Account)
     private readonly accountModel: typeof Account,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {}
 
   async findAllByUserId(userId: string): Promise<Account[]> {
@@ -24,6 +26,9 @@ export class AccountsService {
   }
 
   async create(userId: string, dto: CreateAccountDto): Promise<Account> {
+    const currentAccounts = await this.accountModel.count({ where: { userId } });
+    await this.subscriptionsService.checkAccountLimit(userId, currentAccounts);
+
     return this.accountModel.create({
       userId,
       name: dto.name,

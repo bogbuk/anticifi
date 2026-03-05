@@ -16,13 +16,14 @@ import { CreateBudgetDto } from './dto/create-budget.dto.js';
 import { UpdateBudgetDto } from './dto/update-budget.dto.js';
 import { QueryBudgetDto } from './dto/query-budget.dto.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
+import { PremiumGuard } from '../../common/guards/premium.guard.js';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Budgets')
 @ApiBearerAuth()
 @Controller('budgets')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PremiumGuard)
 export class BudgetsController {
   constructor(private readonly budgetsService: BudgetsService) {}
 

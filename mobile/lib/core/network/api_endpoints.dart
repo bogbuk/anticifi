@@ -77,4 +77,8 @@ class ApiEndpoints {
 
   // Categorization
   static const String transactionsCategorize = '/transactions/categorize';
+
+  // Subscriptions
+  static const String subscriptionStatus = '/subscriptions/status';
+  static const String subscriptionSync = '/subscriptions/sync';
 }

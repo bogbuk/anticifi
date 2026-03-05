@@ -35,6 +35,7 @@ dependencies:
   sqflite: ^2.2.0
   connectivity_plus: ^4.0.0
   path: ^1.8.0
+  purchases_flutter: ^6.0.0
 
 dev_dependencies:
   flutter_test:

@@ -10,6 +10,8 @@ import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/theme/theme_state.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
+import '../../../subscription/presentation/bloc/subscription_cubit.dart';
+import '../../../subscription/presentation/bloc/subscription_state.dart';
 import '../bloc/settings_cubit.dart';
 import '../bloc/settings_state.dart';
 
@@ -24,11 +26,20 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _biometricSupported = false;
   bool _biometricEnabled = false;
 
+  late final SubscriptionCubit _subscriptionCubit;
+
   @override
   void initState() {
     super.initState();
     context.read<SettingsCubit>().loadProfile();
+    _subscriptionCubit = getIt<SubscriptionCubit>()..loadSubscription();
     _loadBiometricState();
+  }
+
+  @override
+  void dispose() {
+    _subscriptionCubit.close();
+    super.dispose();
   }
 
   Future<void> _loadBiometricState() async {
@@ -100,8 +111,37 @@ class _SettingsPageState extends State<SettingsPage> {
 
               const SizedBox(height: 24),
 
-              _buildSectionHeader('Account')
+              _buildSectionHeader('Subscription')
                   .animate().fadeIn(duration: 400.ms, delay: 100.ms),
+              BlocBuilder<SubscriptionCubit, SubscriptionState>(
+                bloc: _subscriptionCubit,
+                builder: (context, subState) {
+                  final isPremium = subState is SubscriptionLoaded &&
+                      subState.subscription.isPremium;
+                  return _buildListTile(
+                    icon: Icons.workspace_premium,
+                    title: isPremium
+                        ? 'Manage Subscription'
+                        : 'Upgrade to Premium',
+                    iconColor: isPremium ? AppColors.accent : null,
+                    trailing: isPremium
+                        ? const Text(
+                            'Active',
+                            style: TextStyle(
+                              color: AppColors.success,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : null,
+                    onTap: () => context.push('/subscription'),
+                  );
+                },
+              ),
+              _buildDivider(),
+
+              _buildSectionHeader('Account')
+                  .animate().fadeIn(duration: 400.ms, delay: 150.ms),
               _buildListTile(
                 icon: Icons.person_outline,
                 title: 'Edit Profile',
@@ -340,20 +380,38 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Text(
-              'FREE',
-              style: TextStyle(
-                color: AppColors.primaryLight,
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+          BlocBuilder<SubscriptionCubit, SubscriptionState>(
+            bloc: _subscriptionCubit,
+            builder: (context, subState) {
+              final isPremium = subState is SubscriptionLoaded &&
+                  subState.subscription.isPremium;
+              return GestureDetector(
+                onTap: () => context.push('/subscription'),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    gradient: isPremium
+                        ? const LinearGradient(
+                            colors: [AppColors.primary, AppColors.accent],
+                          )
+                        : null,
+                    color: isPremium
+                        ? null
+                        : AppColors.primary.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    isPremium ? 'PREMIUM' : 'FREE',
+                    style: TextStyle(
+                      color: isPremium ? Colors.white : AppColors.primaryLight,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),

@@ -48,6 +48,8 @@ import '../../features/receipts/presentation/pages/receipt_scan_page.dart';
 import '../../features/receipts/presentation/bloc/receipt_cubit.dart';
 import '../../features/export/presentation/pages/export_page.dart';
 import '../../features/export/presentation/bloc/export_cubit.dart';
+import '../../features/subscription/presentation/pages/paywall_page.dart';
+import '../../features/subscription/presentation/bloc/subscription_cubit.dart';
 
 GoRouter createAppRouter(AuthBloc authBloc) {
   return GoRouter(
@@ -353,6 +355,15 @@ GoRouter createAppRouter(AuthBloc authBloc) {
         builder: (context, state) => BlocProvider(
           create: (_) => getIt<ExportCubit>(),
           child: const ExportPage(),
+        ),
+      ),
+
+      // ── Subscription / Paywall route ─────────────────
+      GoRoute(
+        path: '/subscription',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<SubscriptionCubit>(),
+          child: const PaywallPage(),
         ),
       ),
     ],

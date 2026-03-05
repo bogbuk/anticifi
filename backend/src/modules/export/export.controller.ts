@@ -1,10 +1,11 @@
 import { Controller, Get, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { PremiumGuard } from '../../common/guards/premium.guard.js';
 import type { Response } from 'express';
 import { ExportService, ExportQuery } from './export.service.js';
 
 @Controller('export')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), PremiumGuard)
 export class ExportController {
   constructor(private readonly exportService: ExportService) {}
 

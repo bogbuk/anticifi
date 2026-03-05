@@ -10,13 +10,14 @@ import {
 import { PredictionService } from './prediction.service.js';
 import { PredictionRequestDto, ChatPredictionRequestDto, ForecastQueryDto } from './dto/prediction-request.dto.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
+import { PremiumGuard } from '../../common/guards/premium.guard.js';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Predictions')
 @ApiBearerAuth()
 @Controller('predictions')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PremiumGuard)
 export class PredictionController {
   constructor(private readonly predictionService: PredictionService) {}
 

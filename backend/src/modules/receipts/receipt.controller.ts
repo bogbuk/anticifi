@@ -4,11 +4,12 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { PremiumGuard } from '../../common/guards/premium.guard.js';
 import { ReceiptService } from './receipt.service.js';
 import { ConfirmReceiptDto } from './dto/confirm-receipt.dto.js';
 
 @Controller('receipts')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), PremiumGuard)
 export class ReceiptController {
   constructor(private readonly receiptService: ReceiptService) {}
 

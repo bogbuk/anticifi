@@ -17,6 +17,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
+import { PremiumGuard } from '../../common/guards/premium.guard.js';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
 import { PlaidService } from './plaid.service.js';
 import { PlaidSyncService } from './plaid-sync.service.js';
@@ -35,7 +36,7 @@ export class PlaidController {
   ) {}
 
   @Post('link-token')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PremiumGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create Plaid Link token' })
   @ApiResponse({ status: 201, description: 'Link token created' })
@@ -46,7 +47,7 @@ export class PlaidController {
   }
 
   @Post('exchange-token')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PremiumGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Exchange public token and create accounts' })
   @ApiResponse({ status: 201, description: 'Token exchanged, accounts created' })

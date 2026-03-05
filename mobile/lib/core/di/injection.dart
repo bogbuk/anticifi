@@ -78,6 +78,12 @@ import '../../features/export/data/repositories/export_repository_impl.dart';
 import '../../features/export/domain/repositories/export_repository.dart';
 import '../../features/export/presentation/bloc/export_cubit.dart';
 
+import '../../features/subscription/data/datasources/subscription_remote_datasource.dart';
+import '../../features/subscription/data/datasources/revenuecat_datasource.dart';
+import '../../features/subscription/data/repositories/subscription_repository_impl.dart';
+import '../../features/subscription/domain/repositories/subscription_repository.dart';
+import '../../features/subscription/presentation/bloc/subscription_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupDI() async {
@@ -373,6 +379,30 @@ Future<void> setupDI() async {
   // Cubits
   getIt.registerFactory<ExportCubit>(
     () => ExportCubit(getIt<ExportRepository>()),
+  );
+
+  // ── Subscription ─────────────────────────────────────────
+
+  getIt.registerSingleton<RevenueCatDataSource>(
+    RevenueCatDataSource(),
+  );
+
+  getIt.registerSingleton<SubscriptionRemoteDataSource>(
+    SubscriptionRemoteDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  getIt.registerSingleton<SubscriptionRepository>(
+    SubscriptionRepositoryImpl(
+      getIt<RevenueCatDataSource>(),
+      getIt<SubscriptionRemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerFactory<SubscriptionCubit>(
+    () => SubscriptionCubit(
+      getIt<SubscriptionRepository>(),
+      getIt<RevenueCatDataSource>(),
+    ),
   );
 
   // ── FCM Service ─────────────────────────────────────────
