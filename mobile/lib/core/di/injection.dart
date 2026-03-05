@@ -2,9 +2,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../database/local_database.dart';
 import '../storage/secure_storage.dart';
 import '../network/dio_client.dart';
 import '../services/biometric_service.dart';
+import '../services/connectivity_service.dart';
+import '../services/sync_service.dart';
+
+import '../../features/accounts/data/datasources/account_local_datasource.dart';
+import '../../features/transactions/data/datasources/transaction_local_datasource.dart';
+import '../../features/budgets/data/datasources/budget_local_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
@@ -59,6 +66,7 @@ import '../../features/notifications/domain/repositories/notifications_repositor
 import '../../features/notifications/presentation/bloc/notifications_cubit.dart';
 
 import '../services/fcm_service.dart';
+import '../theme/theme_cubit.dart';
 
 import '../../features/receipts/data/datasources/receipt_remote_datasource.dart';
 import '../../features/receipts/data/repositories/receipt_repository_impl.dart';
@@ -86,6 +94,34 @@ Future<void> setupDI() async {
     DioClient(getIt<SecureStorage>()),
   );
 
+  // ── Offline / Sync ─────────────────────────────────────
+  final localDatabase = LocalDatabase();
+  await localDatabase.database;
+  getIt.registerSingleton<LocalDatabase>(localDatabase);
+
+  getIt.registerSingleton<ConnectivityService>(ConnectivityService());
+
+  getIt.registerSingleton<SyncService>(
+    SyncService(
+      localDatabase: getIt<LocalDatabase>(),
+      dioClient: getIt<DioClient>(),
+      connectivityService: getIt<ConnectivityService>(),
+    ),
+  );
+
+  // Local data sources
+  getIt.registerSingleton<AccountLocalDatasource>(
+    AccountLocalDatasource(localDatabase: getIt<LocalDatabase>()),
+  );
+
+  getIt.registerSingleton<TransactionLocalDatasource>(
+    TransactionLocalDatasource(localDatabase: getIt<LocalDatabase>()),
+  );
+
+  getIt.registerSingleton<BudgetLocalDatasource>(
+    BudgetLocalDatasource(localDatabase: getIt<LocalDatabase>()),
+  );
+
   // ── Biometric ──────────────────────────────────────────
   getIt.registerSingleton<LocalAuthentication>(
     LocalAuthentication(),
@@ -96,6 +132,11 @@ Future<void> setupDI() async {
       localAuth: getIt<LocalAuthentication>(),
       storage: getIt<SecureStorage>(),
     ),
+  );
+
+  // ── Theme ──────────────────────────────────────────────
+  getIt.registerSingleton<ThemeCubit>(
+    ThemeCubit(storage: getIt<SecureStorage>()),
   );
 
   // ── Auth ──────────────────────────────────────────────
@@ -131,7 +172,12 @@ Future<void> setupDI() async {
 
   // Repositories
   getIt.registerSingleton<AccountsRepository>(
-    AccountsRepositoryImpl(getIt<AccountsRemoteDataSource>()),
+    AccountsRepositoryImpl(
+      getIt<AccountsRemoteDataSource>(),
+      localDataSource: getIt<AccountLocalDatasource>(),
+      connectivityService: getIt<ConnectivityService>(),
+      syncService: getIt<SyncService>(),
+    ),
   );
 
   // Cubits
@@ -151,7 +197,12 @@ Future<void> setupDI() async {
 
   // Repositories
   getIt.registerSingleton<TransactionsRepository>(
-    TransactionsRepositoryImpl(getIt<TransactionsRemoteDataSource>()),
+    TransactionsRepositoryImpl(
+      getIt<TransactionsRemoteDataSource>(),
+      localDataSource: getIt<TransactionLocalDatasource>(),
+      connectivityService: getIt<ConnectivityService>(),
+      syncService: getIt<SyncService>(),
+    ),
   );
 
   // BLoCs
@@ -209,7 +260,12 @@ Future<void> setupDI() async {
 
   // Repositories
   getIt.registerSingleton<BudgetsRepository>(
-    BudgetsRepositoryImpl(getIt<BudgetsRemoteDataSource>()),
+    BudgetsRepositoryImpl(
+      getIt<BudgetsRemoteDataSource>(),
+      localDataSource: getIt<BudgetLocalDatasource>(),
+      connectivityService: getIt<ConnectivityService>(),
+      syncService: getIt<SyncService>(),
+    ),
   );
 
   // Cubits

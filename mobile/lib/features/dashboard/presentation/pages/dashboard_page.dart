@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -117,18 +118,19 @@ class _DashboardPageState extends State<DashboardPage> {
                     monthlyExpense: dashboard.monthlyExpense,
                     previousMonthIncome: dashboard.previousMonthIncome,
                     previousMonthExpense: dashboard.previousMonthExpense,
-                  ),
+                  ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1, end: 0),
                   const SizedBox(height: 16),
                   IncomeExpenseRow(
                     income: dashboard.monthlyIncome,
                     expense: dashboard.monthlyExpense,
-                  ),
+                  ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideY(begin: 0.1, end: 0),
                   const SizedBox(height: 16),
                   SpendingChart(
                     spendingByCategory: dashboard.spendingByCategory,
-                  ),
+                  ).animate().fadeIn(duration: 600.ms, delay: 400.ms).slideY(begin: 0.1, end: 0),
                   const SizedBox(height: 16),
-                  _buildRecentTransactions(context, dashboard),
+                  _buildRecentTransactions(context, dashboard)
+                      .animate().fadeIn(duration: 600.ms, delay: 600.ms).slideY(begin: 0.1, end: 0),
                   const SizedBox(height: 24),
                 ],
               ),

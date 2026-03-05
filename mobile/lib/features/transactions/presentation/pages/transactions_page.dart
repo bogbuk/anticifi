@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -194,21 +197,71 @@ class _TransactionsPageState extends State<TransactionsPage> {
                         }
 
                         final transaction = state.transactions[index];
-                        return TransactionTile(
-                          transaction: transaction,
-                          onTap: () async {
-                            final result = await context.push(
-                              '/transactions/${transaction.id}/edit',
-                              extra: transaction,
+                        return Dismissible(
+                          key: Key(transaction.id),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 24),
+                            color: AppColors.error,
+                            child: const Icon(Icons.delete_outline,
+                                color: Colors.white),
+                          ),
+                          confirmDismiss: (_) async {
+                            return await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                backgroundColor: AppColors.card,
+                                title: const Text('Delete Transaction',
+                                    style: TextStyle(
+                                        color: AppColors.textPrimary)),
+                                content: const Text(
+                                    'Are you sure you want to delete this transaction?',
+                                    style: TextStyle(
+                                        color: AppColors.textSecondary)),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(true),
+                                    child: const Text('Delete',
+                                        style:
+                                            TextStyle(color: AppColors.error)),
+                                  ),
+                                ],
+                              ),
                             );
-                            if (result == true && context.mounted) {
-                              context.read<TransactionsBloc>().add(
-                                    LoadTransactions(
-                                        typeFilter: _selectedFilter),
-                                  );
-                            }
                           },
-                        );
+                          onDismissed: (_) {
+                            context.read<TransactionsBloc>().add(
+                                  DeleteTransaction(transaction.id),
+                                );
+                          },
+                          child: TransactionTile(
+                            transaction: transaction,
+                            onDelete: () {
+                              context.read<TransactionsBloc>().add(
+                                    DeleteTransaction(transaction.id),
+                                  );
+                            },
+                            onTap: () async {
+                              final result = await context.push(
+                                '/transactions/${transaction.id}/edit',
+                                extra: transaction,
+                              );
+                              if (result == true && context.mounted) {
+                                context.read<TransactionsBloc>().add(
+                                      LoadTransactions(
+                                          typeFilter: _selectedFilter),
+                                    );
+                              }
+                            },
+                          ),
+                        ).animate().fadeIn(duration: 400.ms, delay: (min(index, 10) * 50).ms).slideX(begin: 0.05, end: 0);
                       },
                     ),
                   );

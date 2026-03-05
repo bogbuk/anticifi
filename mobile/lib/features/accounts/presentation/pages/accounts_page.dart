@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -115,7 +118,7 @@ class _AccountsPageState extends State<AccountsPage> {
                     onDelete: () {
                       context.read<AccountsCubit>().deleteAccount(account.id);
                     },
-                  );
+                  ).animate().fadeIn(duration: 400.ms, delay: (min(index, 10) * 50).ms).slideY(begin: 0.05, end: 0);
                 },
               ),
             );

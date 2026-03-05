@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/services/biometric_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/theme_cubit.dart';
+import '../../../../core/theme/theme_state.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../bloc/settings_cubit.dart';
@@ -91,13 +94,14 @@ class _SettingsPageState extends State<SettingsPage> {
           return ListView(
             padding: const EdgeInsets.symmetric(vertical: 16),
             children: [
-              // User info header
-              if (profile != null) _buildUserHeader(profile),
+              if (profile != null)
+                _buildUserHeader(profile)
+                    .animate().fadeIn(duration: 600.ms).slideY(begin: 0.1, end: 0),
 
               const SizedBox(height: 24),
 
-              // Account section
-              _buildSectionHeader('Account'),
+              _buildSectionHeader('Account')
+                  .animate().fadeIn(duration: 400.ms, delay: 100.ms),
               _buildListTile(
                 icon: Icons.person_outline,
                 title: 'Edit Profile',
@@ -110,8 +114,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _buildDivider(),
 
-              // Preferences section
-              _buildSectionHeader('Preferences'),
+              _buildSectionHeader('Preferences')
+                  .animate().fadeIn(duration: 400.ms, delay: 200.ms),
               _buildListTile(
                 icon: Icons.attach_money,
                 title: 'Currency',
@@ -124,17 +128,21 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 onTap: () => _showCurrencyPicker(context),
               ),
-              _buildListTile(
-                icon: Icons.dark_mode_outlined,
-                title: 'Theme',
-                trailing: Text(
-                  _themeLabel(profile?.theme ?? 'system'),
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
-                ),
-                onTap: () => _showThemePicker(context),
+              BlocBuilder<ThemeCubit, ThemeState>(
+                builder: (context, themeState) {
+                  return _buildListTile(
+                    icon: Icons.dark_mode_outlined,
+                    title: 'Theme',
+                    trailing: Text(
+                      _themeModeLabel(themeState.themeMode),
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14,
+                      ),
+                    ),
+                    onTap: () => _showThemePicker(context),
+                  );
+                },
               ),
               if (_biometricSupported)
                 _buildSwitchTile(
@@ -174,8 +182,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _buildDivider(),
 
-              // Notifications section
-              _buildSectionHeader('Notifications'),
+              _buildSectionHeader('Notifications')
+                  .animate().fadeIn(duration: 400.ms, delay: 300.ms),
               _buildSwitchTile(
                 icon: Icons.notifications_outlined,
                 title: 'Push Notifications',
@@ -188,8 +196,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _buildDivider(),
 
-              // Data section
-              _buildSectionHeader('Data'),
+              _buildSectionHeader('Data')
+                  .animate().fadeIn(duration: 400.ms, delay: 400.ms),
               _buildListTile(
                 icon: Icons.receipt_long,
                 title: 'Scan Receipt',
@@ -222,8 +230,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _buildDivider(),
 
-              // About section
-              _buildSectionHeader('About'),
+              _buildSectionHeader('About')
+                  .animate().fadeIn(duration: 400.ms, delay: 500.ms),
               _buildListTile(
                 icon: Icons.info_outline,
                 title: 'App Version',
@@ -248,8 +256,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _buildDivider(),
 
-              // Danger zone
-              _buildSectionHeader('Danger Zone'),
+              _buildSectionHeader('Danger Zone')
+                  .animate().fadeIn(duration: 400.ms, delay: 600.ms),
               _buildListTile(
                 icon: Icons.delete_forever,
                 title: 'Delete Account',
@@ -436,13 +444,13 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  String _themeLabel(String theme) {
-    switch (theme) {
-      case 'dark':
+  String _themeModeLabel(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.dark:
         return 'Dark';
-      case 'light':
+      case ThemeMode.light:
         return 'Light';
-      default:
+      case ThemeMode.system:
         return 'System';
     }
   }
@@ -501,7 +509,12 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _showThemePicker(BuildContext context) {
-    const themes = {'system': 'System', 'dark': 'Dark', 'light': 'Light'};
+    final themes = {
+      ThemeMode.system: 'System',
+      ThemeMode.dark: 'Dark',
+      ThemeMode.light: 'Light',
+    };
+    final currentMode = context.read<ThemeCubit>().state.themeMode;
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surface,
@@ -529,11 +542,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   e.value,
                   style: const TextStyle(color: AppColors.textPrimary),
                 ),
+                trailing: currentMode == e.key
+                    ? const Icon(Icons.check, color: AppColors.primary)
+                    : null,
                 onTap: () {
                   Navigator.pop(context);
-                  context
-                      .read<SettingsCubit>()
-                      .updateProfile({'theme': e.key});
+                  context.read<ThemeCubit>().setThemeMode(e.key);
                 },
               ),
             ),
