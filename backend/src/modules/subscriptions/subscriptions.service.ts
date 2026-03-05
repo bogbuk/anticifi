@@ -109,7 +109,7 @@ export class SubscriptionsService {
           status: SubscriptionStatus.ACTIVE,
           productId: product_id,
           expiresAt: expiration_at_ms ? new Date(expiration_at_ms) : null,
-          period: period_type === 'ANNUAL' ? 'yearly' : 'monthly',
+          period: !expiration_at_ms ? 'lifetime' : period_type === 'ANNUAL' ? 'yearly' : 'monthly',
           store,
           originalPurchaseDate:
             type === 'INITIAL_PURCHASE' ? new Date() : subscription.originalPurchaseDate,

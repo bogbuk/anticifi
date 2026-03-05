@@ -22,6 +22,7 @@ export enum SubscriptionTier {
 export enum SubscriptionPeriod {
   MONTHLY = 'monthly',
   YEARLY = 'yearly',
+  LIFETIME = 'lifetime',
 }
 
 export enum SubscriptionStatus {

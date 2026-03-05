@@ -239,6 +239,19 @@ class _PaywallPageState extends State<PaywallPage> {
             }
           },
         ),
+        const SizedBox(height: 12),
+        _buildPriceCard(
+          title: 'Lifetime',
+          price: '\$99.99',
+          subtitle: 'One-time payment, forever yours',
+          isPopular: false,
+          onTap: () {
+            final pkg = _findPackage(packages, PackageType.lifetime);
+            if (pkg != null) {
+              context.read<SubscriptionCubit>().purchasePackage(pkg.identifier);
+            }
+          },
+        ),
       ],
     );
   }

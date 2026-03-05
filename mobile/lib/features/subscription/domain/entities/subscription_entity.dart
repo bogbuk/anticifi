@@ -17,6 +17,8 @@ class SubscriptionEntity extends Equatable {
     this.entitlements = const [],
   });
 
+  bool get isLifetime => isPremium && period == 'lifetime';
+
   bool hasEntitlement(String entitlement) => entitlements.contains(entitlement);
 
   @override
