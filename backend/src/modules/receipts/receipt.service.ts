@@ -38,7 +38,7 @@ export class ReceiptService {
     } as any);
 
     try {
-      const worker = await createWorker('eng');
+      const worker = await createWorker('eng+fra+deu+spa');
       const { data } = await worker.recognize(filePath);
       await worker.terminate();
 
@@ -90,6 +90,24 @@ export class ReceiptService {
     });
   }
 
+  private parseAmount(raw: string): number | null {
+    let cleaned = raw.replace(/[€$£\s]/g, '').trim();
+    // European format: 1.234,56
+    if (/^\d{1,3}(\.\d{3})*(,\d{2})$/.test(cleaned)) {
+      cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+    }
+    // US format: 1,234.56
+    else if (/^\d{1,3}(,\d{3})*(\.\d{2})$/.test(cleaned)) {
+      cleaned = cleaned.replace(/,/g, '');
+    }
+    // Simple comma decimal: 9,00
+    else if (/^\d+,\d{2}$/.test(cleaned)) {
+      cleaned = cleaned.replace(',', '.');
+    }
+    const val = parseFloat(cleaned);
+    return isNaN(val) || val <= 0 ? null : val;
+  }
+
   private parseOcrText(text: string): {
     merchant?: string;
     amount?: number;
@@ -100,33 +118,68 @@ export class ReceiptService {
     const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
     const result: any = {};
 
-    if (lines.length > 0) {
-      result.merchant = lines[0];
-    }
+    // --- Currency detection (¢ is common OCR misread of €) ---
+    if (text.includes('€') || text.includes('¢') || /\bEUR\b/.test(text)) result.currency = 'EUR';
+    else if (text.includes('£') || /\bGBP\b/.test(text)) result.currency = 'GBP';
+    else if (text.includes('$') || /\bUSD\b/.test(text)) result.currency = 'USD';
 
-    const totalPattern = /(?:total|amount|sum|due)[:\s]*\$?([\d,.]+)/i;
+    // --- Merchant: skip short/garbage lines, find first meaningful line (5+ alpha chars) ---
+    const skipMerchant = /^tel\b|^\d+\s*(rue|st|ave|blvd|road|str)/i;
     for (const line of lines) {
-      const match = line.match(totalPattern);
-      if (match) {
-        result.amount = parseFloat(match[1].replace(',', ''));
+      const clean = line.replace(/[^a-zA-Z\u00C0-\u024F0-9\s\-'.]/g, '').trim();
+      const alphaCount = (clean.match(/[a-zA-Z\u00C0-\u024F]/g) || []).length;
+      if (alphaCount >= 5 && !skipMerchant.test(line)) {
+        result.merchant = clean;
         break;
       }
     }
 
+    // Currency symbols including common OCR misreads (¢ for €)
+    const cur = '[$\u20AC\u00A3\u00A2]';
+    // --- Total amount (multi-language) ---
+    const totalPatterns = [
+      // FR: Total a payer, Montant, Total TTC
+      new RegExp(`(?:total\\s*(?:a|à)\\s*payer|montant\\s*(?:total|ttc)?|total\\s*ttc)[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*${cur}?`, 'i'),
+      // EN: Total, Amount Due, Grand Total
+      new RegExp(`(?:grand\\s*total|total\\s*due|balance\\s*due|amount\\s*due|total)[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*${cur}?`, 'i'),
+      // DE: Gesamtbetrag, Summe
+      new RegExp(`(?:gesamtbetrag|summe|gesamt|zu\\s*zahlen)[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*${cur}?`, 'i'),
+      // ES: Total a pagar, Importe
+      new RegExp(`(?:total\\s*a\\s*pagar|importe\\s*total|importe)[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*${cur}?`, 'i'),
+    ];
+
+    for (const pattern of totalPatterns) {
+      for (const line of lines) {
+        const match = line.match(pattern);
+        if (match) {
+          const amount = this.parseAmount(match[1]);
+          if (amount) {
+            result.amount = amount;
+            break;
+          }
+        }
+      }
+      if (result.amount) break;
+    }
+
+    // Fallback: find the largest price-like value, skipping lines with phone/address
     if (!result.amount) {
-      const amountPattern = /\$?([\d]+\.[\d]{2})/g;
+      const pricePattern = new RegExp(`${cur}?\\s*([\\d]+[.,]\\d{2})\\s*${cur}?`, 'g');
+      const skipFallback = /tel|phone|fax|rue|street|addr/i;
       let maxAmount = 0;
       for (const line of lines) {
+        if (skipFallback.test(line)) continue;
         let match;
-        while ((match = amountPattern.exec(line)) !== null) {
-          const val = parseFloat(match[1]);
-          if (val > maxAmount) maxAmount = val;
+        while ((match = pricePattern.exec(line)) !== null) {
+          const val = this.parseAmount(match[1]);
+          if (val && val > maxAmount) maxAmount = val;
         }
       }
       if (maxAmount > 0) result.amount = maxAmount;
     }
 
-    const datePattern = /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/;
+    // --- Date ---
+    const datePattern = /(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})/;
     for (const line of lines) {
       const match = line.match(datePattern);
       if (match) {
@@ -135,19 +188,21 @@ export class ReceiptService {
       }
     }
 
+    // --- Items ---
     const items: Array<{ name: string; price: number }> = [];
-    const itemPattern = /^(.+?)\s+\$?([\d]+\.[\d]{2})$/;
+    const skipItems = /total|subtotal|sub.total|tax|tip|tva|montant|payer|summe|gesamt|importe|balance|change|visa|master|carte|cb\s|emv|article/i;
+    const itemPatternRe = new RegExp(`^(.+?)\\s+${cur}?\\s*([\\d]+[.,]\\d{2})\\s*${cur}?\\s*$`);
     for (const line of lines) {
-      const match = line.match(itemPattern);
-      if (match && !line.match(/total|subtotal|tax|tip/i)) {
-        items.push({ name: match[1].trim(), price: parseFloat(match[2]) });
+      if (skipItems.test(line)) continue;
+      const match = line.match(itemPatternRe);
+      if (match) {
+        const price = this.parseAmount(match[2]);
+        if (price && price < 10000) {
+          items.push({ name: match[1].replace(/^\*+/, '').trim(), price });
+        }
       }
     }
     if (items.length > 0) result.items = items;
-
-    if (text.includes('$')) result.currency = 'USD';
-    else if (text.includes('€')) result.currency = 'EUR';
-    else if (text.includes('£')) result.currency = 'GBP';
 
     return result;
   }

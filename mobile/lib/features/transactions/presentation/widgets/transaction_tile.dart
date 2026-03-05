@@ -6,11 +6,13 @@ import '../../domain/entities/transaction_entity.dart';
 class TransactionTile extends StatelessWidget {
   final TransactionEntity transaction;
   final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
   const TransactionTile({
     super.key,
     required this.transaction,
     this.onTap,
+    this.onDelete,
   });
 
   String _formatDate(DateTime date) {
@@ -30,6 +32,33 @@ class TransactionTile extends StatelessWidget {
 
     return ListTile(
       onTap: onTap,
+      onLongPress: onDelete != null
+          ? () async {
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  backgroundColor: AppColors.card,
+                  title: const Text('Delete Transaction',
+                      style: TextStyle(color: AppColors.textPrimary)),
+                  content: const Text(
+                      'Are you sure you want to delete this transaction?',
+                      style: TextStyle(color: AppColors.textSecondary)),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(true),
+                      child: const Text('Delete',
+                          style: TextStyle(color: AppColors.error)),
+                    ),
+                  ],
+                ),
+              );
+              if (confirmed == true) onDelete!();
+            }
+          : null,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       leading: Container(
         width: 42,

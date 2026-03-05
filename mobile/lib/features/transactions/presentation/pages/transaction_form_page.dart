@@ -182,6 +182,42 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           title: Text(_isEditing ? 'Edit Transaction' : 'New Transaction'),
+          actions: [
+            if (_isEditing)
+              IconButton(
+                icon: const Icon(Icons.delete_outline, color: AppColors.error),
+                onPressed: () async {
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      backgroundColor: AppColors.card,
+                      title: const Text('Delete Transaction',
+                          style: TextStyle(color: AppColors.textPrimary)),
+                      content: const Text(
+                          'Are you sure you want to delete this transaction?',
+                          style: TextStyle(color: AppColors.textSecondary)),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(true),
+                          child: const Text('Delete',
+                              style: TextStyle(color: AppColors.error)),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirmed == true && mounted) {
+                    context.read<TransactionsBloc>().add(
+                          DeleteTransaction(widget.transaction!.id),
+                        );
+                    context.pop(true);
+                  }
+                },
+              ),
+          ],
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(24),

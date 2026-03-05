@@ -1,14 +1,15 @@
-import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Platform-aware secure storage wrapper.
-/// Uses FlutterSecureStorage on iOS/Android, in-memory map on macOS (dev).
+/// Uses FlutterSecureStorage on iOS/Android, in-memory map on web/macOS (dev).
 class SecureStorage {
   final FlutterSecureStorage _storage;
   final Map<String, String> _memoryStore = {};
   final bool _useMemory;
 
-  SecureStorage(this._storage) : _useMemory = Platform.isMacOS;
+  SecureStorage(this._storage)
+      : _useMemory = kIsWeb || defaultTargetPlatform == TargetPlatform.macOS;
 
   Future<String?> read({required String key}) async {
     if (_useMemory) return _memoryStore[key];

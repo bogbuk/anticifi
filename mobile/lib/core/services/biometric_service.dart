@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:local_auth/local_auth.dart';
 
 import '../storage/secure_storage.dart';
@@ -15,6 +16,7 @@ class BiometricService {
         _storage = storage;
 
   Future<bool> isDeviceSupported() async {
+    if (kIsWeb) return false;
     return await _localAuth.isDeviceSupported();
   }
 
@@ -32,6 +34,7 @@ class BiometricService {
   }
 
   Future<bool> authenticate() async {
+    if (kIsWeb) return false;
     try {
       return await _localAuth.authenticate(
         localizedReason: 'Authenticate to access AnticiFi',

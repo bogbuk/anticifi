@@ -35,15 +35,18 @@ const FIREBASE_ADMIN = 'FIREBASE_ADMIN';
           return admin.apps[0]!;
         }
 
-        return admin.initializeApp({
-          credential: admin.credential.cert({
-            projectId,
-            clientEmail: configService.get<string>('FIREBASE_CLIENT_EMAIL'),
-            privateKey: configService
-              .get<string>('FIREBASE_PRIVATE_KEY')
-              ?.replace(/\\n/g, '\n'),
-          }),
-        });
+        const privateKey = configService.get<string>('FIREBASE_PRIVATE_KEY');
+        if (privateKey) {
+          return admin.initializeApp({
+            credential: admin.credential.cert({
+              projectId,
+              clientEmail: configService.get<string>('FIREBASE_CLIENT_EMAIL'),
+              privateKey: privateKey.replace(/\\n/g, '\n'),
+            }),
+          });
+        }
+
+        return admin.initializeApp({ projectId });
       },
       inject: [ConfigService],
     },

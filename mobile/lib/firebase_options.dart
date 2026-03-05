@@ -1,14 +1,19 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
-import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
-    if (Platform.isIOS) {
-      return ios;
-    } else if (Platform.isAndroid) {
-      return android;
+    if (kIsWeb) {
+      return web;
     }
-    throw UnsupportedError('Unsupported platform');
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.iOS:
+        return ios;
+      case TargetPlatform.android:
+        return android;
+      default:
+        throw UnsupportedError('Unsupported platform');
+    }
   }
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -26,5 +31,13 @@ class DefaultFirebaseOptions {
     projectId: 'anticifi',
     storageBucket: 'anticifi.firebasestorage.app',
     iosBundleId: 'com.anticifi.app',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyANMmtbwnTPeJXCjOR0k4WlZ6KHwM_yScY',
+    appId: '1:294067863294:web:anticifi256faf',
+    messagingSenderId: '294067863294',
+    projectId: 'anticifi',
+    storageBucket: 'anticifi.firebasestorage.app',
   );
 }

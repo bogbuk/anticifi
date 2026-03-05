@@ -9,7 +9,6 @@ import {
   BelongsTo,
   AllowNull,
   HasMany,
-  Index,
 } from 'sequelize-typescript';
 import { User } from '../users/user.model';
 import { Account } from '../accounts/account.model';
@@ -38,9 +37,8 @@ export class PlaidItem extends Model {
   @Column(DataType.UUID)
   declare userId: string;
 
-  @Index({ unique: true })
   @AllowNull(false)
-  @Column(DataType.STRING(100))
+  @Column({ type: DataType.STRING(100), unique: true, field: 'item_id' })
   declare itemId: string;
 
   @AllowNull(false)
