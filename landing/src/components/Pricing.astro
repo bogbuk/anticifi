@@ -1,0 +1,196 @@
+---
+---
+
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="fade-in" style="text-align:center;">
+      <span class="section-label">Pricing</span>
+      <h2 class="section-title">Start free, upgrade when ready</h2>
+      <p class="section-desc" style="margin: 0 auto;">No hidden fees. Cancel anytime.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card fade-in">
+        <h3>Free</h3>
+        <p class="pricing-desc">Perfect for getting started</p>
+        <div class="pricing-price">$0<span>/mo</span></div>
+        <ul class="pricing-features">
+          <li>1 account</li>
+          <li>Manual CSV import</li>
+          <li>Basic predictions</li>
+          <li>7-day forecast</li>
+        </ul>
+        <a href="#waitlist" class="btn-pricing btn-pricing-outline">Get Started</a>
+      </div>
+
+      <div class="pricing-card featured fade-in">
+        <h3>Pro</h3>
+        <p class="pricing-desc">For serious planners</p>
+        <div class="pricing-price">$9.99<span>/mo</span></div>
+        <ul class="pricing-features">
+          <li>Unlimited accounts</li>
+          <li>OCR receipt scanning</li>
+          <li>Advanced AI predictions</li>
+          <li>90-day forecast</li>
+          <li>Predictive alerts</li>
+        </ul>
+        <a href="#waitlist" class="btn-pricing btn-pricing-filled">Join Waitlist</a>
+      </div>
+
+      <div class="pricing-card fade-in">
+        <h3>Enterprise</h3>
+        <p class="pricing-desc">White-label for banks & fintechs</p>
+        <div class="pricing-price">Custom</div>
+        <ul class="pricing-features">
+          <li>White-label solution</li>
+          <li>Custom AI models</li>
+          <li>Dedicated support</li>
+          <li>SLA guarantee</li>
+          <li>API access</li>
+        </ul>
+        <a href="#waitlist" class="btn-pricing btn-pricing-outline">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+    align-items: start;
+  }
+
+  .pricing-card {
+    padding: 36px 32px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  }
+
+  .pricing-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .pricing-card.featured {
+    border-color: var(--accent-indigo);
+    box-shadow: 0 0 40px rgba(99, 102, 241, 0.12);
+    position: relative;
+  }
+
+  .pricing-card.featured::before {
+    content: 'Most Popular';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 16px;
+    background: var(--gradient-primary);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .pricing-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .pricing-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .pricing-price span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .pricing-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 32px;
+  }
+
+  .pricing-features li {
+    padding: 8px 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pricing-features li::before {
+    content: '';
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    background: rgba(99, 102, 241, 0.15);
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .btn-pricing {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .btn-pricing-outline {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .btn-pricing-outline:hover {
+    border-color: var(--border-glow);
+    background: rgba(99, 102, 241, 0.05);
+  }
+
+  .btn-pricing-filled {
+    background: var(--gradient-primary);
+    color: #fff;
+    border: none;
+    box-shadow: 0 0 20px var(--glow-color);
+  }
+
+  .btn-pricing-filled:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px var(--glow-color);
+  }
+
+  @media (max-width: 768px) {
+    .pricing-grid {
+      grid-template-columns: 1fr;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+</style>

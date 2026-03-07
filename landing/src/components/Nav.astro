@@ -1,0 +1,184 @@
+---
+---
+
+<nav>
+  <div class="container">
+    <a href="#" class="logo">AnticiFi</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#waitlist" class="btn-nav">Join Waitlist</a></li>
+    </ul>
+    <button class="mobile-toggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="#features">Features</a>
+  <a href="#how-it-works">How It Works</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#waitlist" class="btn-nav">Join Waitlist</a>
+</div>
+
+<script>
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav?.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  const mobileToggle = document.querySelector('.mobile-toggle');
+  const mobileMenu = document.querySelector('.mobile-menu');
+
+  mobileToggle?.addEventListener('click', () => {
+    mobileToggle.classList.toggle('active');
+    mobileMenu?.classList.toggle('open');
+    document.body.style.overflow = mobileMenu?.classList.contains('open') ? 'hidden' : '';
+  });
+
+  mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileToggle?.classList.remove('active');
+      mobileMenu?.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+</script>
+
+<style>
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 16px 0;
+    transition: background 0.3s, backdrop-filter 0.3s;
+  }
+
+  nav.scrolled {
+    background: rgba(10, 10, 26, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  nav .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--text-primary);
+  }
+
+  .btn-nav {
+    padding: 8px 20px;
+    background: var(--gradient-primary);
+    color: #fff !important;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-nav:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .mobile-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text-primary);
+    margin: 6px 0;
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  .mobile-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 6px);
+  }
+
+  .mobile-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -6px);
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 10, 26, 0.97);
+    backdrop-filter: blur(20px);
+    z-index: 99;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .mobile-menu.open {
+    display: flex;
+  }
+
+  .mobile-menu a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .mobile-toggle { display: block; }
+  }
+</style>

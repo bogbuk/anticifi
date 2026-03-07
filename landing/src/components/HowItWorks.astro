@@ -1,0 +1,113 @@
+---
+---
+
+<section class="how-it-works" id="how-it-works">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-label">How It Works</span>
+      <h2 class="section-title">Three steps to financial foresight</h2>
+      <p class="section-desc" style="margin: 0 auto;">Get started in minutes. No bank connections needed.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step fade-in">
+        <div class="step-number">1</div>
+        <h3>Import Transactions</h3>
+        <p>Upload a CSV from your bank or scan receipts with your camera. Quick and private.</p>
+      </div>
+      <div class="step fade-in">
+        <div class="step-number">2</div>
+        <h3>Oracle Learns</h3>
+        <p>Our AI analyzes your income and spending patterns to build a predictive model.</p>
+      </div>
+      <div class="step fade-in">
+        <div class="step-number">3</div>
+        <h3>See the Future</h3>
+        <p>Ask Oracle about any future date and get an accurate prediction of your balance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .how-it-works {
+    background: var(--bg-secondary);
+  }
+
+  .how-it-works .container {
+    text-align: center;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 48px;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-indigo), var(--accent-purple), transparent);
+    opacity: 0.3;
+  }
+
+  .step {
+    text-align: center;
+  }
+
+  .step-number {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    border: 2px solid var(--border-subtle);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-number::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bg-primary);
+    border-radius: 50%;
+    z-index: -1;
+  }
+
+  .step h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px) {
+    .steps {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .steps::before { display: none; }
+  }
+</style>

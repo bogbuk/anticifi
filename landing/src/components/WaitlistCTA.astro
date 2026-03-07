@@ -1,0 +1,162 @@
+---
+---
+
+<section class="final-cta" id="waitlist">
+  <div class="cta-bg"></div>
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-label">Early Access</span>
+      <h2>Be the first to predict your<br><span class="gradient-text">financial future</span></h2>
+      <p>Join the waitlist and get early access when we launch.</p>
+      <form class="waitlist-form" id="waitlist-form">
+        <input type="email" placeholder="you@email.com" required aria-label="Email address" id="waitlist-email">
+        <button type="submit" id="waitlist-btn">Join the Waitlist</button>
+      </form>
+      <p class="waitlist-msg" id="waitlist-msg"></p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyn17FHg87fQtI9OU1MG0EW9l8pRsEzvKDm1JakRZ9LN6oi0Plp2On6Skyxxok0Z3zhGg/exec';
+
+  const form = document.getElementById('waitlist-form') as HTMLFormElement;
+  const emailInput = document.getElementById('waitlist-email') as HTMLInputElement;
+  const submitBtn = document.getElementById('waitlist-btn') as HTMLButtonElement;
+  const msgEl = document.getElementById('waitlist-msg')!;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = emailInput.value.trim();
+    if (!email) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    msgEl.textContent = '';
+    msgEl.className = 'waitlist-msg';
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'email=' + encodeURIComponent(email)
+      });
+
+      msgEl.textContent = "You're on the list! We'll be in touch soon.";
+      msgEl.className = 'waitlist-msg success';
+      emailInput.value = '';
+    } catch {
+      msgEl.textContent = 'Something went wrong. Please try again.';
+      msgEl.className = 'waitlist-msg error';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Join the Waitlist';
+    }
+  });
+</script>
+
+<style>
+  .final-cta {
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+  }
+
+  .final-cta .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .final-cta h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .final-cta p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 36px;
+  }
+
+  .waitlist-form {
+    display: flex;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .waitlist-form input {
+    flex: 1;
+    padding: 14px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: var(--font);
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .waitlist-form input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .waitlist-form input:focus {
+    border-color: var(--accent-indigo);
+  }
+
+  .waitlist-form button {
+    padding: 14px 28px;
+    background: var(--gradient-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    white-space: nowrap;
+    box-shadow: 0 0 20px var(--glow-color);
+  }
+
+  .waitlist-form button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .waitlist-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .waitlist-msg {
+    margin-top: 16px;
+    font-size: 0.9rem;
+    min-height: 1.4em;
+  }
+
+  :global(.waitlist-msg.success) {
+    color: #34d399;
+  }
+
+  :global(.waitlist-msg.error) {
+    color: #f87171;
+  }
+
+  @media (max-width: 768px) {
+    .waitlist-form {
+      flex-direction: column;
+    }
+  }
+</style>
