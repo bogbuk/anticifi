@@ -65,7 +65,7 @@ export class ReceiptService {
     } as any);
 
     try {
-      const worker = await createWorker('eng+fra+deu+spa');
+      const worker = await createWorker('eng+fra+deu+spa+ron');
       const { data } = await worker.recognize(filePath);
       await worker.terminate();
 
@@ -146,18 +146,32 @@ export class ReceiptService {
     const result: any = {};
 
     // --- Currency detection (¢ is common OCR misread of €) ---
-    if (text.includes('€') || text.includes('¢') || /\bEUR\b/.test(text)) result.currency = 'EUR';
+    if (/\bMDL\b/.test(text)) result.currency = 'MDL';
+    else if (/\bRON\b|\bLEI\b/i.test(text)) result.currency = 'RON';
+    else if (text.includes('€') || text.includes('¢') || /\bEUR\b/.test(text)) result.currency = 'EUR';
     else if (text.includes('£') || /\bGBP\b/.test(text)) result.currency = 'GBP';
     else if (text.includes('$') || /\bUSD\b/.test(text)) result.currency = 'USD';
 
-    // --- Merchant: skip short/garbage lines, find first meaningful line (5+ alpha chars) ---
-    const skipMerchant = /^tel\b|^\d+\s*(rue|st|ave|blvd|road|str)/i;
+    // --- Merchant: try labeled field first (RO: Comerciant, FR: Marchand, etc.) ---
+    const merchantLabel = /(?:comerciant|merchant|marchand|händler)[:\s]+(.+)/i;
     for (const line of lines) {
-      const clean = line.replace(/[^a-zA-Z\u00C0-\u024F0-9\s\-'.]/g, '').trim();
-      const alphaCount = (clean.match(/[a-zA-Z\u00C0-\u024F]/g) || []).length;
-      if (alphaCount >= 5 && !skipMerchant.test(line)) {
-        result.merchant = clean;
+      const match = line.match(merchantLabel);
+      if (match) {
+        result.merchant = match[1].trim();
         break;
+      }
+    }
+
+    // Fallback: first meaningful line (5+ alpha chars)
+    if (!result.merchant) {
+      const skipMerchant = /^tel\b|^\d+\s*(rue|st|ave|blvd|road|str|sos\.|adresa)/i;
+      for (const line of lines) {
+        const clean = line.replace(/[^a-zA-Z\u00C0-\u024F0-9\s\-'.]/g, '').trim();
+        const alphaCount = (clean.match(/[a-zA-Z\u00C0-\u024F]/g) || []).length;
+        if (alphaCount >= 5 && !skipMerchant.test(line)) {
+          result.merchant = clean;
+          break;
+        }
       }
     }
 
@@ -173,6 +187,8 @@ export class ReceiptService {
       new RegExp(`(?:gesamtbetrag|summe|gesamt|zu\\s*zahlen)[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*${cur}?`, 'i'),
       // ES: Total a pagar, Importe
       new RegExp(`(?:total\\s*a\\s*pagar|importe\\s*total|importe)[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*${cur}?`, 'i'),
+      // RO: Suma, Total de plata
+      new RegExp(`(?:suma|total\\s*de\\s*plat[aă])[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*(?:MDL|RON|LEI)?`, 'i'),
     ];
 
     for (const pattern of totalPatterns) {
@@ -217,7 +233,7 @@ export class ReceiptService {
 
     // --- Items ---
     const items: Array<{ name: string; price: number }> = [];
-    const skipItems = /total|subtotal|sub.total|tax|tip|tva|montant|payer|summe|gesamt|importe|balance|change|visa|master|carte|cb\s|emv|article/i;
+    const skipItems = /total|subtotal|sub.total|tax|tip|tva|montant|payer|summe|gesamt|importe|balance|change|visa|master|carte|cb\s|emv|article|suma|achitare|reusit|comerciant|locatie|adresa|terminal|autorizare|tranzactie|contactless|returnare|multumim|suport/i;
     const itemPatternRe = new RegExp(`^(.+?)\\s+${cur}?\\s*([\\d]+[.,]\\d{2})\\s*${cur}?\\s*$`);
     for (const line of lines) {
       if (skipItems.test(line)) continue;
