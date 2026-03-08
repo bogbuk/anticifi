@@ -1,11 +1,15 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { createWorker } from 'tesseract.js';
 import * as path from 'path';
 import * as fs from 'fs';
 import { ReceiptScan, ReceiptStatus } from './receipt.model.js';
 import { TransactionsService } from '../transactions/transactions.service.js';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service.js';
 import { ConfirmReceiptDto } from './dto/confirm-receipt.dto.js';
+
+const FREE_DAILY_SCAN_LIMIT = 3;
 
 @Injectable()
 export class ReceiptService {
@@ -16,9 +20,31 @@ export class ReceiptService {
     @InjectModel(ReceiptScan)
     private readonly receiptModel: typeof ReceiptScan,
     private readonly transactionsService: TransactionsService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {
     if (!fs.existsSync(this.uploadsDir)) {
       fs.mkdirSync(this.uploadsDir, { recursive: true });
+    }
+  }
+
+  private async checkDailyLimit(userId: string): Promise<void> {
+    const isPremium = await this.subscriptionsService.isPremiumUser(userId);
+    if (isPremium) return;
+
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayCount = await this.receiptModel.count({
+      where: {
+        userId,
+        createdAt: { [Op.gte]: todayStart },
+      },
+    });
+
+    if (todayCount >= FREE_DAILY_SCAN_LIMIT) {
+      throw new ForbiddenException(
+        `Free plan is limited to ${FREE_DAILY_SCAN_LIMIT} receipt scans per day. Upgrade to Premium for unlimited scans.`,
+      );
     }
   }
 
@@ -26,6 +52,7 @@ export class ReceiptService {
     userId: string,
     file: Express.Multer.File,
   ): Promise<ReceiptScan> {
+    await this.checkDailyLimit(userId);
     const filename = `${Date.now()}-${file.originalname}`;
     const filePath = path.join(this.uploadsDir, filename);
     fs.writeFileSync(filePath, file.buffer);
