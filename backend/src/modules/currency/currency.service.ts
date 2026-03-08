@@ -54,7 +54,10 @@ export class CurrencyService {
 
     if (!latestDate) {
       await this.fetchAndStoreRates(base);
-      return this.getLatestRates(base, targets);
+      const retryDate = await this.currencyRateModel.max('date', {
+        where: { baseCurrency: base },
+      });
+      if (!retryDate) return [];
     }
 
     where.date = latestDate;
