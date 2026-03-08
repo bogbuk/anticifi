@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/repositories/receipt_repository.dart';
@@ -10,13 +11,20 @@ class ReceiptCubit extends Cubit<ReceiptState> {
 
   ReceiptCubit(this._repository) : super(const ReceiptInitial());
 
+  String _parseError(dynamic e) {
+    if (e is DioException && e.response?.data is Map) {
+      return (e.response!.data as Map)['message']?.toString() ?? e.message ?? 'Unknown error';
+    }
+    return e.toString();
+  }
+
   Future<void> scanReceipt(File image) async {
     emit(const ReceiptScanning());
     try {
       final scan = await _repository.scanReceipt(image);
       emit(ReceiptScanned(scan));
     } catch (e) {
-      emit(ReceiptError(e.toString()));
+      emit(ReceiptError(_parseError(e)));
     }
   }
 
@@ -45,7 +53,7 @@ class ReceiptCubit extends Cubit<ReceiptState> {
       );
       emit(const ReceiptConfirmed());
     } catch (e) {
-      emit(ReceiptError(e.toString()));
+      emit(ReceiptError(_parseError(e)));
     }
   }
 
@@ -54,7 +62,7 @@ class ReceiptCubit extends Cubit<ReceiptState> {
       final scans = await _repository.getUserScans();
       emit(ReceiptHistoryLoaded(scans));
     } catch (e) {
-      emit(ReceiptError(e.toString()));
+      emit(ReceiptError(_parseError(e)));
     }
   }
 

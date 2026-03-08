@@ -9,7 +9,7 @@ import { TransactionsService } from '../transactions/transactions.service.js';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service.js';
 import { ConfirmReceiptDto } from './dto/confirm-receipt.dto.js';
 
-const FREE_DAILY_SCAN_LIMIT = 3;
+const FREE_DAILY_SCAN_LIMIT = 5;
 
 @Injectable()
 export class ReceiptService {
