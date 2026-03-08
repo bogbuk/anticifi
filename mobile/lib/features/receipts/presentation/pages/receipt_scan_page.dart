@@ -358,14 +358,16 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: Theme.of(context).inputDecorationTheme.fillColor,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(
+                  color: Theme.of(context).inputDecorationTheme.enabledBorder?.borderSide.color ?? AppColors.border,
+                ),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.calendar_today_outlined,
-                      color: AppColors.textMuted, size: 20),
+                  Icon(Icons.calendar_today_outlined,
+                      color: Theme.of(context).inputDecorationTheme.labelStyle?.color, size: 20),
                   const SizedBox(width: 12),
                   Text(
                     _formatDate(_selectedDate),
@@ -375,8 +377,8 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                     ),
                   ),
                   const Spacer(),
-                  const Icon(Icons.chevron_right,
-                      color: AppColors.textMuted),
+                  Icon(Icons.chevron_right,
+                      color: Theme.of(context).inputDecorationTheme.labelStyle?.color),
                 ],
               ),
             ),
