@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../auth/domain/entities/user_entity.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_event.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../../settings/domain/repositories/settings_repository.dart';
 import '../widgets/onboarding_step.dart';
@@ -51,12 +56,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
     try {
       final settingsRepo = getIt<SettingsRepository>();
       await settingsRepo.updateProfile({'onboardingCompleted': true});
-      if (mounted) {
-        context.go('/dashboard');
-      }
-    } catch (_) {
-      if (mounted) {
-        context.go('/dashboard');
+    } catch (_) {}
+
+    if (mounted) {
+      final authBloc = context.read<AuthBloc>();
+      final currentState = authBloc.state;
+      if (currentState is AuthAuthenticated) {
+        final updatedUser = UserEntity(
+          id: currentState.user.id,
+          name: currentState.user.name,
+          email: currentState.user.email,
+          onboardingCompleted: true,
+        );
+        authBloc.add(AuthConfirmLogin(updatedUser));
       }
     }
   }

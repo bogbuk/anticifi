@@ -60,9 +60,9 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
   Future<void> _pickImage(ImageSource source) async {
     final picked = await _picker.pickImage(
       source: source,
-      maxWidth: 2000,
-      maxHeight: 2000,
-      imageQuality: 85,
+      maxWidth: 1200,
+      maxHeight: 1600,
+      imageQuality: 70,
     );
     if (picked != null && mounted) {
       context.read<ReceiptCubit>().scanReceipt(File(picked.path));
