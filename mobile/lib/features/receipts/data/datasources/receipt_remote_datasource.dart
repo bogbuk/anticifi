@@ -23,6 +23,10 @@ class ReceiptRemoteDataSource {
     final response = await dioClient.dio.post(
       ApiEndpoints.receiptsScan,
       data: formData,
+      options: Options(
+        sendTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 60),
+      ),
     );
     final data = response.data as Map<String, dynamic>;
     return ReceiptScanModel.fromJson(data);
