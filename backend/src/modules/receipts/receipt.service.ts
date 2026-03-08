@@ -52,7 +52,8 @@ export class ReceiptService {
     userId: string,
     file: Express.Multer.File,
   ): Promise<ReceiptScan> {
-    await this.checkDailyLimit(userId);
+    // TODO: re-enable after testing
+    // await this.checkDailyLimit(userId);
     const filename = `${Date.now()}-${file.originalname}`;
     const filePath = path.join(this.uploadsDir, filename);
     fs.writeFileSync(filePath, file.buffer);
