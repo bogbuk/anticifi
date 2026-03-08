@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 
 class AuthTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -34,15 +33,15 @@ class _AuthTextFieldState extends State<AuthTextField> {
       obscureText: widget.isPassword && _obscureText,
       keyboardType: widget.keyboardType,
       validator: widget.validator,
-      style: const TextStyle(color: AppColors.textPrimary),
+      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
       decoration: InputDecoration(
         labelText: widget.label,
-        prefixIcon: Icon(widget.prefixIcon, color: AppColors.textSecondary),
+        prefixIcon: Icon(widget.prefixIcon, color: Theme.of(context).inputDecorationTheme.labelStyle?.color),
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
                   _obscureText ? Icons.visibility_off : Icons.visibility,
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).inputDecorationTheme.labelStyle?.color,
                 ),
                 onPressed: () {
                   setState(() {
