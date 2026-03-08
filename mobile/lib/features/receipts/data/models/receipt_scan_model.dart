@@ -53,16 +53,19 @@ class ReceiptScanModel extends ReceiptScanEntity {
   });
 
   factory ReceiptScanModel.fromJson(Map<String, dynamic> json) {
+    final parsed = json['parsedData'] ?? json['parsed_data'];
     return ReceiptScanModel(
       id: json['id'] as String,
       status: json['status'] as String,
-      originalFilename: json['originalFilename'] as String? ?? '',
-      parsedData: json['parsedData'] != null
-          ? ReceiptParsedDataModel.fromJson(
-              json['parsedData'] as Map<String, dynamic>)
+      originalFilename:
+          (json['originalFilename'] ?? json['original_filename']) as String? ??
+              '',
+      parsedData: parsed != null
+          ? ReceiptParsedDataModel.fromJson(parsed as Map<String, dynamic>)
           : null,
       confidence: _toDouble(json['confidence']),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(
+          (json['createdAt'] ?? json['created_at']) as String),
     );
   }
 }
