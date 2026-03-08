@@ -286,7 +286,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                   value: a.id,
                   child: Text(
                     '${a.name} (${a.currency})',
-                    style: const TextStyle(color: AppColors.textPrimary),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   ),
                 );
               }).toList(),
@@ -302,8 +302,8 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           // Amount
           TextFormField(
             controller: _amountController,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
@@ -320,7 +320,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           // Merchant
           TextFormField(
             controller: _merchantController,
-            style: const TextStyle(color: AppColors.textPrimary),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             decoration: const InputDecoration(
               labelText: 'Merchant',
               prefixIcon:
@@ -369,8 +369,8 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                   const SizedBox(width: 12),
                   Text(
                     _formatDate(_selectedDate),
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 15,
                     ),
                   ),
