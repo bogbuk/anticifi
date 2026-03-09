@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, literal } from 'sequelize';
+import { Op, literal, Sequelize } from 'sequelize';
 import { User } from '../users/user.model.js';
 import { Subscription } from '../subscriptions/subscription.model.js';
 import { Account } from '../accounts/account.model.js';
@@ -21,6 +21,21 @@ export class AdminService {
   ) {}
 
   async promoteToAdmin(email: string) {
+    // Ensure role column exists (migration for production)
+    const sequelize = this.userModel.sequelize!;
+    await sequelize.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'users' AND column_name = 'role'
+        ) THEN
+          CREATE TYPE "enum_users_role" AS ENUM ('USER', 'ADMIN');
+          ALTER TABLE users ADD COLUMN role "enum_users_role" NOT NULL DEFAULT 'USER';
+        END IF;
+      END $$;
+    `);
+
     const user = await this.userModel.findOne({ where: { email } });
     if (!user) {
       throw new NotFoundException(`User with email "${email}" not found`);
