@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import { createWorker } from 'tesseract.js';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -8,6 +8,18 @@ import { ReceiptScan, ReceiptStatus } from './receipt.model.js';
 import { TransactionsService } from '../transactions/transactions.service.js';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service.js';
 import { ConfirmReceiptDto } from './dto/confirm-receipt.dto.js';
+import { QueryReceiptDto } from './dto/query-receipt.dto.js';
+import { UpdateReceiptDto } from './dto/update-receipt.dto.js';
+
+const CONFIDENCE_THRESHOLD = 60;
+
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
 const FREE_DAILY_SCAN_LIMIT = 5;
 
@@ -51,7 +63,7 @@ export class ReceiptService {
   async scanReceipt(
     userId: string,
     file: Express.Multer.File,
-  ): Promise<ReceiptScan> {
+  ): Promise<{ receipt: ReceiptScan; warning?: string }> {
     await this.checkDailyLimit(userId);
     const filename = `${Date.now()}-${file.originalname}`;
     const filePath = path.join(this.uploadsDir, filename);
@@ -63,6 +75,8 @@ export class ReceiptService {
       originalFilename: file.originalname,
       imagePath: filePath,
     } as any);
+
+    let warning: string | undefined;
 
     try {
       const worker = await createWorker('eng+fra+deu+spa+ron');
@@ -77,12 +91,17 @@ export class ReceiptService {
         parsedData,
         confidence,
       });
+
+      if (confidence < CONFIDENCE_THRESHOLD) {
+        warning = `Low OCR confidence (${confidence.toFixed(1)}%). Recognized data may be inaccurate — please review before confirming.`;
+      }
     } catch (error) {
       this.logger.error('OCR processing failed', error);
       await receipt.update({ status: ReceiptStatus.FAILED });
     }
 
-    return receipt.reload();
+    const result = await receipt.reload();
+    return { receipt: result, ...(warning ? { warning } : {}) };
   }
 
   async confirmReceipt(
@@ -112,18 +131,31 @@ export class ReceiptService {
 
   async getUserScans(
     userId: string,
-    page = 1,
-    limit = 20,
-  ): Promise<{ data: ReceiptScan[]; total: number; page: number; limit: number }> {
+    query: QueryReceiptDto,
+  ): Promise<PaginatedResult<ReceiptScan>> {
+    const page = query.page ? parseInt(query.page, 10) : 1;
+    const limit = Math.min(query.limit ? parseInt(query.limit, 10) : 20, 100);
     const offset = (page - 1) * limit;
+
+    const where: WhereOptions = { userId } as any;
+    if (query.status) {
+      (where as any).status = query.status;
+    }
+
     const { rows, count } = await this.receiptModel.findAndCountAll({
-      where: { userId },
+      where,
       order: [['createdAt', 'DESC']],
       limit,
       offset,
     });
 
-    return { data: rows, total: count, page, limit };
+    return {
+      data: rows,
+      total: count,
+      page,
+      limit,
+      totalPages: Math.ceil(count / limit),
+    };
   }
 
   async deleteScan(userId: string, receiptId: string): Promise<void> {
@@ -136,6 +168,33 @@ export class ReceiptService {
     }
 
     await receipt.destroy();
+  }
+
+  async updateScan(
+    userId: string,
+    receiptId: string,
+    dto: UpdateReceiptDto,
+  ): Promise<ReceiptScan> {
+    const receipt = await this.receiptModel.findOne({
+      where: { id: receiptId, userId },
+    });
+
+    if (!receipt) {
+      throw new NotFoundException('Receipt scan not found');
+    }
+
+    const currentData = receipt.parsedData || {};
+    const updatedData = { ...currentData };
+
+    if (dto.merchant !== undefined) updatedData.merchant = dto.merchant;
+    if (dto.amount !== undefined) updatedData.amount = dto.amount;
+    if (dto.date !== undefined) updatedData.date = dto.date;
+    if (dto.currency !== undefined) updatedData.currency = dto.currency;
+    if (dto.items !== undefined) updatedData.items = dto.items;
+
+    await receipt.update({ parsedData: updatedData });
+
+    return receipt.reload();
   }
 
   private parseAmount(raw: string): number | null {

@@ -1,5 +1,5 @@
 import {
-  Controller, Post, Get, Delete, Param, Body, Query, UseGuards,
+  Controller, Post, Get, Patch, Delete, Param, Body, Query, UseGuards,
   UseInterceptors, UploadedFile, Req, ParseFilePipe, MaxFileSizeValidator,
   HttpCode, HttpStatus,
 } from '@nestjs/common';
@@ -7,6 +7,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ReceiptService } from './receipt.service.js';
 import { ConfirmReceiptDto } from './dto/confirm-receipt.dto.js';
+import { QueryReceiptDto } from './dto/query-receipt.dto.js';
+import { UpdateReceiptDto } from './dto/update-receipt.dto.js';
 
 @Controller('receipts')
 @UseGuards(AuthGuard('jwt'))
@@ -39,14 +41,18 @@ export class ReceiptController {
   @Get()
   async getUserScans(
     @Req() req: any,
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
+    @Query() query: QueryReceiptDto,
   ) {
-    return this.receiptService.getUserScans(
-      req.user.id,
-      page ? parseInt(page, 10) : 1,
-      limit ? parseInt(limit, 10) : 20,
-    );
+    return this.receiptService.getUserScans(req.user.id, query);
+  }
+
+  @Patch(':id')
+  async updateScan(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Body() dto: UpdateReceiptDto,
+  ) {
+    return this.receiptService.updateScan(req.user.id, id, dto);
   }
 
   @Delete(':id')
