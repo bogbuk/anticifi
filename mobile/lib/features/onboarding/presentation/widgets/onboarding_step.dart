@@ -7,12 +7,14 @@ class OnboardingStep extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
+  final Widget? customIcon;
 
   const OnboardingStep({
     super.key,
     required this.icon,
     required this.title,
     required this.description,
+    this.customIcon,
   });
 
   @override
@@ -22,31 +24,34 @@ class OnboardingStep extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.primary.withOpacity(0.2),
-                  AppColors.accent.withOpacity(0.2),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+          if (customIcon != null)
+            customIcon!
+          else
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primary.withOpacity(0.2),
+                    AppColors.accent.withOpacity(0.2),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(60),
               ),
-              borderRadius: BorderRadius.circular(60),
-            ),
-            child: ShaderMask(
-              shaderCallback: (bounds) => const LinearGradient(
-                colors: [AppColors.primary, AppColors.accent],
-              ).createShader(bounds),
-              child: Icon(
-                icon,
-                size: 56,
-                color: Colors.white,
+              child: ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [AppColors.primary, AppColors.accent],
+                ).createShader(bounds),
+                child: Icon(
+                  icon,
+                  size: 56,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
           const SizedBox(height: 48),
           Text(
             title,
