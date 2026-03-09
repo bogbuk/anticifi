@@ -6,6 +6,7 @@
 |---------|--------------|------|----------|
 | Landing (Astro + Nginx) | `https://anticifi.com` | 80 | Coolify |
 | Backend (NestJS) | `https://api.anticifi.com` | 3000 | Coolify |
+| Admin Panel (React + Nginx) | `https://admin.anticifi.com` | 80 | Coolify |
 | PostgreSQL 16 | `dss4w00kcc08sk08s0owok4c` (internal) | 5432 | Coolify DB |
 | Redis 7 | `fs40ggs00skko44ks8c0o0ko` (internal) | 6379 | Coolify DB |
 | NATS 2 | `ycw44w00gwgw4w84gkg08s4o-nats` (internal) | 4222 | Coolify Service |
@@ -20,6 +21,7 @@
 |----------|------|
 | Landing app | `agg8w0kwss80o8k8wwkggw48` |
 | Backend app | `dos0gk0cg4gk08s8o44s0og4` |
+| Admin Panel | `x0ccooccss4w48oo48488gko` |
 | PostgreSQL | `dss4w00kcc08sk08s0owok4c` |
 | Redis | `fs40ggs00skko44ks8c0o0ko` |
 | NATS service | `ycw44w00gwgw4w84gkg08s4o` |
@@ -62,7 +64,17 @@ curl https://api.anticifi.com/api/health
 - Domain: `https://api.anticifi.com`
 - ENV: runtime-only (not build-time) to avoid `NODE_ENV=production` breaking `npm ci`
 
-### 3. Restart Backend (after env changes)
+### 3. Deploy Admin Panel
+
+```bash
+coolify deploy uuid x0ccooccss4w48oo48488gko
+```
+
+- Source: `admin/` directory, multi-stage Dockerfile (node build → nginx serve)
+- Domain: `https://admin.anticifi.com`
+- ENV: `VITE_API_URL=https://api.anticifi.com` (build-time)
+
+### 4. Restart Backend (after env changes)
 
 ```bash
 coolify app restart dos0gk0cg4gk08s8o44s0og4
@@ -116,6 +128,7 @@ NATS_URL=nats://ycw44w00gwgw4w84gkg08s4o-nats:4222
 |------|------|-------|-----|
 | A | `@` | `<SERVER_IP>` | 600 |
 | A | `api` | `<SERVER_IP>` | 600 |
+| A | `admin` | `<SERVER_IP>` | 600 |
 
 ## Dockerfiles
 
