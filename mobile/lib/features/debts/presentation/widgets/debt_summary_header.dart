@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/debt_summary_entity.dart';
 import 'debt_progress_bar.dart';
 
@@ -15,9 +16,9 @@ class DebtSummaryHeader extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: context.appColors.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.appColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,10 +26,10 @@ class DebtSummaryHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Debt Overview',
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -66,8 +67,8 @@ class DebtSummaryHeader extends StatelessWidget {
               ),
               Text(
                 '\$${summary.totalCurrentBalance.toStringAsFixed(2)} remaining',
-                style: const TextStyle(
-                  color: AppColors.textMuted,
+                style: TextStyle(
+                  color: context.appColors.textMuted,
                   fontSize: 13,
                 ),
               ),
@@ -76,13 +77,13 @@ class DebtSummaryHeader extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              _buildStatChip('${summary.totalDebts}', 'Total'),
+              _buildStatChip(context, '${summary.totalDebts}', 'Total'),
               const SizedBox(width: 8),
-              _buildStatChip('${summary.activeDebts}', 'Active'),
+              _buildStatChip(context, '${summary.activeDebts}', 'Active'),
               const SizedBox(width: 8),
-              _buildStatChip('${summary.paidOffDebts}', 'Paid Off'),
+              _buildStatChip(context, '${summary.paidOffDebts}', 'Paid Off'),
               const SizedBox(width: 8),
-              _buildStatChip('${summary.overallProgress.toStringAsFixed(0)}%', 'Progress'),
+              _buildStatChip(context, '${summary.overallProgress.toStringAsFixed(0)}%', 'Progress'),
             ],
           ),
         ],
@@ -90,20 +91,20 @@ class DebtSummaryHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildStatChip(String value, String label) {
+  Widget _buildStatChip(BuildContext context, String value, String label) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
           children: [
             Text(
               value,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -111,8 +112,8 @@ class DebtSummaryHeader extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               label,
-              style: const TextStyle(
-                color: AppColors.textMuted,
+              style: TextStyle(
+                color: context.appColors.textMuted,
                 fontSize: 10,
               ),
             ),

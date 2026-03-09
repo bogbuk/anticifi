@@ -6,6 +6,7 @@ import '../database/local_database.dart';
 import '../storage/secure_storage.dart';
 import '../network/dio_client.dart';
 import '../services/biometric_service.dart';
+import '../services/speech_service.dart';
 import '../services/connectivity_service.dart';
 import '../services/sync_service.dart';
 
@@ -67,6 +68,7 @@ import '../../features/notifications/presentation/bloc/notifications_cubit.dart'
 
 import '../services/fcm_service.dart';
 import '../theme/theme_cubit.dart';
+import '../locale/locale_cubit.dart';
 
 import '../../features/receipts/data/datasources/receipt_remote_datasource.dart';
 import '../../features/receipts/data/repositories/receipt_repository_impl.dart';
@@ -140,9 +142,19 @@ Future<void> setupDI() async {
     ),
   );
 
+  // ── Speech ──────────────────────────────────────────────
+  getIt.registerSingleton<SpeechService>(
+    SpeechService(storage: getIt<SecureStorage>()),
+  );
+
   // ── Theme ──────────────────────────────────────────────
   getIt.registerSingleton<ThemeCubit>(
     ThemeCubit(storage: getIt<SecureStorage>()),
+  );
+
+  // ── Locale ──────────────────────────────────────────────
+  getIt.registerSingleton<LocaleCubit>(
+    LocaleCubit(storage: getIt<SecureStorage>()),
   );
 
   // ── Auth ──────────────────────────────────────────────

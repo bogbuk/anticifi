@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../transactions/presentation/widgets/transaction_tile.dart';
 import '../bloc/dashboard_cubit.dart';
 import '../bloc/dashboard_state.dart';
@@ -31,7 +32,6 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           'Dashboard',
@@ -39,7 +39,6 @@ class _DashboardPageState extends State<DashboardPage> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: AppColors.background,
         elevation: 0,
       ),
       body: BlocBuilder<DashboardCubit, DashboardState>(
@@ -65,21 +64,21 @@ class _DashboardPageState extends State<DashboardPage> {
                       color: AppColors.error,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
+                    Text(
                       'Failed to load dashboard',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       state.message,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textMuted,
+                        color: context.appColors.textMuted,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -107,7 +106,7 @@ class _DashboardPageState extends State<DashboardPage> {
             return RefreshIndicator(
               onRefresh: _onRefresh,
               color: AppColors.primary,
-              backgroundColor: AppColors.card,
+              backgroundColor: context.appColors.card,
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -154,33 +153,33 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: context.appColors.card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.appColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
               'Recent Transactions',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
           if (transactions.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(24),
+            Padding(
+              padding: const EdgeInsets.all(24),
               child: Center(
                 child: Text(
                   'No recent transactions',
                   style: TextStyle(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color: context.appColors.textSecondary,
                   ),
                 ),
               ),
@@ -190,9 +189,9 @@ class _DashboardPageState extends State<DashboardPage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: transactions.length > 10 ? 10 : transactions.length,
-              separatorBuilder: (_, __) => const Divider(
+              separatorBuilder: (_, __) => Divider(
                 height: 1,
-                color: AppColors.border,
+                color: context.appColors.border,
                 indent: 16,
                 endIndent: 16,
               ),

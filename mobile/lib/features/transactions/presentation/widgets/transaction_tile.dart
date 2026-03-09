@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/transaction_entity.dart';
 
 class TransactionTile extends StatelessWidget {
@@ -37,12 +38,12 @@ class TransactionTile extends StatelessWidget {
               final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  backgroundColor: AppColors.card,
-                  title: const Text('Delete Transaction',
-                      style: TextStyle(color: AppColors.textPrimary)),
-                  content: const Text(
+                  backgroundColor: context.appColors.card,
+                  title: Text('Delete Transaction',
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                  content: Text(
                       'Are you sure you want to delete this transaction?',
-                      style: TextStyle(color: AppColors.textSecondary)),
+                      style: TextStyle(color: context.appColors.textSecondary)),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(ctx).pop(false),
@@ -75,19 +76,19 @@ class TransactionTile extends StatelessWidget {
       ),
       title: Text(
         transaction.description ?? 'No description',
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
         '${_formatDate(transaction.date)}${transaction.categoryName != null ? ' \u2022 ${transaction.categoryName}' : ''}',
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
-          color: AppColors.textMuted,
+          color: context.appColors.textMuted,
         ),
       ),
       trailing: Text(

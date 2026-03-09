@@ -52,8 +52,7 @@ export class ReceiptService {
     userId: string,
     file: Express.Multer.File,
   ): Promise<ReceiptScan> {
-    // TODO: re-enable after testing
-    // await this.checkDailyLimit(userId);
+    await this.checkDailyLimit(userId);
     const filename = `${Date.now()}-${file.originalname}`;
     const filePath = path.join(this.uploadsDir, filename);
     fs.writeFileSync(filePath, file.buffer);
@@ -111,11 +110,32 @@ export class ReceiptService {
     return transaction;
   }
 
-  async getUserScans(userId: string): Promise<ReceiptScan[]> {
-    return this.receiptModel.findAll({
+  async getUserScans(
+    userId: string,
+    page = 1,
+    limit = 20,
+  ): Promise<{ data: ReceiptScan[]; total: number; page: number; limit: number }> {
+    const offset = (page - 1) * limit;
+    const { rows, count } = await this.receiptModel.findAndCountAll({
       where: { userId },
       order: [['createdAt', 'DESC']],
+      limit,
+      offset,
     });
+
+    return { data: rows, total: count, page, limit };
+  }
+
+  async deleteScan(userId: string, receiptId: string): Promise<void> {
+    const receipt = await this.receiptModel.findOne({
+      where: { id: receiptId, userId },
+    });
+
+    if (!receipt) {
+      throw new NotFoundException('Receipt scan not found');
+    }
+
+    await receipt.destroy();
   }
 
   private parseAmount(raw: string): number | null {

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/budget_entity.dart';
 import '../bloc/budgets_cubit.dart';
 import '../bloc/budgets_state.dart';
@@ -31,7 +32,6 @@ class _BudgetsPageState extends State<BudgetsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Budgets'),
       ),
@@ -42,9 +42,9 @@ class _BudgetsPageState extends State<BudgetsPage> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: context.appColors.card,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.appColors.border),
               ),
               child: Row(
                 children: [
@@ -67,7 +67,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                             fontWeight: FontWeight.w600,
                             color: _showActive
                                 ? AppColors.primaryLight
-                                : AppColors.textMuted,
+                                : context.appColors.textMuted,
                           ),
                         ),
                       ),
@@ -92,7 +92,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                             fontWeight: FontWeight.w600,
                             color: !_showActive
                                 ? AppColors.primaryLight
-                                : AppColors.textMuted,
+                                : context.appColors.textMuted,
                           ),
                         ),
                       ),
@@ -132,28 +132,28 @@ class _BudgetsPageState extends State<BudgetsPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.account_balance_wallet_outlined,
                             size: 64,
-                            color: AppColors.textMuted,
+                            color: context.appColors.textMuted,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             _showActive
                                 ? 'No active budgets'
                                 : 'No inactive budgets',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
-                              color: AppColors.textSecondary,
+                              color: context.appColors.textSecondary,
                             ),
                           ),
                           if (_showActive) ...[
                             const SizedBox(height: 8),
-                            const Text(
+                            Text(
                               'Tap + to create your first budget',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: AppColors.textMuted,
+                                color: context.appColors.textMuted,
                               ),
                             ),
                           ],
@@ -164,7 +164,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
 
                   return RefreshIndicator(
                     color: AppColors.primary,
-                    backgroundColor: AppColors.card,
+                    backgroundColor: context.appColors.card,
                     onRefresh: () =>
                         context.read<BudgetsCubit>().loadBudgets(),
                     child: ListView.builder(
@@ -215,21 +215,21 @@ class _BudgetsPageState extends State<BudgetsPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: const Text(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(
           'Delete Budget',
-          style: TextStyle(color: AppColors.textPrimary),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         ),
         content: Text(
           'Are you sure you want to delete "${budget.name}"?',
-          style: const TextStyle(color: AppColors.textSecondary),
+          style: TextStyle(color: context.appColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: context.appColors.textSecondary),
             ),
           ),
           TextButton(

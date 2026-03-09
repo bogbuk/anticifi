@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/debt_entity.dart';
 import '../bloc/debts_cubit.dart';
 import '../bloc/debts_state.dart';
@@ -39,7 +40,6 @@ class _DebtsPageState extends State<DebtsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Debts')),
       body: Column(
         children: [
@@ -48,9 +48,9 @@ class _DebtsPageState extends State<DebtsPage> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: context.appColors.card,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.appColors.border),
               ),
               child: Row(
                 children: List.generate(3, (index) {
@@ -75,7 +75,7 @@ class _DebtsPageState extends State<DebtsPage> {
                             fontWeight: FontWeight.w600,
                             color: isSelected
                                 ? AppColors.primaryLight
-                                : AppColors.textMuted,
+                                : context.appColors.textMuted,
                           ),
                         ),
                       ),
@@ -108,7 +108,7 @@ class _DebtsPageState extends State<DebtsPage> {
                   final filtered = _filterDebts(state.debts);
                   return RefreshIndicator(
                     color: AppColors.primary,
-                    backgroundColor: AppColors.card,
+                    backgroundColor: context.appColors.card,
                     onRefresh: () => context.read<DebtsCubit>().loadDebts(),
                     child: ListView(
                       children: [
@@ -119,7 +119,7 @@ class _DebtsPageState extends State<DebtsPage> {
                             child: Center(
                               child: Column(
                                 children: [
-                                  const Icon(Icons.money_off, size: 64, color: AppColors.textMuted),
+                                  Icon(Icons.money_off, size: 64, color: context.appColors.textMuted),
                                   const SizedBox(height: 16),
                                   Text(
                                     _tabIndex == 0
@@ -127,13 +127,13 @@ class _DebtsPageState extends State<DebtsPage> {
                                         : _tabIndex == 1
                                             ? 'No paid off debts'
                                             : 'No debts',
-                                    style: const TextStyle(fontSize: 18, color: AppColors.textSecondary),
+                                    style: TextStyle(fontSize: 18, color: context.appColors.textSecondary),
                                   ),
                                   if (_tabIndex == 0) ...[
                                     const SizedBox(height: 8),
-                                    const Text(
+                                    Text(
                                       'Tap + to add your first debt',
-                                      style: TextStyle(fontSize: 14, color: AppColors.textMuted),
+                                      style: TextStyle(fontSize: 14, color: context.appColors.textMuted),
                                     ),
                                   ],
                                 ],
@@ -175,7 +175,7 @@ class _DebtsPageState extends State<DebtsPage> {
             context.read<DebtsCubit>().loadDebts();
           }
         },
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: Theme.of(context).colorScheme.onSurface),
       ),
     );
   }

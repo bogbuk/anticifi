@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 
 class BudgetProgressBar extends StatelessWidget {
   final double percentage;
@@ -25,7 +26,7 @@ class BudgetProgressBar extends StatelessWidget {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: AppColors.border,
+        color: context.appColors.border,
         borderRadius: BorderRadius.circular(height / 2),
       ),
       child: LayoutBuilder(

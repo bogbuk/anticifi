@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../bloc/notifications_cubit.dart';
 import '../bloc/notifications_state.dart';
 import '../widgets/notification_card.dart';
@@ -24,10 +25,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Notifications'),
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -70,16 +70,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.error_outline,
                     size: 48,
-                    color: AppColors.textMuted,
+                    color: context.appColors.textMuted,
                   ),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     'Failed to load notifications',
                     style: TextStyle(
-                      color: AppColors.textSecondary,
+                      color: context.appColors.textSecondary,
                       fontSize: 16,
                     ),
                   ),
@@ -108,7 +108,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 await context.read<NotificationsCubit>().loadNotifications();
               },
               color: AppColors.primary,
-              backgroundColor: AppColors.surface,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 itemCount: state.notifications.length,
@@ -144,29 +144,29 @@ class _NotificationsPageState extends State<NotificationsPage> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: AppColors.card,
+              color: context.appColors.card,
               borderRadius: BorderRadius.circular(40),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.notifications_none,
               size: 40,
-              color: AppColors.textMuted,
+              color: context.appColors.textMuted,
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'No notifications yet',
             style: TextStyle(
-              color: AppColors.textSecondary,
+              color: context.appColors.textSecondary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'You\'ll see your alerts and updates here',
             style: TextStyle(
-              color: AppColors.textMuted,
+              color: context.appColors.textMuted,
               fontSize: 14,
             ),
           ),

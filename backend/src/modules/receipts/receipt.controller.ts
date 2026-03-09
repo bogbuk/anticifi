@@ -1,6 +1,7 @@
 import {
-  Controller, Post, Get, Param, Body, UseGuards,
+  Controller, Post, Get, Delete, Param, Body, Query, UseGuards,
   UseInterceptors, UploadedFile, Req, ParseFilePipe, MaxFileSizeValidator,
+  HttpCode, HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -36,7 +37,24 @@ export class ReceiptController {
   }
 
   @Get()
-  async getUserScans(@Req() req: any) {
-    return this.receiptService.getUserScans(req.user.id);
+  async getUserScans(
+    @Req() req: any,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.receiptService.getUserScans(
+      req.user.id,
+      page ? parseInt(page, 10) : 1,
+      limit ? parseInt(limit, 10) : 20,
+    );
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteScan(
+    @Req() req: any,
+    @Param('id') id: string,
+  ) {
+    await this.receiptService.deleteScan(req.user.id, id);
   }
 }

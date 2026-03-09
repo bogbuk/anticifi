@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../domain/entities/export_entity.dart';
 import '../bloc/export_cubit.dart';
@@ -39,11 +40,8 @@ class _ExportPageState extends State<ExportPage> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.dark(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
-              surface: AppColors.card,
-              onSurface: AppColors.textPrimary,
             ),
           ),
           child: child!,
@@ -72,10 +70,9 @@ class _ExportPageState extends State<ExportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Export Data'),
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
       body: BlocConsumer<ExportCubit, ExportState>(
@@ -104,10 +101,10 @@ class _ExportPageState extends State<ExportPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Format selection
-                const Text(
+                Text(
                   'Export Format',
                   style: TextStyle(
-                    color: AppColors.textPrimary,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -135,10 +132,10 @@ class _ExportPageState extends State<ExportPage> {
                 const SizedBox(height: 24),
 
                 // Date range
-                const Text(
+                Text(
                   'Date Range (Optional)',
                   style: TextStyle(
-                    color: AppColors.textPrimary,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -154,11 +151,11 @@ class _ExportPageState extends State<ExportPage> {
                         onTap: () => _pickDate(isStart: true),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
                         '—',
-                        style: TextStyle(color: AppColors.textMuted),
+                        style: TextStyle(color: context.appColors.textMuted),
                       ),
                     ),
                     Expanded(
@@ -179,10 +176,10 @@ class _ExportPageState extends State<ExportPage> {
                         _startDate = null;
                         _endDate = null;
                       }),
-                      child: const Text(
+                      child: Text(
                         'Clear dates',
                         style: TextStyle(
-                          color: AppColors.textMuted,
+                          color: context.appColors.textMuted,
                           fontSize: 12,
                         ),
                       ),
@@ -207,8 +204,8 @@ class _ExportPageState extends State<ExportPage> {
                           _selectedFormat == ExportFormat.csv
                               ? 'CSV file with columns: Date, Description, Amount, Type, Category, Account'
                               : 'PDF report with summary and transaction table',
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
+                          style: TextStyle(
+                            color: context.appColors.textSecondary,
                             fontSize: 13,
                           ),
                         ),
@@ -241,10 +238,10 @@ class _ExportPageState extends State<ExportPage> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary.withOpacity(0.15)
-              : AppColors.card,
+              : context.appColors.card,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
+            color: isSelected ? AppColors.primary : context.appColors.border,
           ),
         ),
         child: Column(
@@ -252,14 +249,14 @@ class _ExportPageState extends State<ExportPage> {
             Icon(
               icon,
               size: 32,
-              color: isSelected ? AppColors.primary : AppColors.textMuted,
+              color: isSelected ? AppColors.primary : context.appColors.textMuted,
             ),
             const SizedBox(height: 8),
             Text(
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: isSelected ? AppColors.primary : AppColors.textMuted,
+                color: isSelected ? AppColors.primary : context.appColors.textMuted,
               ),
             ),
           ],
@@ -274,20 +271,20 @@ class _ExportPageState extends State<ExportPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: context.appColors.card,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.appColors.border),
         ),
         child: Row(
           children: [
-            const Icon(Icons.calendar_today_outlined,
-                color: AppColors.textMuted, size: 16),
+            Icon(Icons.calendar_today_outlined,
+                color: context.appColors.textMuted, size: 16),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  color: context.appColors.textSecondary,
                   fontSize: 13,
                 ),
                 overflow: TextOverflow.ellipsis,

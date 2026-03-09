@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/account_entity.dart';
 
 class AccountCard extends StatelessWidget {
@@ -71,14 +72,14 @@ class AccountCard extends StatelessWidget {
         return await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            backgroundColor: AppColors.card,
-            title: const Text(
+            backgroundColor: context.appColors.card,
+            title: Text(
               'Delete Account',
-              style: TextStyle(color: AppColors.textPrimary),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             ),
             content: Text(
               'Are you sure you want to delete "${account.name}"?',
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: context.appColors.textSecondary),
             ),
             actions: [
               TextButton(
@@ -103,9 +104,9 @@ class AccountCard extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.card,
+            color: context.appColors.card,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: context.appColors.border),
           ),
           child: Row(
             children: [
@@ -129,18 +130,18 @@ class AccountCard extends StatelessWidget {
                   children: [
                     Text(
                       account.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       account.bank ?? account.type,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textMuted,
+                        color: context.appColors.textMuted,
                       ),
                     ),
                   ],

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
@@ -78,7 +79,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
     final isLastPage = _currentPage == _steps.length - 1;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -89,10 +89,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 padding: const EdgeInsets.all(16),
                 child: TextButton(
                   onPressed: _completeOnboarding,
-                  child: const Text(
+                  child: Text(
                     'Skip',
                     style: TextStyle(
-                      color: AppColors.textSecondary,
+                      color: context.appColors.textSecondary,
                       fontSize: 16,
                     ),
                   ),
@@ -128,7 +128,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       borderRadius: BorderRadius.circular(4),
                       color: _currentPage == index
                           ? AppColors.primary
-                          : AppColors.textMuted.withOpacity(0.3),
+                          : context.appColors.textMuted.withOpacity(0.3),
                     ),
                   ),
                 ),

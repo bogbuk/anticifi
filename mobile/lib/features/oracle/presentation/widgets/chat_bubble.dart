@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/prediction_entity.dart';
 import 'forecast_chart.dart';
 
@@ -40,7 +41,7 @@ class ChatBubble extends StatelessWidget {
                             end: Alignment.bottomRight,
                           )
                         : null,
-                    color: message.isUser ? null : AppColors.card,
+                    color: message.isUser ? null : context.appColors.card,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(16),
                       topRight: const Radius.circular(16),
@@ -57,7 +58,7 @@ class ChatBubble extends StatelessWidget {
                           ]
                         : [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
                               blurRadius: 4,
                               offset: const Offset(0, 1),
                             ),
@@ -68,7 +69,7 @@ class ChatBubble extends StatelessWidget {
                     style: TextStyle(
                       color: message.isUser
                           ? Colors.white
-                          : AppColors.textPrimary,
+                          : Theme.of(context).colorScheme.onSurface,
                       fontSize: 14,
                       height: 1.4,
                     ),

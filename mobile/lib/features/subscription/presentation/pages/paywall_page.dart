@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../bloc/subscription_cubit.dart';
 import '../bloc/subscription_state.dart';
 
@@ -24,10 +25,9 @@ class _PaywallPageState extends State<PaywallPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Upgrade to Premium'),
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
       body: BlocConsumer<SubscriptionCubit, SubscriptionState>(
@@ -59,9 +59,9 @@ class _PaywallPageState extends State<PaywallPage> {
                   const CircularProgressIndicator(color: AppColors.primary),
                   if (state is SubscriptionPurchasing) ...[
                     const SizedBox(height: 16),
-                    const Text(
+                    Text(
                       'Processing purchase...',
-                      style: TextStyle(color: AppColors.textSecondary),
+                      style: TextStyle(color: context.appColors.textSecondary),
                     ),
                   ],
                 ],
@@ -93,9 +93,9 @@ class _PaywallPageState extends State<PaywallPage> {
                   onPressed: () {
                     context.read<SubscriptionCubit>().restorePurchases();
                   },
-                  child: const Text(
+                  child: Text(
                     'Restore Purchases',
-                    style: TextStyle(color: AppColors.textMuted, fontSize: 14),
+                    style: TextStyle(color: context.appColors.textMuted, fontSize: 14),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -128,19 +128,19 @@ class _PaywallPageState extends State<PaywallPage> {
           ),
         ),
         const SizedBox(height: 20),
-        const Text(
+        Text(
           'Unlock Full Power',
           style: TextStyle(
-            color: AppColors.textPrimary,
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 28,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 8),
-        const Text(
+        Text(
           'Get unlimited access to all premium features',
           style: TextStyle(
-            color: AppColors.textSecondary,
+            color: context.appColors.textSecondary,
             fontSize: 16,
           ),
           textAlign: TextAlign.center,
@@ -164,17 +164,17 @@ class _PaywallPageState extends State<PaywallPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: context.appColors.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.appColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Premium includes:',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -197,8 +197,8 @@ class _PaywallPageState extends State<PaywallPage> {
                   const SizedBox(width: 12),
                   Text(
                     f['title'] as String,
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 15,
                     ),
                   ),
@@ -284,9 +284,9 @@ class _PaywallPageState extends State<PaywallPage> {
                   end: Alignment.bottomRight,
                 )
               : null,
-          color: isPopular ? null : AppColors.card,
+          color: isPopular ? null : context.appColors.card,
           borderRadius: BorderRadius.circular(16),
-          border: isPopular ? null : Border.all(color: AppColors.border),
+          border: isPopular ? null : Border.all(color: context.appColors.border),
         ),
         child: Column(
           children: [
@@ -311,7 +311,7 @@ class _PaywallPageState extends State<PaywallPage> {
             Text(
               title,
               style: TextStyle(
-                color: isPopular ? Colors.white70 : AppColors.textSecondary,
+                color: isPopular ? Colors.white70 : context.appColors.textSecondary,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -320,7 +320,7 @@ class _PaywallPageState extends State<PaywallPage> {
             Text(
               price,
               style: TextStyle(
-                color: isPopular ? Colors.white : AppColors.textPrimary,
+                color: isPopular ? Colors.white : Theme.of(context).colorScheme.onSurface,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -329,7 +329,7 @@ class _PaywallPageState extends State<PaywallPage> {
             Text(
               subtitle,
               style: TextStyle(
-                color: isPopular ? Colors.white60 : AppColors.textMuted,
+                color: isPopular ? Colors.white60 : context.appColors.textMuted,
                 fontSize: 13,
               ),
             ),

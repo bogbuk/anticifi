@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/notification_entity.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -20,7 +21,7 @@ class NotificationCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: context.appColors.card,
           borderRadius: BorderRadius.circular(12),
           border: Border(
             left: BorderSide(
@@ -41,12 +42,12 @@ class NotificationCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: _iconColor.withOpacity(0.15),
+                  color: _iconColor(context).withOpacity(0.15),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   _icon,
-                  color: _iconColor,
+                  color: _iconColor(context),
                   size: 20,
                 ),
               ),
@@ -63,8 +64,8 @@ class NotificationCard extends StatelessWidget {
                             notification.title,
                             style: TextStyle(
                               color: notification.isRead
-                                  ? AppColors.textSecondary
-                                  : AppColors.textPrimary,
+                                  ? context.appColors.textSecondary
+                                  : Theme.of(context).colorScheme.onSurface,
                               fontSize: 15,
                               fontWeight: notification.isRead
                                   ? FontWeight.w400
@@ -88,8 +89,8 @@ class NotificationCard extends StatelessWidget {
                       notification.body,
                       style: TextStyle(
                         color: notification.isRead
-                            ? AppColors.textMuted
-                            : AppColors.textSecondary,
+                            ? context.appColors.textMuted
+                            : context.appColors.textSecondary,
                         fontSize: 13,
                       ),
                       maxLines: 2,
@@ -98,8 +99,8 @@ class NotificationCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       _formatTimestamp(notification.createdAt),
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
+                      style: TextStyle(
+                        color: context.appColors.textMuted,
                         fontSize: 12,
                       ),
                     ),
@@ -130,7 +131,7 @@ class NotificationCard extends StatelessWidget {
     }
   }
 
-  Color get _iconColor {
+  Color _iconColor(BuildContext context) {
     switch (notification.type) {
       case 'balance_alert':
         return AppColors.warning;
@@ -143,7 +144,7 @@ class NotificationCard extends StatelessWidget {
       case 'debt_payment_due':
         return AppColors.error;
       default:
-        return AppColors.textSecondary;
+        return context.appColors.textSecondary;
     }
   }
 

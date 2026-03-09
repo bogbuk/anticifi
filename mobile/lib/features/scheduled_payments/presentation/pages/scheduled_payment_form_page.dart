@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../../accounts/presentation/bloc/accounts_cubit.dart';
 import '../../../accounts/presentation/bloc/accounts_state.dart';
@@ -83,12 +84,9 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.dark(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
               primary: AppColors.primary,
-              surface: AppColors.card,
-              onSurface: AppColors.textPrimary,
             ),
-            dialogBackgroundColor: AppColors.surface,
           ),
           child: child!,
         );
@@ -177,7 +175,6 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
         appBar: AppBar(
           title: Text(
             _isEditing
@@ -195,12 +192,12 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                 // Name
                 TextFormField(
                   controller: _nameController,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Payment Name',
                     prefixIcon: Icon(
                       Icons.label_outline,
-                      color: AppColors.textMuted,
+                      color: context.appColors.textMuted,
                     ),
                   ),
                   validator: (value) {
@@ -215,15 +212,15 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                 // Amount
                 TextFormField(
                   controller: _amountController,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Amount',
                     prefixIcon: Icon(
                       Icons.attach_money,
-                      color: AppColors.textMuted,
+                      color: context.appColors.textMuted,
                     ),
                   ),
                   validator: (value) {
@@ -241,9 +238,9 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                 // Type toggle (Income / Expense)
                 Container(
                   decoration: BoxDecoration(
-                    color: AppColors.card,
+                    color: context.appColors.card,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.border),
+                    border: Border.all(color: context.appColors.border),
                   ),
                   child: Row(
                     children: [
@@ -268,7 +265,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                                 fontWeight: FontWeight.w600,
                                 color: _selectedType == 'expense'
                                     ? AppColors.error
-                                    : AppColors.textMuted,
+                                    : context.appColors.textMuted,
                               ),
                             ),
                           ),
@@ -295,7 +292,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                                 fontWeight: FontWeight.w600,
                                 color: _selectedType == 'income'
                                     ? AppColors.success
-                                    : AppColors.textMuted,
+                                    : context.appColors.textMuted,
                               ),
                             ),
                           ),
@@ -309,13 +306,13 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                 // Frequency dropdown
                 DropdownButtonFormField<String>(
                   value: _selectedFrequency,
-                  dropdownColor: AppColors.card,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  dropdownColor: context.appColors.card,
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Frequency',
                     prefixIcon: Icon(
                       Icons.event_repeat,
-                      color: AppColors.textMuted,
+                      color: context.appColors.textMuted,
                     ),
                   ),
                   items: _frequencies
@@ -366,15 +363,15 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
 
                       return DropdownButtonFormField<String>(
                         value: validId,
-                        dropdownColor: AppColors.card,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
+                        dropdownColor: context.appColors.card,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Account',
                           prefixIcon: Icon(
                             Icons.account_balance_wallet_outlined,
-                            color: AppColors.textMuted,
+                            color: context.appColors.textMuted,
                           ),
                         ),
                         items: accounts
@@ -428,34 +425,34 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                       vertical: 16,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.card,
+                      color: context.appColors.card,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.appColors.border),
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.calendar_today,
-                          color: AppColors.textMuted,
+                          color: context.appColors.textMuted,
                           size: 20,
                         ),
                         const SizedBox(width: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Start Date',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: AppColors.textMuted,
+                                color: context.appColors.textMuted,
                               ),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               dateFormat.format(_startDate),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 15,
-                                color: AppColors.textPrimary,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                           ],
@@ -475,15 +472,15 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                       vertical: 16,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.card,
+                      color: context.appColors.card,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.appColors.border),
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.event,
-                          color: AppColors.textMuted,
+                          color: context.appColors.textMuted,
                           size: 20,
                         ),
                         const SizedBox(width: 12),
@@ -492,11 +489,11 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'End Date (optional)',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: AppColors.textMuted,
+                                  color: context.appColors.textMuted,
                                 ),
                               ),
                               const SizedBox(height: 2),
@@ -507,8 +504,8 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: _endDate != null
-                                      ? AppColors.textPrimary
-                                      : AppColors.textMuted,
+                                      ? Theme.of(context).colorScheme.onSurface
+                                      : context.appColors.textMuted,
                                 ),
                               ),
                             ],
@@ -518,9 +515,9 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                           GestureDetector(
                             onTap: () =>
                                 setState(() => _endDate = null),
-                            child: const Icon(
+                            child: Icon(
                               Icons.close,
-                              color: AppColors.textMuted,
+                              color: context.appColors.textMuted,
                               size: 20,
                             ),
                           ),
@@ -533,16 +530,16 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                 // Description (optional)
                 TextFormField(
                   controller: _descriptionController,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   maxLines: 3,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Description (optional)',
                     alignLabelWithHint: true,
                     prefixIcon: Padding(
-                      padding: EdgeInsets.only(bottom: 40),
+                      padding: const EdgeInsets.only(bottom: 40),
                       child: Icon(
                         Icons.notes,
-                        color: AppColors.textMuted,
+                        color: context.appColors.textMuted,
                       ),
                     ),
                   ),
@@ -557,19 +554,19 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.card,
+                      color: context.appColors.card,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.appColors.border),
                     ),
                     child: Row(
                       mainAxisAlignment:
                           MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Active',
                           style: TextStyle(
                             fontSize: 15,
-                            color: AppColors.textPrimary,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         Switch(

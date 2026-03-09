@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 
 import 'core/di/injection.dart';
+import 'core/locale/locale_cubit.dart';
+import 'core/locale/locale_state.dart';
 import 'core/router/app_router.dart';
 import 'core/services/fcm_service.dart';
 import 'core/theme/app_theme.dart';
@@ -20,6 +24,7 @@ class AnticiFiApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(create: (_) => getIt<AuthBloc>()),
         BlocProvider<ThemeCubit>.value(value: getIt<ThemeCubit>()),
+        BlocProvider<LocaleCubit>.value(value: getIt<LocaleCubit>()),
       ],
       child: Builder(
         builder: (context) {
@@ -38,15 +43,22 @@ class AnticiFiApp extends StatelessWidget {
             },
             child: BlocBuilder<ThemeCubit, ThemeState>(
               builder: (context, themeState) {
-                return MaterialApp.router(
-                  title: 'AnticiFi',
-                  debugShowCheckedModeBanner: false,
-                  theme: AppTheme.lightTheme,
-                  darkTheme: AppTheme.darkTheme,
-                  themeMode: themeState.themeMode,
-                  routerConfig: router,
-                  builder: (context, child) {
-                    return OfflineBanner(child: child ?? const SizedBox.shrink());
+                return BlocBuilder<LocaleCubit, LocaleState>(
+                  builder: (context, localeState) {
+                    return MaterialApp.router(
+                      title: 'AnticiFi',
+                      debugShowCheckedModeBanner: false,
+                      theme: AppTheme.lightTheme,
+                      darkTheme: AppTheme.darkTheme,
+                      themeMode: themeState.themeMode,
+                      locale: localeState.locale,
+                      supportedLocales: AppLocalizations.supportedLocales,
+                      localizationsDelegates: AppLocalizations.localizationsDelegates,
+                      routerConfig: router,
+                      builder: (context, child) {
+                        return OfflineBanner(child: child ?? const SizedBox.shrink());
+                      },
+                    );
                   },
                 );
               },

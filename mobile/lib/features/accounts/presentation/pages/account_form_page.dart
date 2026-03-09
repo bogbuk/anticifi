@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../domain/entities/account_entity.dart';
 import '../bloc/accounts_cubit.dart';
@@ -113,7 +114,6 @@ class _AccountFormPageState extends State<AccountFormPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
         appBar: AppBar(
           title: Text(_isEditing ? 'Edit Account' : 'New Account'),
         ),
@@ -127,11 +127,11 @@ class _AccountFormPageState extends State<AccountFormPage> {
                 // Name
                 TextFormField(
                   controller: _nameController,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Account Name',
                     prefixIcon:
-                        Icon(Icons.label_outline, color: AppColors.textMuted),
+                        Icon(Icons.label_outline, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -145,12 +145,12 @@ class _AccountFormPageState extends State<AccountFormPage> {
                 // Type dropdown
                 DropdownButtonFormField<String>(
                   value: _selectedType,
-                  dropdownColor: AppColors.card,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  dropdownColor: context.appColors.card,
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Account Type',
                     prefixIcon: Icon(Icons.category_outlined,
-                        color: AppColors.textMuted),
+                        color: context.appColors.textMuted),
                   ),
                   items: _accountTypes
                       .map((t) => DropdownMenuItem(
@@ -169,11 +169,11 @@ class _AccountFormPageState extends State<AccountFormPage> {
                 // Bank (optional)
                 TextFormField(
                   controller: _bankController,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Bank (optional)',
                     prefixIcon: Icon(Icons.account_balance_outlined,
-                        color: AppColors.textMuted),
+                        color: context.appColors.textMuted),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -181,12 +181,12 @@ class _AccountFormPageState extends State<AccountFormPage> {
                 // Currency dropdown
                 DropdownButtonFormField<String>(
                   value: _selectedCurrency,
-                  dropdownColor: AppColors.card,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  dropdownColor: context.appColors.card,
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Currency',
                     prefixIcon: Icon(Icons.attach_money_outlined,
-                        color: AppColors.textMuted),
+                        color: context.appColors.textMuted),
                   ),
                   items: _currencies
                       .map((c) => DropdownMenuItem(
@@ -205,13 +205,13 @@ class _AccountFormPageState extends State<AccountFormPage> {
                 // Initial balance
                 TextFormField(
                   controller: _initialBalanceController,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Initial Balance',
                     prefixIcon:
-                        Icon(Icons.money_outlined, color: AppColors.textMuted),
+                        Icon(Icons.money_outlined, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value != null && value.isNotEmpty) {

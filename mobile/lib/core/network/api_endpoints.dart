@@ -2,10 +2,7 @@ import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, Tar
 
 class ApiEndpoints {
   static String get baseUrl {
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:3000/api';
-    }
-    return 'http://localhost:3000/api';
+    return 'https://api.anticifi.com/api';
   }
 
   // Auth

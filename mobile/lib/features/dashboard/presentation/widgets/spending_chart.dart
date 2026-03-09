@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/dashboard_entity.dart';
 
 class SpendingChart extends StatefulWidget {
@@ -49,23 +49,23 @@ class _SpendingChartState extends State<SpendingChart> {
         width: double.infinity,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: context.appColors.card,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.appColors.border),
         ),
         child: Column(
-          children: const [
+          children: [
             Icon(
               Icons.pie_chart_outline,
               size: 48,
-              color: AppColors.textMuted,
+              color: context.appColors.textMuted,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               'No spending data yet',
               style: TextStyle(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: context.appColors.textSecondary,
               ),
             ),
           ],
@@ -80,19 +80,19 @@ class _SpendingChartState extends State<SpendingChart> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: context.appColors.card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.appColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Spending by Category',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 20),
@@ -176,26 +176,26 @@ class _SpendingChartState extends State<SpendingChart> {
             Expanded(
               child: Text(
                 category.categoryName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: AppColors.textSecondary,
+                  color: context.appColors.textSecondary,
                 ),
               ),
             ),
             Text(
               '\$${category.amount.toStringAsFixed(2)}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(width: 8),
             Text(
               '${percentage.toStringAsFixed(1)}%',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppColors.textMuted,
+                color: context.appColors.textMuted,
               ),
             ),
           ],

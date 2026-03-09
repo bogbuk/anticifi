@@ -6,7 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/di/injection.dart';
+import '../../../../core/network/api_endpoints.dart';
+import '../../../../core/network/dio_client.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../accounts/domain/entities/account_entity.dart';
 import '../../../accounts/domain/repositories/accounts_repository.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
@@ -26,8 +29,11 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
   final _amountController = TextEditingController();
   final _merchantController = TextEditingController();
 
+  File? _selectedImage;
   List<AccountEntity> _accounts = [];
+  List<Map<String, dynamic>> _categories = [];
   String? _selectedAccountId;
+  String? _selectedCategoryId;
   String _selectedType = 'expense';
   DateTime _selectedDate = DateTime.now();
 
@@ -35,6 +41,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
   void initState() {
     super.initState();
     _loadAccounts();
+    _loadCategories();
   }
 
   Future<void> _loadAccounts() async {
@@ -45,6 +52,21 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           _accounts = accounts;
           _selectedAccountId =
               accounts.isNotEmpty ? accounts.first.id : null;
+        });
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _loadCategories() async {
+    try {
+      final response =
+          await getIt<DioClient>().dio.get(ApiEndpoints.categories);
+      final list = response.data as List<dynamic>;
+      if (mounted) {
+        setState(() {
+          _categories = list
+              .map((e) => e as Map<String, dynamic>)
+              .toList();
         });
       }
     } catch (_) {}
@@ -65,6 +87,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
       imageQuality: 70,
     );
     if (picked != null && mounted) {
+      setState(() => _selectedImage = File(picked.path));
       context.read<ReceiptCubit>().scanReceipt(File(picked.path));
     }
   }
@@ -109,16 +132,16 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
               : null,
           date: _selectedDate.toIso8601String().split('T').first,
           type: _selectedType,
+          categoryId: _selectedCategoryId,
         );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Scan Receipt'),
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
       body: BlocConsumer<ReceiptCubit, ReceiptState>(
@@ -152,12 +175,23 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
-                  CircularProgressIndicator(color: AppColors.primary),
-                  SizedBox(height: 16),
+                children: [
+                  if (_selectedImage != null) ...[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.file(
+                        _selectedImage!,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                  const CircularProgressIndicator(color: AppColors.primary),
+                  const SizedBox(height: 16),
                   Text(
                     'Processing receipt...',
-                    style: TextStyle(color: AppColors.textSecondary),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -191,11 +225,11 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
               color: AppColors.primary.withOpacity(0.5),
             ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'Scan a receipt to auto-fill\ntransaction details',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: AppColors.textSecondary,
+                color: context.appColors.textSecondary,
                 fontSize: 16,
               ),
             ),
@@ -232,13 +266,25 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (_selectedImage != null) ...[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.file(
+                _selectedImage!,
+                height: 120,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           if (scan.parsedData != null) ...[
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: context.appColors.card,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.appColors.border),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,12 +337,58 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                 );
               }).toList(),
               onChanged: (value) => setState(() => _selectedAccountId = value),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Account',
                 prefixIcon:
-                    Icon(Icons.account_balance, color: AppColors.textMuted),
+                    Icon(Icons.account_balance, color: context.appColors.textMuted),
               ),
-              dropdownColor: AppColors.card,
+              dropdownColor: context.appColors.card,
+            )
+          else
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.account_balance_outlined,
+                    color: Theme.of(context).colorScheme.error,
+                    size: 32,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Please create an account first',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    icon: Icon(Icons.add, color: Theme.of(context).colorScheme.primary),
+                    label: Text(
+                      'Add Account',
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () async {
+                      final result = await context.push('/accounts/add');
+                      if (result == true) _loadAccounts();
+                    },
+                  ),
+                ],
+              ),
             ),
           const SizedBox(height: 16),
           // Amount
@@ -310,10 +402,10 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
             keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),
             textAlign: TextAlign.center,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Amount',
               prefixIcon:
-                  Icon(Icons.attach_money, color: AppColors.textMuted),
+                  Icon(Icons.attach_money, color: context.appColors.textMuted),
             ),
           ),
           const SizedBox(height: 16),
@@ -321,12 +413,45 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           TextFormField(
             controller: _merchantController,
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Merchant',
               prefixIcon:
-                  Icon(Icons.store_outlined, color: AppColors.textMuted),
+                  Icon(Icons.store_outlined, color: context.appColors.textMuted),
             ),
           ),
+          const SizedBox(height: 16),
+          // Category
+          if (_categories.isNotEmpty)
+            DropdownButtonFormField<String>(
+              value: _selectedCategoryId,
+              items: [
+                DropdownMenuItem<String>(
+                  value: null,
+                  child: Text(
+                    'No category',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+                ..._categories.map((c) {
+                  return DropdownMenuItem<String>(
+                    value: c['id'] as String,
+                    child: Text(
+                      c['name'] as String,
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                  );
+                }),
+              ],
+              onChanged: (value) => setState(() => _selectedCategoryId = value),
+              decoration: InputDecoration(
+                labelText: 'Category',
+                prefixIcon:
+                    Icon(Icons.category_outlined, color: context.appColors.textMuted),
+              ),
+              dropdownColor: context.appColors.card,
+            ),
           const SizedBox(height: 16),
           // Date
           GestureDetector(
@@ -339,11 +464,8 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                 builder: (context, child) {
                   return Theme(
                     data: Theme.of(context).copyWith(
-                      colorScheme: const ColorScheme.dark(
+                      colorScheme: Theme.of(context).colorScheme.copyWith(
                         primary: AppColors.primary,
-                        onPrimary: Colors.white,
-                        surface: AppColors.card,
-                        onSurface: AppColors.textPrimary,
                       ),
                     ),
                     child: child!,
@@ -361,7 +483,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                 color: Theme.of(context).inputDecorationTheme.fillColor,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Theme.of(context).inputDecorationTheme.enabledBorder?.borderSide.color ?? AppColors.border,
+                  color: Theme.of(context).inputDecorationTheme.enabledBorder?.borderSide.color ?? context.appColors.border,
                 ),
               ),
               child: Row(
@@ -387,14 +509,14 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           GradientButton(
             text: 'Create Transaction',
             isLoading: isLoading,
-            onPressed: () => _confirm(scan),
+            onPressed: _accounts.isEmpty ? null : () => _confirm(scan),
           ),
           const SizedBox(height: 12),
           TextButton(
             onPressed: () => context.read<ReceiptCubit>().reset(),
-            child: const Text(
+            child: Text(
               'Scan Another Receipt',
-              style: TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: context.appColors.textSecondary),
             ),
           ),
         ],
@@ -410,10 +532,10 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : AppColors.card,
+          color: isSelected ? color.withOpacity(0.2) : context.appColors.card,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? color : AppColors.border,
+            color: isSelected ? color : context.appColors.border,
           ),
         ),
         child: Row(
@@ -422,14 +544,14 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
             Icon(
               icon,
               size: 18,
-              color: isSelected ? color : AppColors.textMuted,
+              color: isSelected ? color : context.appColors.textMuted,
             ),
             const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: isSelected ? color : AppColors.textMuted,
+                color: isSelected ? color : context.appColors.textMuted,
               ),
             ),
           ],

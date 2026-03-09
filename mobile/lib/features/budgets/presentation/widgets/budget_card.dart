@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/budget_entity.dart';
 import 'budget_progress_bar.dart';
 
@@ -37,12 +38,12 @@ class BudgetCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: context.appColors.card,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: budget.isOverBudget
                 ? AppColors.error.withOpacity(0.3)
-                : AppColors.border,
+                : context.appColors.border,
           ),
         ),
         child: Column(
@@ -88,8 +89,8 @@ class BudgetCard extends StatelessWidget {
                     children: [
                       Text(
                         budget.name,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -97,8 +98,8 @@ class BudgetCard extends StatelessWidget {
                       if (budget.categoryName != null)
                         Text(
                           budget.categoryName!,
-                          style: const TextStyle(
-                            color: AppColors.textMuted,
+                          style: TextStyle(
+                            color: context.appColors.textMuted,
                             fontSize: 12,
                           ),
                         ),
@@ -123,9 +124,9 @@ class BudgetCard extends StatelessWidget {
                 ),
                 if (onDelete != null)
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.delete_outline,
-                      color: AppColors.textMuted,
+                      color: context.appColors.textMuted,
                       size: 20,
                     ),
                     onPressed: onDelete,
@@ -152,15 +153,15 @@ class BudgetCard extends StatelessWidget {
                   style: TextStyle(
                     color: budget.isOverBudget
                         ? AppColors.error
-                        : AppColors.textSecondary,
+                        : context.appColors.textSecondary,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   '\$${budget.amount.toStringAsFixed(2)} limit',
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
+                  style: TextStyle(
+                    color: context.appColors.textMuted,
                     fontSize: 13,
                   ),
                 ),
@@ -175,15 +176,15 @@ class BudgetCard extends StatelessWidget {
                   style: TextStyle(
                     color: budget.isOverBudget
                         ? AppColors.error
-                        : AppColors.textSecondary,
+                        : context.appColors.textSecondary,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   '\$${budget.remainingAmount.toStringAsFixed(2)} remaining',
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
+                  style: TextStyle(
+                    color: context.appColors.textMuted,
                     fontSize: 12,
                   ),
                 ),

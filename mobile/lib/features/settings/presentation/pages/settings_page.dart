@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
+import '../../../../core/locale/locale_cubit.dart';
+import '../../../../core/locale/locale_state.dart';
 import '../../../../core/services/biometric_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/theme/theme_state.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -56,11 +60,11 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: AppColors.surface,
+        title: Text(l10n.settings),
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
       body: BlocConsumer<SettingsCubit, SettingsState>(
@@ -70,8 +74,8 @@ class _SettingsPageState extends State<SettingsPage> {
           }
           if (state is SettingsUpdated) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Profile updated'),
+              SnackBar(
+                content: Text(l10n.profileUpdated),
                 backgroundColor: AppColors.success,
               ),
             );
@@ -111,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
               const SizedBox(height: 24),
 
-              _buildSectionHeader('Subscription')
+              _buildSectionHeader(l10n.subscription)
                   .animate().fadeIn(duration: 400.ms, delay: 100.ms),
               BlocBuilder<SubscriptionCubit, SubscriptionState>(
                 bloc: _subscriptionCubit,
@@ -121,13 +125,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   return _buildListTile(
                     icon: Icons.workspace_premium,
                     title: isPremium
-                        ? 'Manage Subscription'
-                        : 'Upgrade to Premium',
+                        ? l10n.manageSubscription
+                        : l10n.upgradeToPremium,
                     iconColor: isPremium ? AppColors.accent : null,
                     trailing: isPremium
-                        ? const Text(
-                            'Active',
-                            style: TextStyle(
+                        ? Text(
+                            l10n.active,
+                            style: const TextStyle(
                               color: AppColors.success,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -140,29 +144,29 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _buildDivider(),
 
-              _buildSectionHeader('Account')
+              _buildSectionHeader(l10n.account)
                   .animate().fadeIn(duration: 400.ms, delay: 150.ms),
               _buildListTile(
                 icon: Icons.person_outline,
-                title: 'Edit Profile',
+                title: l10n.editProfile,
                 onTap: () => context.push('/settings/edit-profile'),
               ),
               _buildListTile(
                 icon: Icons.account_balance_wallet_outlined,
-                title: 'Manage Accounts',
+                title: l10n.manageAccounts,
                 onTap: () => context.push('/accounts'),
               ),
               _buildDivider(),
 
-              _buildSectionHeader('Preferences')
+              _buildSectionHeader(l10n.preferences)
                   .animate().fadeIn(duration: 400.ms, delay: 200.ms),
               _buildListTile(
                 icon: Icons.attach_money,
-                title: 'Currency',
+                title: l10n.currency,
                 trailing: Text(
                   profile?.currency ?? 'USD',
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: context.appColors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
@@ -172,11 +176,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 builder: (context, themeState) {
                   return _buildListTile(
                     icon: Icons.dark_mode_outlined,
-                    title: 'Theme',
+                    title: l10n.theme,
                     trailing: Text(
                       _themeModeLabel(themeState.themeMode),
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
+                      style: TextStyle(
+                        color: context.appColors.textSecondary,
                         fontSize: 14,
                       ),
                     ),
@@ -187,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
               if (_biometricSupported)
                 _buildSwitchTile(
                   icon: Icons.fingerprint,
-                  title: 'Biometric Login',
+                  title: l10n.biometricLogin,
                   value: _biometricEnabled,
                   onChanged: (value) async {
                     final biometricService = getIt<BiometricService>();
@@ -208,25 +212,29 @@ class _SettingsPageState extends State<SettingsPage> {
                     }
                   },
                 ),
-              _buildListTile(
-                icon: Icons.language,
-                title: 'Language',
-                trailing: Text(
-                  _localeLabel(profile?.locale ?? 'en'),
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
-                ),
-                onTap: () {},
+              BlocBuilder<LocaleCubit, LocaleState>(
+                builder: (context, localeState) {
+                  return _buildListTile(
+                    icon: Icons.language,
+                    title: l10n.language,
+                    trailing: Text(
+                      _localeLabel(localeState.locale.languageCode),
+                      style: TextStyle(
+                        color: context.appColors.textSecondary,
+                        fontSize: 14,
+                      ),
+                    ),
+                    onTap: () => _showLanguagePicker(context),
+                  );
+                },
               ),
               _buildDivider(),
 
-              _buildSectionHeader('Notifications')
+              _buildSectionHeader(l10n.notifications)
                   .animate().fadeIn(duration: 400.ms, delay: 300.ms),
               _buildSwitchTile(
                 icon: Icons.notifications_outlined,
-                title: 'Push Notifications',
+                title: l10n.pushNotifications,
                 value: profile?.notificationsEnabled ?? true,
                 onChanged: (value) {
                   context.read<SettingsCubit>().updateProfile({
@@ -236,49 +244,54 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _buildDivider(),
 
-              _buildSectionHeader('Data')
+              _buildSectionHeader(l10n.data)
                   .animate().fadeIn(duration: 400.ms, delay: 400.ms),
               _buildListTile(
                 icon: Icons.receipt_long,
-                title: 'Scan Receipt',
+                title: l10n.scanReceipt,
                 onTap: () => context.push('/receipts/scan'),
               ),
               _buildListTile(
+                icon: Icons.history,
+                title: 'Receipt History',
+                onTap: () => context.push('/receipts/history'),
+              ),
+              _buildListTile(
                 icon: Icons.upload_file,
-                title: 'Import Transactions',
+                title: l10n.importTransactions,
                 onTap: () => context.push('/import'),
               ),
               _buildListTile(
                 icon: Icons.download,
-                title: 'Export Data',
+                title: l10n.exportData,
                 onTap: () => context.push('/export'),
               ),
               _buildListTile(
                 icon: Icons.schedule,
-                title: 'Scheduled Payments',
+                title: l10n.scheduledPayments,
                 onTap: () => context.push('/scheduled-payments'),
               ),
               _buildListTile(
                 icon: Icons.account_balance_wallet_outlined,
-                title: 'Budgets',
+                title: l10n.budgets,
                 onTap: () => context.push('/budgets'),
               ),
               _buildListTile(
                 icon: Icons.money_off,
-                title: 'Debts',
+                title: l10n.debts,
                 onTap: () => context.push('/debts'),
               ),
               _buildDivider(),
 
-              _buildSectionHeader('About')
+              _buildSectionHeader(l10n.about)
                   .animate().fadeIn(duration: 400.ms, delay: 500.ms),
               _buildListTile(
                 icon: Icons.info_outline,
-                title: 'App Version',
-                trailing: const Text(
+                title: l10n.appVersion,
+                trailing: Text(
                   '1.0.0',
                   style: TextStyle(
-                    color: AppColors.textMuted,
+                    color: context.appColors.textMuted,
                     fontSize: 14,
                   ),
                 ),
@@ -286,28 +299,28 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _buildListTile(
                 icon: Icons.privacy_tip_outlined,
-                title: 'Privacy Policy',
+                title: l10n.privacyPolicy,
                 onTap: () {},
               ),
               _buildListTile(
                 icon: Icons.description_outlined,
-                title: 'Terms of Service',
+                title: l10n.termsOfService,
                 onTap: () {},
               ),
               _buildDivider(),
 
-              _buildSectionHeader('Danger Zone')
+              _buildSectionHeader(l10n.dangerZone)
                   .animate().fadeIn(duration: 400.ms, delay: 600.ms),
               _buildListTile(
                 icon: Icons.delete_forever,
-                title: 'Delete Account',
+                title: l10n.deleteAccount,
                 iconColor: AppColors.error,
                 titleColor: AppColors.error,
                 onTap: () => _showDeleteConfirmation(context),
               ),
               _buildListTile(
                 icon: Icons.logout,
-                title: 'Logout',
+                title: l10n.logout,
                 iconColor: AppColors.error,
                 titleColor: AppColors.error,
                 onTap: () => _showLogoutConfirmation(context),
@@ -326,9 +339,9 @@ class _SettingsPageState extends State<SettingsPage> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: context.appColors.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.appColors.border),
       ),
       child: Row(
         children: [
@@ -363,8 +376,8 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Text(
                   profile.fullName,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -372,8 +385,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(height: 4),
                 Text(
                   profile.email as String,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: context.appColors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
@@ -402,7 +415,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    isPremium ? 'PREMIUM' : 'FREE',
+                    isPremium ? AppLocalizations.of(context)!.premium : AppLocalizations.of(context)!.free,
                     style: TextStyle(
                       color: isPremium ? Colors.white : AppColors.primaryLight,
                       fontSize: 11,
@@ -423,8 +436,8 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
       child: Text(
         title,
-        style: const TextStyle(
-          color: AppColors.textMuted,
+        style: TextStyle(
+          color: context.appColors.textMuted,
           fontSize: 12,
           fontWeight: FontWeight.w600,
           letterSpacing: 1.2,
@@ -444,20 +457,20 @@ class _SettingsPageState extends State<SettingsPage> {
     return ListTile(
       leading: Icon(
         icon,
-        color: iconColor ?? AppColors.textSecondary,
+        color: iconColor ?? context.appColors.textSecondary,
         size: 22,
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: titleColor ?? AppColors.textPrimary,
+          color: titleColor ?? Theme.of(context).colorScheme.onSurface,
           fontSize: 15,
         ),
       ),
       trailing: trailing ??
-          const Icon(
+          Icon(
             Icons.chevron_right,
-            color: AppColors.textMuted,
+            color: context.appColors.textMuted,
             size: 20,
           ),
       onTap: onTap,
@@ -475,13 +488,13 @@ class _SettingsPageState extends State<SettingsPage> {
     return ListTile(
       leading: Icon(
         icon,
-        color: AppColors.textSecondary,
+        color: context.appColors.textSecondary,
         size: 22,
       ),
       title: Text(
         title,
-        style: const TextStyle(
-          color: AppColors.textPrimary,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurface,
           fontSize: 15,
         ),
       ),
@@ -496,39 +509,60 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildDivider() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Divider(color: AppColors.border, height: 1),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Divider(color: context.appColors.border, height: 1),
     );
   }
 
   String _themeModeLabel(ThemeMode mode) {
+    final l10n = AppLocalizations.of(context)!;
     switch (mode) {
       case ThemeMode.dark:
-        return 'Dark';
+        return l10n.dark;
       case ThemeMode.light:
-        return 'Light';
+        return l10n.light;
       case ThemeMode.system:
-        return 'System';
+        return l10n.system;
     }
   }
 
   String _localeLabel(String locale) {
+    final l10n = AppLocalizations.of(context)!;
     switch (locale) {
-      case 'ro':
-        return 'Romanian';
       case 'ru':
-        return 'Russian';
+        return l10n.russian;
+      case 'ro':
+        return l10n.romanian;
+      case 'es':
+        return l10n.spanish;
+      case 'fr':
+        return l10n.french;
+      case 'de':
+        return l10n.german;
+      case 'uk':
+        return l10n.ukrainian;
+      case 'pt':
+        return l10n.portuguese;
+      case 'it':
+        return l10n.italian;
+      case 'tr':
+        return l10n.turkish;
+      case 'zh':
+        return l10n.chinese;
+      case 'ja':
+        return l10n.japanese;
       default:
-        return 'English';
+        return l10n.english;
     }
   }
 
   void _showCurrencyPicker(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     const currencies = ['USD', 'EUR', 'GBP', 'MDL', 'RON'];
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -536,12 +570,12 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
+            Padding(
+              padding: const EdgeInsets.all(16),
               child: Text(
-                'Select Currency',
+                l10n.selectCurrency,
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -551,7 +585,7 @@ class _SettingsPageState extends State<SettingsPage> {
               (c) => ListTile(
                 title: Text(
                   c,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -567,15 +601,16 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _showThemePicker(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final themes = {
-      ThemeMode.system: 'System',
-      ThemeMode.dark: 'Dark',
-      ThemeMode.light: 'Light',
+      ThemeMode.system: l10n.system,
+      ThemeMode.dark: l10n.dark,
+      ThemeMode.light: l10n.light,
     };
     final currentMode = context.read<ThemeCubit>().state.themeMode;
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -583,12 +618,12 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
+            Padding(
+              padding: const EdgeInsets.all(16),
               child: Text(
-                'Select Theme',
+                l10n.selectTheme,
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -598,7 +633,7 @@ class _SettingsPageState extends State<SettingsPage> {
               (e) => ListTile(
                 title: Text(
                   e.value,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                 ),
                 trailing: currentMode == e.key
                     ? const Icon(Icons.check, color: AppColors.primary)
@@ -616,25 +651,95 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  void _showLanguagePicker(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final languages = {
+      const Locale('en'): l10n.english,
+      const Locale('ru'): l10n.russian,
+      const Locale('ro'): l10n.romanian,
+      const Locale('es'): l10n.spanish,
+      const Locale('fr'): l10n.french,
+      const Locale('de'): l10n.german,
+      const Locale('uk'): l10n.ukrainian,
+      const Locale('pt'): l10n.portuguese,
+      const Locale('it'): l10n.italian,
+      const Locale('tr'): l10n.turkish,
+      const Locale('zh'): l10n.chinese,
+      const Locale('ja'): l10n.japanese,
+    };
+    final currentLocale = context.read<LocaleCubit>().state.locale;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      isScrollControlled: true,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.6,
+      ),
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                l10n.selectLanguage,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Flexible(
+              child: ListView(
+                shrinkWrap: true,
+                children: languages.entries.map(
+                  (e) => ListTile(
+                    title: Text(
+                      e.value,
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                    trailing: currentLocale.languageCode == e.key.languageCode
+                        ? const Icon(Icons.check, color: AppColors.primary)
+                        : null,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.read<LocaleCubit>().setLocale(e.key);
+                    },
+                  ),
+                ).toList(),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showDeleteConfirmation(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: const Text(
-          'Delete Account',
-          style: TextStyle(color: AppColors.textPrimary),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(
+          l10n.deleteAccount,
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         ),
-        content: const Text(
-          'Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently removed.',
-          style: TextStyle(color: AppColors.textSecondary),
+        content: Text(
+          l10n.deleteAccountConfirm,
+          style: TextStyle(color: context.appColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.textSecondary),
+            child: Text(
+              l10n.cancel,
+              style: TextStyle(color: context.appColors.textSecondary),
             ),
           ),
           TextButton(
@@ -642,9 +747,9 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.pop(ctx);
               context.read<SettingsCubit>().deleteAccount();
             },
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: AppColors.error),
+            child: Text(
+              l10n.delete,
+              style: const TextStyle(color: AppColors.error),
             ),
           ),
         ],
@@ -653,24 +758,25 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _showLogoutConfirmation(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: const Text(
-          'Logout',
-          style: TextStyle(color: AppColors.textPrimary),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(
+          l10n.logout,
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         ),
-        content: const Text(
-          'Are you sure you want to logout?',
-          style: TextStyle(color: AppColors.textSecondary),
+        content: Text(
+          l10n.logoutConfirm,
+          style: TextStyle(color: context.appColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.textSecondary),
+            child: Text(
+              l10n.cancel,
+              style: TextStyle(color: context.appColors.textSecondary),
             ),
           ),
           TextButton(
@@ -678,9 +784,9 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.pop(ctx);
               context.read<AuthBloc>().add(const AuthLogoutRequested());
             },
-            child: const Text(
-              'Logout',
-              style: TextStyle(color: AppColors.error),
+            child: Text(
+              l10n.logout,
+              style: const TextStyle(color: AppColors.error),
             ),
           ),
         ],

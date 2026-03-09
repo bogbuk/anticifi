@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../bloc/oracle_cubit.dart';
 import '../bloc/oracle_state.dart';
 import '../widgets/chat_bubble.dart';
@@ -52,9 +53,8 @@ class _OraclePageState extends State<OraclePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         centerTitle: false,
         title: Row(
@@ -79,11 +79,11 @@ class _OraclePageState extends State<OraclePage> {
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Oracle',
                   style: TextStyle(
-                    color: AppColors.textPrimary,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -91,7 +91,7 @@ class _OraclePageState extends State<OraclePage> {
                 Text(
                   'AI Financial Advisor',
                   style: TextStyle(
-                    color: AppColors.textMuted,
+                    color: context.appColors.textMuted,
                     fontSize: 12,
                   ),
                 ),
@@ -163,22 +163,22 @@ class _OraclePageState extends State<OraclePage> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'Hi! I\'m Oracle, your AI\nfinancial advisor.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: AppColors.textPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 height: 1.3,
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Ask me anything about your\nfuture finances.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: AppColors.textSecondary,
+                color: context.appColors.textSecondary,
                 fontSize: 14,
                 height: 1.4,
               ),
@@ -226,9 +226,9 @@ class _OraclePageState extends State<OraclePage> {
           Container(
             padding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: const BoxDecoration(
-              color: AppColors.card,
-              borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+              color: context.appColors.card,
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
                 bottomLeft: Radius.circular(4),
@@ -260,7 +260,7 @@ class _OraclePageState extends State<OraclePage> {
           width: 8,
           height: 8,
           decoration: BoxDecoration(
-            color: AppColors.textMuted.withOpacity(value),
+            color: context.appColors.textMuted.withOpacity(value),
             borderRadius: BorderRadius.circular(4),
           ),
         );
@@ -276,25 +276,25 @@ class _OraclePageState extends State<OraclePage> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: context.appColors.card,
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.appColors.border),
               ),
               child: TextField(
                 controller: _textController,
                 focusNode: _focusNode,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 14,
                 ),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Ask Oracle about your finances...',
                   hintStyle: TextStyle(
-                    color: AppColors.textMuted,
+                    color: context.appColors.textMuted,
                     fontSize: 14,
                   ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
+                  contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 12,
                   ),

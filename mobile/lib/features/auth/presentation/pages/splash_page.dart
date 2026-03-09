@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/services/biometric_service.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_logo.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -41,21 +41,8 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       body: Center(
-        child: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [AppColors.primary, AppColors.accent],
-          ).createShader(bounds),
-          child: const Text(
-            'AnticiFi',
-            style: TextStyle(
-              fontSize: 42,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
+        child: const AppLogo(size: 90),
       ),
     );
   }

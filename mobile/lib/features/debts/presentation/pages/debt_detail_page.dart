@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/debt_entity.dart';
 import '../bloc/debts_cubit.dart';
 import '../bloc/debts_state.dart';
@@ -31,7 +32,6 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
     final dateFormat = DateFormat('MMM d, yyyy');
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Debt Details'),
         actions: [
@@ -80,7 +80,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
             final debt = state.debt;
             return RefreshIndicator(
               color: AppColors.primary,
-              backgroundColor: AppColors.card,
+              backgroundColor: context.appColors.card,
               onRefresh: () => context.read<DebtsCubit>().loadDebtDetail(widget.debtId),
               child: ListView(
                 children: [
@@ -89,9 +89,9 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                     margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.card,
+                      color: context.appColors.card,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.appColors.border),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,8 +102,8 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                             Expanded(
                               child: Text(
                                 debt.name,
-                                style: const TextStyle(
-                                  color: AppColors.textPrimary,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -123,11 +123,11 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                         ),
                         const SizedBox(height: 4),
                         Text(debt.typeLabel,
-                            style: const TextStyle(color: AppColors.textMuted, fontSize: 14)),
+                            style: TextStyle(color: context.appColors.textMuted, fontSize: 14)),
                         if (debt.creditorName != null) ...[
                           const SizedBox(height: 2),
                           Text(debt.creditorName!,
-                              style: const TextStyle(color: AppColors.textMuted, fontSize: 13)),
+                              style: TextStyle(color: context.appColors.textMuted, fontSize: 13)),
                         ],
                         const SizedBox(height: 16),
                         DebtProgressBar(percentage: debt.progressPercent, height: 12),
@@ -138,7 +138,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                             Text('\$${debt.totalPaid.toStringAsFixed(2)} paid',
                                 style: const TextStyle(color: AppColors.success, fontSize: 14, fontWeight: FontWeight.w500)),
                             Text('${debt.progressPercent.toStringAsFixed(0)}%',
-                                style: const TextStyle(color: AppColors.textSecondary, fontSize: 14, fontWeight: FontWeight.w600)),
+                                style: TextStyle(color: context.appColors.textSecondary, fontSize: 14, fontWeight: FontWeight.w600)),
                           ],
                         ),
                       ],
@@ -170,18 +170,18 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                       margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.card,
+                        color: context.appColors.card,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: context.appColors.border),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Notes',
-                              style: TextStyle(color: AppColors.textMuted, fontSize: 12, fontWeight: FontWeight.w600)),
+                          Text('Notes',
+                              style: TextStyle(color: context.appColors.textMuted, fontSize: 12, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 4),
                           Text(debt.notes!,
-                              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+                              style: TextStyle(color: context.appColors.textSecondary, fontSize: 14)),
                         ],
                       ),
                     ),
@@ -211,8 +211,8 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                   context.read<DebtsCubit>().loadDebtDetail(widget.debtId);
                 }
               },
-              icon: const Icon(Icons.payment, color: Colors.white),
-              label: const Text('Record Payment', style: TextStyle(color: Colors.white)),
+              icon: Icon(Icons.payment, color: Theme.of(context).colorScheme.onSurface),
+              label: Text('Record Payment', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
             );
           }
           return const SizedBox.shrink();
@@ -227,16 +227,16 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: context.appColors.card,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.appColors.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+            Text(label, style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
             const SizedBox(height: 4),
-            Text(value, style: const TextStyle(color: AppColors.textPrimary, fontSize: 15, fontWeight: FontWeight.w600)),
+            Text(value, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15, fontWeight: FontWeight.w600)),
           ],
         ),
       ),
@@ -247,14 +247,14 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: const Text('Delete Debt', style: TextStyle(color: AppColors.textPrimary)),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text('Delete Debt', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
         content: Text('Are you sure you want to delete "${debt.name}"?',
-            style: const TextStyle(color: AppColors.textSecondary)),
+            style: TextStyle(color: context.appColors.textSecondary)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text('Cancel', style: TextStyle(color: context.appColors.textSecondary)),
           ),
           TextButton(
             onPressed: () {

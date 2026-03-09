@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../bloc/transactions_bloc.dart';
 import '../bloc/transactions_event.dart';
 import '../bloc/transactions_state.dart';
@@ -52,19 +53,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
       context: context,
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: AppColors.primary,
-              onPrimary: Colors.white,
-              surface: AppColors.card,
-              onSurface: AppColors.textPrimary,
-            ),
-          ),
-          child: child!,
-        );
-      },
+      builder: (context, child) => child!,
     );
 
     if (picked != null && mounted) {
@@ -79,12 +68,11 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Transactions'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.date_range, color: AppColors.textSecondary),
+            icon: Icon(Icons.date_range, color: context.appColors.textSecondary),
             onPressed: _pickDateRange,
           ),
         ],
@@ -144,26 +132,26 @@ class _TransactionsPageState extends State<TransactionsPage> {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.receipt_long_outlined,
                             size: 64,
-                            color: AppColors.textMuted,
+                            color: context.appColors.textMuted,
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Text(
                             'No transactions yet',
                             style: TextStyle(
                               fontSize: 18,
-                              color: AppColors.textSecondary,
+                              color: context.appColors.textSecondary,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             'Tap + to add your first transaction',
                             style: TextStyle(
                               fontSize: 14,
-                              color: AppColors.textMuted,
+                              color: context.appColors.textMuted,
                             ),
                           ),
                         ],
@@ -173,7 +161,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
                   return RefreshIndicator(
                     color: AppColors.primary,
-                    backgroundColor: AppColors.card,
+                    backgroundColor: context.appColors.card,
                     onRefresh: () async {
                       context.read<TransactionsBloc>().add(
                             LoadTransactions(typeFilter: _selectedFilter),
@@ -211,14 +199,14 @@ class _TransactionsPageState extends State<TransactionsPage> {
                             return await showDialog<bool>(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                backgroundColor: AppColors.card,
-                                title: const Text('Delete Transaction',
+                                backgroundColor: context.appColors.card,
+                                title: Text('Delete Transaction',
                                     style: TextStyle(
-                                        color: AppColors.textPrimary)),
-                                content: const Text(
+                                        color: Theme.of(context).colorScheme.onSurface)),
+                                content: Text(
                                     'Are you sure you want to delete this transaction?',
                                     style: TextStyle(
-                                        color: AppColors.textSecondary)),
+                                        color: context.appColors.textSecondary)),
                                 actions: [
                                   TextButton(
                                     onPressed: () =>
@@ -309,10 +297,10 @@ class _FilterChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary.withOpacity(0.2)
-              : AppColors.card,
+              : context.appColors.card,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
+            color: isSelected ? AppColors.primary : context.appColors.border,
           ),
         ),
         child: Text(
@@ -320,7 +308,7 @@ class _FilterChip extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isSelected ? AppColors.primary : AppColors.textSecondary,
+            color: isSelected ? AppColors.primary : context.appColors.textSecondary,
           ),
         ),
       ),

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4338CA"/>
+      <stop offset="45%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+
+    <radialGradient id="glow" cx="30%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#4338CA" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="lineShadow" x="-5%" y="-5%" width="115%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#1E1B4B" flood-opacity="0.5"/>
+    </filter>
+
+    <filter id="bigGlow" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="20"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="224" ry="224" fill="url(#bg)"/>
+  <rect width="1024" height="1024" rx="224" ry="224" fill="url(#glow)"/>
+
+  <!-- Subtle grid -->
+  <g opacity="0.04" stroke="white" stroke-width="1.5">
+    <line x1="160" y1="320" x2="864" y2="320"/>
+    <line x1="160" y1="460" x2="864" y2="460"/>
+    <line x1="160" y1="600" x2="864" y2="600"/>
+    <line x1="160" y1="740" x2="864" y2="740"/>
+  </g>
+
+  <!-- Area fill under chart -->
+  <path d="M 200 700 L 350 555 L 505 620 L 630 395 L 630 770 L 200 770 Z"
+        fill="white" opacity="0.08"/>
+
+  <!-- Main chart line -->
+  <path d="M 200 700 L 350 555 L 505 620 L 630 395"
+        fill="none"
+        stroke="white"
+        stroke-width="46"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        filter="url(#lineShadow)"/>
+
+  <!-- Prediction dashed line -->
+  <line x1="630" y1="395" x2="790" y2="240"
+        stroke="white"
+        stroke-width="38"
+        stroke-linecap="round"
+        stroke-dasharray="5 54"
+        opacity="0.45"/>
+
+  <!-- Small data points -->
+  <circle cx="200" cy="700" r="14" fill="white" opacity="0.4"/>
+  <circle cx="350" cy="555" r="16" fill="white" opacity="0.5"/>
+  <circle cx="505" cy="620" r="16" fill="white" opacity="0.6"/>
+
+  <!-- Current point (solid ring) -->
+  <circle cx="630" cy="395" r="30" fill="white"/>
+  <circle cx="630" cy="395" r="16" fill="#5B5CF0"/>
+
+  <!-- Prediction target - outer glow -->
+  <circle cx="790" cy="240" r="50" fill="white" opacity="0.1" filter="url(#bigGlow)"/>
+
+  <!-- Prediction target - ring -->
+  <circle cx="790" cy="240" r="32" fill="white" opacity="0.9"/>
+  <circle cx="790" cy="240" r="18" fill="#9333EA"/>
+
+  <!-- Sparkle cross at prediction -->
+  <g stroke="white" stroke-width="10" stroke-linecap="round" opacity="0.8">
+    <!-- Vertical -->
+    <line x1="790" y1="170" x2="790" y2="192"/>
+    <!-- Horizontal right -->
+    <line x1="840" y1="218" x2="822" y2="228"/>
+    <!-- Horizontal left -->
+    <line x1="740" y1="218" x2="758" y2="228"/>
+  </g>
+
+  <!-- Small sparkle dots -->
+  <circle cx="842" cy="190" r="6" fill="white" opacity="0.5"/>
+  <circle cx="738" cy="192" r="5" fill="white" opacity="0.4"/>
+  <circle cx="790" cy="155" r="5" fill="white" opacity="0.45"/>
+</svg>

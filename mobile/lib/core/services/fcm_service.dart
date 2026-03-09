@@ -51,9 +51,13 @@ class FcmService {
       return;
     }
 
-    final token = await _messaging.getToken();
-    if (token != null) {
-      await _registerToken(token);
+    try {
+      final token = await _messaging.getToken();
+      if (token != null) {
+        await _registerToken(token);
+      }
+    } catch (e) {
+      log('FCM: Failed to get token: $e');
     }
 
     _tokenRefreshSub = _messaging.onTokenRefresh.listen(_registerToken);

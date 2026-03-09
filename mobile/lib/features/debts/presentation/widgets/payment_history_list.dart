@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/debt_payment_entity.dart';
 
 class PaymentHistoryList extends StatelessWidget {
@@ -16,10 +17,10 @@ class PaymentHistoryList extends StatelessWidget {
     if (payments.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(24),
-        child: const Center(
+        child: Center(
           child: Text(
             'No payments recorded yet',
-            style: TextStyle(color: AppColors.textMuted, fontSize: 14),
+            style: TextStyle(color: context.appColors.textMuted, fontSize: 14),
           ),
         ),
       );
@@ -28,12 +29,12 @@ class PaymentHistoryList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Text(
             'Payment History',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -43,9 +44,9 @@ class PaymentHistoryList extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: context.appColors.card,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.appColors.border),
               ),
               child: Row(
                 children: [
@@ -65,8 +66,8 @@ class PaymentHistoryList extends StatelessWidget {
                       children: [
                         Text(
                           '\$${payment.amount.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                           ),
@@ -74,8 +75,8 @@ class PaymentHistoryList extends StatelessWidget {
                         if (payment.notes != null && payment.notes!.isNotEmpty)
                           Text(
                             payment.notes!,
-                            style: const TextStyle(
-                              color: AppColors.textMuted,
+                            style: TextStyle(
+                              color: context.appColors.textMuted,
                               fontSize: 12,
                             ),
                           ),
@@ -84,8 +85,8 @@ class PaymentHistoryList extends StatelessWidget {
                   ),
                   Text(
                     dateFormat.format(payment.paymentDate),
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
+                    style: TextStyle(
+                      color: context.appColors.textMuted,
                       fontSize: 12,
                     ),
                   ),

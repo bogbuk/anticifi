@@ -14,9 +14,13 @@ class GradientButton extends StatelessWidget {
     this.isLoading = false,
   });
 
+  bool get _isDisabled => onPressed == null && !isLoading;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Opacity(
+      opacity: _isDisabled ? 0.5 : 1.0,
+      child: Container(
       width: double.infinity,
       height: 52,
       decoration: BoxDecoration(
@@ -60,6 +64,7 @@ class GradientButton extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }

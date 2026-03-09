@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 
 class IncomeExpenseRow extends StatelessWidget {
   final double income;
@@ -56,9 +57,9 @@ class _SummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: context.appColors.card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.appColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,10 +80,10 @@ class _SummaryCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
+              color: context.appColors.textSecondary,
             ),
           ),
           const SizedBox(height: 4),

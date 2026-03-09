@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/scheduled_payment_entity.dart';
 import '../bloc/scheduled_payments_cubit.dart';
 import '../bloc/scheduled_payments_state.dart';
@@ -32,7 +33,6 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Scheduled Payments'),
       ),
@@ -43,9 +43,9 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: context.appColors.card,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.appColors.border),
               ),
               child: Row(
                 children: [
@@ -68,7 +68,7 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
                             fontWeight: FontWeight.w600,
                             color: _showActive
                                 ? AppColors.primaryLight
-                                : AppColors.textMuted,
+                                : context.appColors.textMuted,
                           ),
                         ),
                       ),
@@ -93,7 +93,7 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
                             fontWeight: FontWeight.w600,
                             color: !_showActive
                                 ? AppColors.primaryLight
-                                : AppColors.textMuted,
+                                : context.appColors.textMuted,
                           ),
                         ),
                       ),
@@ -134,28 +134,28 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.event_repeat_outlined,
                             size: 64,
-                            color: AppColors.textMuted,
+                            color: context.appColors.textMuted,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             _showActive
                                 ? 'No active scheduled payments'
                                 : 'No inactive scheduled payments',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
-                              color: AppColors.textSecondary,
+                              color: context.appColors.textSecondary,
                             ),
                           ),
                           if (_showActive) ...[
                             const SizedBox(height: 8),
-                            const Text(
+                            Text(
                               'Tap + to add your first scheduled payment',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: AppColors.textMuted,
+                                color: context.appColors.textMuted,
                               ),
                             ),
                           ],
@@ -166,7 +166,7 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
 
                   return RefreshIndicator(
                     color: AppColors.primary,
-                    backgroundColor: AppColors.card,
+                    backgroundColor: context.appColors.card,
                     onRefresh: () => context
                         .read<ScheduledPaymentsCubit>()
                         .loadScheduledPayments(),

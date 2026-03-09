@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/debt_entity.dart';
 import 'debt_progress_bar.dart';
 
@@ -36,12 +37,12 @@ class DebtCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: context.appColors.card,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: debt.isPaidOff
                 ? AppColors.success.withOpacity(0.3)
-                : AppColors.border,
+                : context.appColors.border,
           ),
         ),
         child: Column(
@@ -65,16 +66,16 @@ class DebtCard extends StatelessWidget {
                     children: [
                       Text(
                         debt.name,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
                         debt.typeLabel,
-                        style: const TextStyle(
-                          color: AppColors.textMuted,
+                        style: TextStyle(
+                          color: context.appColors.textMuted,
                           fontSize: 12,
                         ),
                       ),
@@ -100,8 +101,8 @@ class DebtCard extends StatelessWidget {
                 else if (debt.creditorName != null)
                   Text(
                     debt.creditorName!,
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
+                    style: TextStyle(
+                      color: context.appColors.textMuted,
                       fontSize: 11,
                     ),
                   ),
@@ -115,16 +116,16 @@ class DebtCard extends StatelessWidget {
               children: [
                 Text(
                   '\$${debt.totalPaid.toStringAsFixed(2)} paid',
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: context.appColors.textSecondary,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   '\$${debt.originalAmount.toStringAsFixed(2)} total',
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
+                  style: TextStyle(
+                    color: context.appColors.textMuted,
                     fontSize: 13,
                   ),
                 ),
@@ -136,16 +137,16 @@ class DebtCard extends StatelessWidget {
               children: [
                 Text(
                   '${debt.progressPercent.toStringAsFixed(0)}%',
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: context.appColors.textSecondary,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   '\$${debt.currentBalance.toStringAsFixed(2)} remaining',
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
+                  style: TextStyle(
+                    color: context.appColors.textMuted,
                     fontSize: 12,
                   ),
                 ),

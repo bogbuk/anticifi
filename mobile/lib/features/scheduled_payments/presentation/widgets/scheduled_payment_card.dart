@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/scheduled_payment_entity.dart';
 
 class ScheduledPaymentCard extends StatelessWidget {
@@ -67,14 +68,14 @@ class ScheduledPaymentCard extends StatelessWidget {
           return await showDialog<bool>(
             context: context,
             builder: (ctx) => AlertDialog(
-              backgroundColor: AppColors.card,
-              title: const Text(
+              backgroundColor: context.appColors.card,
+              title: Text(
                 'Delete Scheduled Payment',
-                style: TextStyle(color: AppColors.textPrimary),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
               content: Text(
                 'Are you sure you want to delete "${payment.name}"?',
-                style: const TextStyle(color: AppColors.textSecondary),
+                style: TextStyle(color: context.appColors.textSecondary),
               ),
               actions: [
                 TextButton(
@@ -104,9 +105,9 @@ class ScheduledPaymentCard extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.card,
+              color: context.appColors.card,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: context.appColors.border),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,10 +138,10 @@ class ScheduledPaymentCard extends StatelessWidget {
                         children: [
                           Text(
                             payment.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textPrimary,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -148,9 +149,9 @@ class ScheduledPaymentCard extends StatelessWidget {
                           const SizedBox(height: 2),
                           Text(
                             payment.accountName,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: AppColors.textMuted,
+                              color: context.appColors.textMuted,
                             ),
                           ),
                         ],
@@ -195,17 +196,17 @@ class ScheduledPaymentCard extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.schedule,
                           size: 14,
-                          color: AppColors.textMuted,
+                          color: context.appColors.textMuted,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           'Next: ${dateFormat.format(payment.nextExecutionDate)}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.textSecondary,
+                            color: context.appColors.textSecondary,
                           ),
                         ),
                       ],
@@ -244,14 +245,14 @@ class ScheduledPaymentCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.card,
-        title: const Text(
+        backgroundColor: context.appColors.card,
+        title: Text(
           'Execute Payment',
-          style: TextStyle(color: AppColors.textPrimary),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         ),
         content: Text(
           'Execute "${payment.name}" now?',
-          style: const TextStyle(color: AppColors.textSecondary),
+          style: TextStyle(color: context.appColors.textSecondary),
         ),
         actions: [
           TextButton(

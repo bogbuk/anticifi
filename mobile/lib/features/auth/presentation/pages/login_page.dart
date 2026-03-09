@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -46,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
         final isLoading = state is AuthLoading;
 
         return Scaffold(
-          backgroundColor: AppColors.background,
           body: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -121,10 +121,10 @@ class _LoginPageState extends State<LoginPage> {
                   TextButton(
                     onPressed: () => context.go('/auth/register'),
                     child: RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         text: "Don't have an account? ",
-                        style: TextStyle(color: AppColors.textSecondary),
-                        children: [
+                        style: TextStyle(color: context.appColors.textSecondary),
+                        children: const [
                           TextSpan(
                             text: 'Sign Up',
                             style: TextStyle(
@@ -160,21 +160,21 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         barrierDismissible: false,
         builder: (ctx) => AlertDialog(
-          backgroundColor: AppColors.surface,
-          title: const Text(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          title: Text(
             'Enable Biometric Login?',
-            style: TextStyle(color: AppColors.textPrimary),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
-          content: const Text(
+          content: Text(
             'Use Face ID or Touch ID for faster access next time.',
-            style: TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(color: context.appColors.textSecondary),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text(
+              child: Text(
                 'Not Now',
-                style: TextStyle(color: AppColors.textSecondary),
+                style: TextStyle(color: context.appColors.textSecondary),
               ),
             ),
             TextButton(

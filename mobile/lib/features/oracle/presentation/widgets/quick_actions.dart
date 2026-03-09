@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 
 class QuickActions extends StatelessWidget {
   final void Function(String question) onQuickAction;
@@ -27,13 +28,13 @@ class QuickActions extends StatelessWidget {
         itemCount: _actions.length,
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
-          return _buildChip(_actions[index]);
+          return _buildChip(context, _actions[index]);
         },
       ),
     );
   }
 
-  Widget _buildChip(String label) {
+  Widget _buildChip(BuildContext context, String label) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -42,9 +43,9 @@ class QuickActions extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: AppColors.card,
+            color: context.appColors.card,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: context.appColors.border),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -57,8 +58,8 @@ class QuickActions extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 label,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  color: context.appColors.textSecondary,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),

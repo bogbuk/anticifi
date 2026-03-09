@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../bloc/settings_cubit.dart';
 import '../bloc/settings_state.dart';
@@ -48,10 +49,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Edit Profile'),
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -120,10 +120,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   const SizedBox(height: 32),
 
                   // Name field
-                  const Text(
+                  Text(
                     'Name',
                     style: TextStyle(
-                      color: AppColors.textSecondary,
+                      color: context.appColors.textSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -131,8 +131,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _nameController,
-                    style: const TextStyle(color: AppColors.textPrimary),
-                    decoration: _inputDecoration('Enter your name'),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                    decoration: _inputDecoration(context, 'Enter your name'),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return 'Name is required';
@@ -143,10 +143,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   const SizedBox(height: 24),
 
                   // Email field (readonly)
-                  const Text(
+                  Text(
                     'Email',
                     style: TextStyle(
-                      color: AppColors.textSecondary,
+                      color: context.appColors.textSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -154,19 +154,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _emailController,
-                    style: const TextStyle(color: AppColors.textMuted),
+                    style: TextStyle(color: context.appColors.textMuted),
                     readOnly: true,
-                    decoration: _inputDecoration('Email').copyWith(
-                      fillColor: AppColors.surface,
+                    decoration: _inputDecoration(context, 'Email').copyWith(
+                      fillColor: Theme.of(context).colorScheme.surface,
                     ),
                   ),
                   const SizedBox(height: 24),
 
                   // Currency dropdown
-                  const Text(
+                  Text(
                     'Currency',
                     style: TextStyle(
-                      color: AppColors.textSecondary,
+                      color: context.appColors.textSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -179,8 +179,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         value: c,
                         child: Text(
                           c,
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       );
@@ -192,9 +192,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         });
                       }
                     },
-                    decoration: _inputDecoration(''),
-                    dropdownColor: AppColors.card,
-                    style: const TextStyle(color: AppColors.textPrimary),
+                    decoration: _inputDecoration(context, ''),
+                    dropdownColor: context.appColors.card,
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   ),
                   const SizedBox(height: 40),
 
@@ -213,19 +213,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  InputDecoration _inputDecoration(String hint) {
+  InputDecoration _inputDecoration(BuildContext context, String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: AppColors.textMuted),
+      hintStyle: TextStyle(color: context.appColors.textMuted),
       filled: true,
-      fillColor: AppColors.card,
+      fillColor: context.appColors.card,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide(color: context.appColors.border),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide(color: context.appColors.border),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

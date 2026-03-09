@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../domain/entities/prediction_entity.dart';
 
 class ForecastChart extends StatelessWidget {
@@ -48,9 +49,9 @@ class ForecastChart extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.fromLTRB(4, 16, 16, 8),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.appColors.border),
       ),
       child: LineChart(
         LineChartData(
@@ -62,7 +63,7 @@ class ForecastChart extends StatelessWidget {
             horizontalInterval: maxY == minY ? 1 : (maxY - minY) / 4,
             getDrawingHorizontalLine: (value) {
               return FlLine(
-                color: AppColors.border,
+                color: context.appColors.border,
                 strokeWidth: 0.5,
               );
             },
@@ -77,8 +78,8 @@ class ForecastChart extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 4),
                     child: Text(
                       '\$${value.toInt()}',
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
+                      style: TextStyle(
+                        color: context.appColors.textMuted,
                         fontSize: 10,
                       ),
                     ),
@@ -100,8 +101,8 @@ class ForecastChart extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       DateFormat('M/d').format(sorted[index].date),
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
+                      style: TextStyle(
+                        color: context.appColors.textMuted,
                         fontSize: 10,
                       ),
                     ),
@@ -154,7 +155,7 @@ class ForecastChart extends StatelessWidget {
           ],
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
-              tooltipBgColor: AppColors.card,
+              tooltipRoundedRadius: 8,
               getTooltipItems: (touchedSpots) {
                 return touchedSpots.map((spot) {
                   if (spot.barIndex != 1) return null;
@@ -163,8 +164,8 @@ class ForecastChart extends StatelessWidget {
                   final p = sorted[index];
                   return LineTooltipItem(
                     '\$${p.predictedBalance.toStringAsFixed(0)}\n${DateFormat('MMM d').format(p.date)}',
-                    const TextStyle(
-                      color: AppColors.textPrimary,
+                    TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),

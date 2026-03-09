@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../bloc/accounts_cubit.dart';
 import '../bloc/accounts_state.dart';
 import '../widgets/account_card.dart';
@@ -27,7 +28,6 @@ class _AccountsPageState extends State<AccountsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Accounts'),
         actions: [
@@ -68,26 +68,26 @@ class _AccountsPageState extends State<AccountsPage> {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Icon(
                       Icons.account_balance_wallet_outlined,
                       size: 64,
-                      color: AppColors.textMuted,
+                      color: context.appColors.textMuted,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
                       'No accounts yet',
                       style: TextStyle(
                         fontSize: 18,
-                        color: AppColors.textSecondary,
+                        color: context.appColors.textSecondary,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       'Tap + to add your first account',
                       style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.textMuted,
+                        color: context.appColors.textMuted,
                       ),
                     ),
                   ],
@@ -97,7 +97,7 @@ class _AccountsPageState extends State<AccountsPage> {
 
             return RefreshIndicator(
               color: AppColors.primary,
-              backgroundColor: AppColors.card,
+              backgroundColor: context.appColors.card,
               onRefresh: () => context.read<AccountsCubit>().loadAccounts(),
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),

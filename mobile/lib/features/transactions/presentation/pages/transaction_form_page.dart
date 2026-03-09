@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../../core/di/injection.dart';
+import '../../../../core/services/speech_service.dart';
+import '../../../../core/utils/voice_input_parser.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../../accounts/domain/repositories/accounts_repository.dart';
 import '../../../accounts/domain/entities/account_entity.dart';
+import '../../../subscription/presentation/bloc/subscription_cubit.dart';
+import '../../../subscription/presentation/bloc/subscription_state.dart';
 import '../../domain/entities/transaction_entity.dart';
 import '../bloc/transactions_bloc.dart';
 import '../bloc/transactions_event.dart';
@@ -28,6 +34,8 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
   late String _selectedType;
   late DateTime _selectedDate;
   bool _isSaving = false;
+  bool _isListening = false;
+  String _partialText = '';
   List<AccountEntity> _accounts = [];
   String? _selectedAccountId;
   List<Map<String, dynamic>> _categorySuggestions = [];
@@ -74,8 +82,97 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
     } catch (_) {}
   }
 
+  Future<void> _startVoiceInput() async {
+    final speechService = getIt<SpeechService>();
+
+    // Check premium status
+    final subCubit = getIt<SubscriptionCubit>();
+    await subCubit.loadSubscription();
+    final state = subCubit.state;
+    final isPremium =
+        state is SubscriptionLoaded && state.subscription.isPremium;
+
+    final canUse = await speechService.canUseVoiceInput(isPremium);
+    if (!canUse) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Voice input limit reached. Upgrade to Pro for unlimited access'),
+            backgroundColor: AppColors.warning,
+            action: SnackBarAction(
+              label: 'Upgrade',
+              textColor: Colors.white,
+              onPressed: () => context.push('/subscription'),
+            ),
+          ),
+        );
+      }
+      return;
+    }
+
+    final available = await speechService.initialize();
+    if (!available) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Speech recognition is not available'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+      return;
+    }
+
+    setState(() {
+      _isListening = true;
+      _partialText = '';
+    });
+
+    await speechService.startListening(
+      onResult: (text, isFinal) {
+        if (!mounted) return;
+        if (isFinal) {
+          _processVoiceResult(text);
+        } else {
+          setState(() => _partialText = text);
+        }
+      },
+    );
+  }
+
+  Future<void> _stopVoiceInput() async {
+    await getIt<SpeechService>().stopListening();
+    if (mounted) {
+      setState(() {
+        _isListening = false;
+        _partialText = '';
+      });
+    }
+  }
+
+  Future<void> _processVoiceResult(String text) async {
+    final result = VoiceInputParser.parse(text);
+
+    setState(() {
+      _isListening = false;
+      _partialText = '';
+    });
+
+    if (result.amount != null) {
+      _amountController.text = result.amount!.toStringAsFixed(
+        result.amount! == result.amount!.roundToDouble() ? 0 : 2,
+      );
+    }
+    if (result.description != null && result.description!.isNotEmpty) {
+      _descriptionController.text = result.description!;
+    }
+
+    await getIt<SpeechService>().incrementUsageCount();
+  }
+
   @override
   void dispose() {
+    getIt<SpeechService>().stopListening();
     _descriptionController.removeListener(_onDescriptionChanged);
     _amountController.dispose();
     _descriptionController.dispose();
@@ -88,19 +185,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
       initialDate: _selectedDate,
       firstDate: DateTime(2020),
       lastDate: DateTime.now().add(const Duration(days: 365)),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: AppColors.primary,
-              onPrimary: Colors.white,
-              surface: AppColors.card,
-              onSurface: AppColors.textPrimary,
-            ),
-          ),
-          child: child!,
-        );
-      },
+      builder: (context, child) => child!,
     );
     if (picked != null) {
       setState(() => _selectedDate = picked);
@@ -179,7 +264,6 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
         appBar: AppBar(
           title: Text(_isEditing ? 'Edit Transaction' : 'New Transaction'),
           actions: [
@@ -190,12 +274,12 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                   final confirmed = await showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      backgroundColor: AppColors.card,
-                      title: const Text('Delete Transaction',
-                          style: TextStyle(color: AppColors.textPrimary)),
-                      content: const Text(
+                      backgroundColor: context.appColors.card,
+                      title: Text('Delete Transaction',
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                      content: Text(
                           'Are you sure you want to delete this transaction?',
-                          style: TextStyle(color: AppColors.textSecondary)),
+                          style: TextStyle(color: context.appColors.textSecondary)),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(ctx).pop(false),
@@ -238,12 +322,12 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                           decoration: BoxDecoration(
                             color: _selectedType == 'expense'
                                 ? AppColors.error.withOpacity(0.2)
-                                : AppColors.card,
+                                : context.appColors.card,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: _selectedType == 'expense'
                                   ? AppColors.error
-                                  : AppColors.border,
+                                  : context.appColors.border,
                             ),
                           ),
                           child: Row(
@@ -254,7 +338,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                                 size: 18,
                                 color: _selectedType == 'expense'
                                     ? AppColors.error
-                                    : AppColors.textMuted,
+                                    : context.appColors.textMuted,
                               ),
                               const SizedBox(width: 8),
                               Text(
@@ -263,7 +347,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                                   fontWeight: FontWeight.w600,
                                   color: _selectedType == 'expense'
                                       ? AppColors.error
-                                      : AppColors.textMuted,
+                                      : context.appColors.textMuted,
                                 ),
                               ),
                             ],
@@ -281,12 +365,12 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                           decoration: BoxDecoration(
                             color: _selectedType == 'income'
                                 ? AppColors.success.withOpacity(0.2)
-                                : AppColors.card,
+                                : context.appColors.card,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: _selectedType == 'income'
                                   ? AppColors.success
-                                  : AppColors.border,
+                                  : context.appColors.border,
                             ),
                           ),
                           child: Row(
@@ -297,7 +381,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                                 size: 18,
                                 color: _selectedType == 'income'
                                     ? AppColors.success
-                                    : AppColors.textMuted,
+                                    : context.appColors.textMuted,
                               ),
                               const SizedBox(width: 8),
                               Text(
@@ -306,7 +390,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                                   fontWeight: FontWeight.w600,
                                   color: _selectedType == 'income'
                                       ? AppColors.success
-                                      : AppColors.textMuted,
+                                      : context.appColors.textMuted,
                                 ),
                               ),
                             ],
@@ -327,35 +411,35 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                         value: a.id,
                         child: Text(
                           '${a.name} (${a.currency})',
-                          style: const TextStyle(color: AppColors.textPrimary),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                         ),
                       );
                     }).toList(),
                     onChanged: (value) {
                       setState(() => _selectedAccountId = value);
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Account',
-                      prefixIcon: Icon(Icons.account_balance, color: AppColors.textMuted),
+                      prefixIcon: Icon(Icons.account_balance, color: context.appColors.textMuted),
                     ),
-                    dropdownColor: AppColors.card,
+                    dropdownColor: context.appColors.card,
                   ),
                 const SizedBox(height: 16),
 
                 // Amount
                 TextFormField(
                   controller: _amountController,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Amount',
-                    prefixIcon: Icon(Icons.attach_money, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.attach_money, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -372,16 +456,64 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Description
-                TextFormField(
-                  controller: _descriptionController,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
-                    labelText: 'Description',
-                    prefixIcon:
-                        Icon(Icons.notes_outlined, color: AppColors.textMuted),
-                  ),
+                // Description + mic button
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _descriptionController,
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                        decoration: InputDecoration(
+                          labelText: 'Description',
+                          prefixIcon:
+                              Icon(Icons.notes_outlined, color: context.appColors.textMuted),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: _isListening ? _stopVoiceInput : _startVoiceInput,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 48,
+                        height: 48,
+                        margin: const EdgeInsets.only(top: 4),
+                        decoration: BoxDecoration(
+                          color: _isListening
+                              ? AppColors.error.withOpacity(0.2)
+                              : AppColors.primary.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: _isListening
+                                ? AppColors.error
+                                : AppColors.primary.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Icon(
+                          _isListening ? Icons.stop : Icons.mic,
+                          color: _isListening ? AppColors.error : AppColors.primary,
+                          size: 24,
+                        ),
+                      ).animate(target: _isListening ? 1 : 0).shimmer(
+                        duration: 1200.ms,
+                        color: AppColors.primary.withOpacity(0.3),
+                      ),
+                    ),
+                  ],
                 ),
+                if (_isListening && _partialText.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      _partialText,
+                      style: TextStyle(
+                        color: context.appColors.textMuted,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
                 // Category suggestions
                 if (_categorySuggestions.isNotEmpty) ...[
                   const SizedBox(height: 8),
@@ -399,17 +531,17 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                           style: TextStyle(
                             color: isSelected
                                 ? Colors.white
-                                : AppColors.textSecondary,
+                                : context.appColors.textSecondary,
                             fontSize: 12,
                           ),
                         ),
                         backgroundColor: isSelected
                             ? AppColors.primary
-                            : AppColors.card,
+                            : context.appColors.card,
                         side: BorderSide(
                           color: isSelected
                               ? AppColors.primary
-                              : AppColors.border,
+                              : context.appColors.border,
                         ),
                         onPressed: () {
                           setState(() {
@@ -433,25 +565,25 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(
-                      color: AppColors.card,
+                      color: context.appColors.card,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.appColors.border),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today_outlined,
-                            color: AppColors.textMuted, size: 20),
+                        Icon(Icons.calendar_today_outlined,
+                            color: context.appColors.textMuted, size: 20),
                         const SizedBox(width: 12),
                         Text(
                           _formatDate(_selectedDate),
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 15,
                           ),
                         ),
                         const Spacer(),
-                        const Icon(Icons.chevron_right,
-                            color: AppColors.textMuted),
+                        Icon(Icons.chevron_right,
+                            color: context.appColors.textMuted),
                       ],
                     ),
                   ),

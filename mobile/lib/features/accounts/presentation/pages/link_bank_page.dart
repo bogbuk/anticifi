@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../bloc/accounts_cubit.dart';
 import '../bloc/accounts_state.dart';
@@ -90,7 +91,6 @@ class _LinkBankPageState extends State<LinkBankPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Connect Bank'),
       ),
@@ -136,21 +136,21 @@ class _LinkBankPageState extends State<LinkBankPage> {
                 ),
               ),
               const SizedBox(height: 32),
-              const Text(
+              Text(
                 'Connect your bank account',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Securely link your bank to automatically import transactions and keep your balances up to date.',
                 style: TextStyle(
                   fontSize: 15,
-                  color: AppColors.textSecondary,
+                  color: context.appColors.textSecondary,
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
@@ -158,15 +158,15 @@ class _LinkBankPageState extends State<LinkBankPage> {
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.lock_outline,
-                      size: 16, color: AppColors.textMuted),
-                  SizedBox(width: 6),
+                      size: 16, color: context.appColors.textMuted),
+                  const SizedBox(width: 6),
                   Text(
                     'Bank-level encryption powered by Plaid',
                     style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.textMuted,
+                      color: context.appColors.textMuted,
                     ),
                   ),
                 ],

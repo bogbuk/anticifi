@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 
 class PremiumGate extends StatelessWidget {
   final String featureName;
@@ -45,18 +46,18 @@ class PremiumGate extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               '$featureName is a Premium feature',
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Upgrade to unlock this and all other premium features.',
               style: TextStyle(
-                color: AppColors.textSecondary,
+                color: context.appColors.textSecondary,
                 fontSize: 14,
               ),
               textAlign: TextAlign.center,

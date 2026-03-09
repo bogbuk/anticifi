@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../accounts/domain/entities/account_entity.dart';
 import '../../../accounts/presentation/bloc/accounts_cubit.dart';
 import '../../../accounts/presentation/bloc/accounts_state.dart';
@@ -28,7 +29,6 @@ class _ImportPageState extends State<ImportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Import CSV'),
       ),
@@ -41,33 +41,33 @@ class _ImportPageState extends State<ImportPage> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: context.appColors.card,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.appColors.border),
               ),
               child: Column(
-                children: const [
-                  Icon(
+                children: [
+                  const Icon(
                     Icons.upload_file,
                     size: 48,
                     color: AppColors.primary,
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Text(
                     'Import Transactions',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Upload a CSV file to import transactions into your account',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
-                      color: AppColors.textMuted,
+                      color: context.appColors.textMuted,
                     ),
                   ),
                 ],
@@ -85,12 +85,12 @@ class _ImportPageState extends State<ImportPage> {
 
                 return DropdownButtonFormField<String>(
                   value: _selectedAccountId,
-                  dropdownColor: AppColors.card,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  dropdownColor: context.appColors.card,
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Select Account',
                     prefixIcon: Icon(Icons.account_balance_wallet_outlined,
-                        color: AppColors.textMuted),
+                        color: context.appColors.textMuted),
                   ),
                   items: accounts
                       .map((a) => DropdownMenuItem(
@@ -101,9 +101,9 @@ class _ImportPageState extends State<ImportPage> {
                   onChanged: (value) {
                     setState(() => _selectedAccountId = value);
                   },
-                  hint: const Text(
+                  hint: Text(
                     'Choose an account',
-                    style: TextStyle(color: AppColors.textMuted),
+                    style: TextStyle(color: context.appColors.textMuted),
                   ),
                 );
               },
@@ -140,8 +140,8 @@ class _ImportPageState extends State<ImportPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.textSecondary,
-                        side: const BorderSide(color: AppColors.border),
+                        foregroundColor: context.appColors.textSecondary,
+                        side: BorderSide(color: context.appColors.border),
                         padding: const EdgeInsets.symmetric(
                             vertical: 14, horizontal: 16),
                         shape: RoundedRectangleBorder(
@@ -155,7 +155,7 @@ class _ImportPageState extends State<ImportPage> {
                     if (state is ImportUploading) ...[
                       LinearProgressIndicator(
                         value: state.progress,
-                        backgroundColor: AppColors.card,
+                        backgroundColor: context.appColors.card,
                         valueColor: const AlwaysStoppedAnimation<Color>(
                             AppColors.primary),
                       ),
@@ -163,8 +163,8 @@ class _ImportPageState extends State<ImportPage> {
                       Text(
                         '${(state.progress * 100).toInt()}% uploaded',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
+                        style: TextStyle(
+                          color: context.appColors.textSecondary,
                           fontSize: 13,
                         ),
                       ),
@@ -274,9 +274,9 @@ class _ResultRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
-            color: AppColors.textSecondary,
+            color: context.appColors.textSecondary,
           ),
         ),
         Text(

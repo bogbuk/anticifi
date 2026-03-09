@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../domain/entities/debt_entity.dart';
 import '../bloc/debts_cubit.dart';
@@ -94,12 +95,9 @@ class _DebtFormPageState extends State<DebtFormPage> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.dark(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
               primary: AppColors.primary,
-              surface: AppColors.card,
-              onSurface: AppColors.textPrimary,
             ),
-            dialogBackgroundColor: AppColors.surface,
           ),
           child: child!,
         );
@@ -170,7 +168,6 @@ class _DebtFormPageState extends State<DebtFormPage> {
         if (state is DebtsError) setState(() => _isSaving = false);
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
         appBar: AppBar(title: Text(_isEditing ? 'Edit Debt' : 'New Debt')),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -182,10 +179,10 @@ class _DebtFormPageState extends State<DebtFormPage> {
                 // Name
                 TextFormField(
                   controller: _nameController,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Debt Name',
-                    prefixIcon: Icon(Icons.label_outline, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.label_outline, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) return 'Please enter debt name';
@@ -196,11 +193,11 @@ class _DebtFormPageState extends State<DebtFormPage> {
                 // Type
                 DropdownButtonFormField<String>(
                   value: _selectedType,
-                  dropdownColor: AppColors.card,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  dropdownColor: context.appColors.card,
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Debt Type',
-                    prefixIcon: Icon(Icons.category_outlined, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.category_outlined, color: context.appColors.textMuted),
                   ),
                   items: _debtTypes
                       .map((t) => DropdownMenuItem(value: t['value'], child: Text(t['label']!)))
@@ -213,11 +210,11 @@ class _DebtFormPageState extends State<DebtFormPage> {
                 // Original Amount
                 TextFormField(
                   controller: _originalAmountController,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Original Amount',
-                    prefixIcon: Icon(Icons.attach_money, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.attach_money, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) return 'Please enter original amount';
@@ -230,11 +227,11 @@ class _DebtFormPageState extends State<DebtFormPage> {
                 // Current Balance
                 TextFormField(
                   controller: _currentBalanceController,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Current Balance',
-                    prefixIcon: Icon(Icons.account_balance, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.account_balance, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) return 'Please enter current balance';
@@ -247,33 +244,33 @@ class _DebtFormPageState extends State<DebtFormPage> {
                 // Interest Rate
                 TextFormField(
                   controller: _interestRateController,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Interest Rate (%)',
-                    prefixIcon: Icon(Icons.percent, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.percent, color: context.appColors.textMuted),
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Minimum Payment
                 TextFormField(
                   controller: _minimumPaymentController,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Minimum Payment',
-                    prefixIcon: Icon(Icons.payment, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.payment, color: context.appColors.textMuted),
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Due Day
                 TextFormField(
                   controller: _dueDayController,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Due Day (1-31)',
-                    prefixIcon: Icon(Icons.calendar_today, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.calendar_today, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value != null && value.trim().isNotEmpty) {
@@ -289,10 +286,10 @@ class _DebtFormPageState extends State<DebtFormPage> {
                 // Creditor
                 TextFormField(
                   controller: _creditorController,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: const InputDecoration(
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                  decoration: InputDecoration(
                     labelText: 'Creditor Name (optional)',
-                    prefixIcon: Icon(Icons.business, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.business, color: context.appColors.textMuted),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -302,21 +299,21 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     decoration: BoxDecoration(
-                      color: AppColors.card,
+                      color: context.appColors.card,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.appColors.border),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today, color: AppColors.textMuted, size: 20),
+                        Icon(Icons.calendar_today, color: context.appColors.textMuted, size: 20),
                         const SizedBox(width: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Start Date', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                            Text('Start Date', style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
                             const SizedBox(height: 2),
                             Text(dateFormat.format(_startDate),
-                                style: const TextStyle(fontSize: 15, color: AppColors.textPrimary)),
+                                style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.onSurface)),
                           ],
                         ),
                       ],
@@ -330,20 +327,20 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     decoration: BoxDecoration(
-                      color: AppColors.card,
+                      color: context.appColors.card,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.appColors.border),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.event, color: AppColors.textMuted, size: 20),
+                        Icon(Icons.event, color: context.appColors.textMuted, size: 20),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Expected Payoff Date (optional)',
-                                  style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                              Text('Expected Payoff Date (optional)',
+                                  style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
                               const SizedBox(height: 2),
                               Text(
                                 _expectedPayoffDate != null
@@ -351,7 +348,7 @@ class _DebtFormPageState extends State<DebtFormPage> {
                                     : 'No date set',
                                 style: TextStyle(
                                   fontSize: 15,
-                                  color: _expectedPayoffDate != null ? AppColors.textPrimary : AppColors.textMuted,
+                                  color: _expectedPayoffDate != null ? Theme.of(context).colorScheme.onSurface : context.appColors.textMuted,
                                 ),
                               ),
                             ],
@@ -360,7 +357,7 @@ class _DebtFormPageState extends State<DebtFormPage> {
                         if (_expectedPayoffDate != null)
                           GestureDetector(
                             onTap: () => setState(() => _expectedPayoffDate = null),
-                            child: const Icon(Icons.close, color: AppColors.textMuted, size: 20),
+                            child: Icon(Icons.close, color: context.appColors.textMuted, size: 20),
                           ),
                       ],
                     ),
@@ -370,11 +367,11 @@ class _DebtFormPageState extends State<DebtFormPage> {
                 // Notes
                 TextFormField(
                   controller: _notesController,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   maxLines: 3,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Notes (optional)',
-                    prefixIcon: Icon(Icons.notes, color: AppColors.textMuted),
+                    prefixIcon: Icon(Icons.notes, color: context.appColors.textMuted),
                     alignLabelWithHint: true,
                   ),
                 ),

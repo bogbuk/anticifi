@@ -56,7 +56,14 @@ class ReceiptRemoteDataSource {
 
   Future<List<ReceiptScanModel>> getUserScans() async {
     final response = await dioClient.dio.get(ApiEndpoints.receipts);
-    final list = response.data as List<dynamic>;
+    final responseData = response.data;
+    // Support both paginated { data: [...] } and plain list responses
+    final List<dynamic> list;
+    if (responseData is Map<String, dynamic> && responseData.containsKey('data')) {
+      list = responseData['data'] as List<dynamic>;
+    } else {
+      list = responseData as List<dynamic>;
+    }
     return list
         .map((e) => ReceiptScanModel.fromJson(e as Map<String, dynamic>))
         .toList();

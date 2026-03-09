@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/services/fcm_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors_extension.dart';
 import '../../../notifications/presentation/bloc/notifications_cubit.dart';
 import '../../../notifications/presentation/bloc/notifications_state.dart';
 
@@ -73,9 +74,9 @@ class _HomePageState extends State<HomePage> {
           });
           context.go(_tabs[index]);
         },
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textMuted,
+        unselectedItemColor: context.appColors.textMuted,
         type: BottomNavigationBarType.fixed,
         elevation: 0,
         items: const [
@@ -109,13 +110,13 @@ class _HomePageState extends State<HomePage> {
 
         return FloatingActionButton.small(
           onPressed: () => context.push('/notifications'),
-          backgroundColor: AppColors.card,
+          backgroundColor: context.appColors.card,
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              const Icon(
+              Icon(
                 Icons.notifications_outlined,
-                color: AppColors.textSecondary,
+                color: context.appColors.textSecondary,
                 size: 22,
               ),
               if (unreadCount > 0)
