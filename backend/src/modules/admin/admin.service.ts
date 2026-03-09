@@ -23,18 +23,24 @@ export class AdminService {
   async promoteToAdmin(email: string) {
     // Ensure role column exists (migration for production)
     const sequelize = this.userModel.sequelize!;
-    await sequelize.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'users' AND column_name = 'role'
-        ) THEN
-          CREATE TYPE "enum_users_role" AS ENUM ('USER', 'ADMIN');
-          ALTER TABLE users ADD COLUMN role "enum_users_role" NOT NULL DEFAULT 'USER';
-        END IF;
-      END $$;
-    `);
+    try {
+      await sequelize.query(`
+        DO $$
+        BEGIN
+          IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_users_role') THEN
+            CREATE TYPE "enum_users_role" AS ENUM ('USER', 'ADMIN');
+          END IF;
+          IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns
+            WHERE table_name = 'users' AND column_name = 'role'
+          ) THEN
+            ALTER TABLE users ADD COLUMN role "enum_users_role" NOT NULL DEFAULT 'USER';
+          END IF;
+        END $$;
+      `);
+    } catch (e) {
+      this.logger.warn(`Migration warning: ${(e as Error).message}`);
+    }
 
     const user = await this.userModel.findOne({ where: { email } });
     if (!user) {
