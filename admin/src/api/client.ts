@@ -2,7 +2,7 @@ import axios from 'axios';
 import { clearAuth, getToken } from '../store/auth';
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://api.anticifi.com',
+  baseURL: (import.meta.env.VITE_API_URL || 'https://api.anticifi.com') + '/api',
   headers: {
     'Content-Type': 'application/json',
   },
