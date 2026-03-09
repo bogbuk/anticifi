@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, literal } from 'sequelize';
 import { User } from '../users/user.model.js';
@@ -11,12 +11,31 @@ import { UpdateSubscriptionAdminDto } from './dto/update-subscription-admin.dto.
 
 @Injectable()
 export class AdminService {
+  private readonly logger = new Logger(AdminService.name);
+
   constructor(
     @InjectModel(User) private readonly userModel: typeof User,
     @InjectModel(Subscription) private readonly subscriptionModel: typeof Subscription,
     @InjectModel(Account) private readonly accountModel: typeof Account,
     @InjectModel(Transaction) private readonly transactionModel: typeof Transaction,
   ) {}
+
+  async promoteToAdmin(email: string) {
+    const user = await this.userModel.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException(`User with email "${email}" not found`);
+    }
+
+    await user.update({ role: 'ADMIN' });
+    this.logger.log(`User ${email} promoted to ADMIN`);
+
+    return {
+      message: `User ${email} promoted to ADMIN`,
+      userId: user.id,
+      email: user.email,
+      role: 'ADMIN',
+    };
+  }
 
   async getStats() {
     const thirtyDaysAgo = new Date();
