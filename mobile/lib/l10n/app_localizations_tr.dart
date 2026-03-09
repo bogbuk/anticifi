@@ -109,6 +109,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get failedToLoadDashboard => 'Panel yüklenemedi';
 
   @override
+  String get failedToLoadAccounts => 'Hesaplar yüklenemedi';
+
+  @override
   String get retry => 'Tekrar dene';
 
   @override
@@ -905,4 +908,40 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get vsLastMonth => 'geçen aya göre';
+
+  @override
+  String get receiptDetails => 'Fiş detayları';
+
+  @override
+  String get scanInfo => 'Tarama bilgisi';
+
+  @override
+  String get filename => 'Dosya adı';
+
+  @override
+  String get scannedOn => 'Taranma tarihi';
+
+  @override
+  String get receiptData => 'Fiş verileri';
+
+  @override
+  String get totalAmount => 'Toplam tutar';
+
+  @override
+  String get receiptDate => 'Fiş tarihi';
+
+  @override
+  String get confidence => 'Güvenilirlik';
+
+  @override
+  String get completed => 'Tamamlandı';
+
+  @override
+  String get failed => 'Başarısız';
+
+  @override
+  String get processing => 'İşleniyor';
+
+  @override
+  String get items => 'Kalemler';
 }

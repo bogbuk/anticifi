@@ -37,6 +37,7 @@
   "getStarted": "Comenzar",
 
   "failedToLoadDashboard": "Error al cargar el panel",
+  "failedToLoadAccounts": "Error al cargar las cuentas",
   "retry": "Reintentar",
   "recentTransactions": "Transacciones recientes",
   "noRecentTransactions": "Sin transacciones recientes",
@@ -315,5 +316,17 @@
   "addAccount": "Añadir cuenta",
   "noCategory": "Sin categoría",
   "category": "Categoría",
-  "vsLastMonth": "respecto al mes pasado"
+  "vsLastMonth": "respecto al mes pasado",
+  "receiptDetails": "Detalles del recibo",
+  "scanInfo": "Información del escaneo",
+  "filename": "Nombre del archivo",
+  "scannedOn": "Escaneado el",
+  "receiptData": "Datos del recibo",
+  "totalAmount": "Monto total",
+  "receiptDate": "Fecha del recibo",
+  "confidence": "Confianza",
+  "completed": "Completado",
+  "failed": "Fallido",
+  "processing": "Procesando",
+  "items": "Artículos"
 }

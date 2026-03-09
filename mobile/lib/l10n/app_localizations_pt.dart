@@ -109,6 +109,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get failedToLoadDashboard => 'Falha ao carregar o painel';
 
   @override
+  String get failedToLoadAccounts => 'Falha ao carregar as contas';
+
+  @override
   String get retry => 'Tentar novamente';
 
   @override
@@ -908,4 +911,40 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get vsLastMonth => 'em relação ao mês passado';
+
+  @override
+  String get receiptDetails => 'Detalhes do recibo';
+
+  @override
+  String get scanInfo => 'Informações da digitalização';
+
+  @override
+  String get filename => 'Nome do arquivo';
+
+  @override
+  String get scannedOn => 'Digitalizado em';
+
+  @override
+  String get receiptData => 'Dados do recibo';
+
+  @override
+  String get totalAmount => 'Valor total';
+
+  @override
+  String get receiptDate => 'Data do recibo';
+
+  @override
+  String get confidence => 'Confiança';
+
+  @override
+  String get completed => 'Concluído';
+
+  @override
+  String get failed => 'Falhou';
+
+  @override
+  String get processing => 'Processando';
+
+  @override
+  String get items => 'Itens';
 }

@@ -32,6 +32,7 @@
   "next": "İleri",
   "getStarted": "Başla",
   "failedToLoadDashboard": "Panel yüklenemedi",
+  "failedToLoadAccounts": "Hesaplar yüklenemedi",
   "retry": "Tekrar dene",
   "recentTransactions": "Son işlemler",
   "noRecentTransactions": "Son işlem yok",
@@ -288,5 +289,17 @@
   "addAccount": "Hesap ekle",
   "noCategory": "Kategorisiz",
   "category": "Kategori",
-  "vsLastMonth": "geçen aya göre"
+  "vsLastMonth": "geçen aya göre",
+  "receiptDetails": "Fiş detayları",
+  "scanInfo": "Tarama bilgisi",
+  "filename": "Dosya adı",
+  "scannedOn": "Taranma tarihi",
+  "receiptData": "Fiş verileri",
+  "totalAmount": "Toplam tutar",
+  "receiptDate": "Fiş tarihi",
+  "confidence": "Güvenilirlik",
+  "completed": "Tamamlandı",
+  "failed": "Başarısız",
+  "processing": "İşleniyor",
+  "items": "Kalemler"
 }

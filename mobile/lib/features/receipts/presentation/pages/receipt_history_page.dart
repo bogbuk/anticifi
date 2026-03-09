@@ -120,7 +120,7 @@ class _ReceiptHistoryPageState extends State<ReceiptHistoryPage> {
           final scan = scans[index];
           return _ReceiptScanTile(
             scan: scan,
-            onTap: () => context.push('/receipts/scan'),
+            onTap: () => context.push('/receipts/detail', extra: scan),
           ).animate().fadeIn(
                 duration: 400.ms,
                 delay: (index.clamp(0, 10) * 50).ms,

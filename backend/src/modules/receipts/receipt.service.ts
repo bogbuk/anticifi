@@ -10,6 +10,7 @@ import { SubscriptionsService } from '../subscriptions/subscriptions.service.js'
 import { ConfirmReceiptDto } from './dto/confirm-receipt.dto.js';
 import { QueryReceiptDto } from './dto/query-receipt.dto.js';
 import { UpdateReceiptDto } from './dto/update-receipt.dto.js';
+import { EventsGateway } from '../events/events.gateway.js';
 
 const CONFIDENCE_THRESHOLD = 60;
 
@@ -33,6 +34,7 @@ export class ReceiptService {
     private readonly receiptModel: typeof ReceiptScan,
     private readonly transactionsService: TransactionsService,
     private readonly subscriptionsService: SubscriptionsService,
+    private readonly eventsGateway: EventsGateway,
   ) {
     if (!fs.existsSync(this.uploadsDir)) {
       fs.mkdirSync(this.uploadsDir, { recursive: true });
@@ -95,9 +97,23 @@ export class ReceiptService {
       if (confidence < CONFIDENCE_THRESHOLD) {
         warning = `Low OCR confidence (${confidence.toFixed(1)}%). Recognized data may be inaccurate — please review before confirming.`;
       }
+
+      this.eventsGateway.emitToUser(userId, 'receipt:scanned', {
+        receiptId: receipt.id,
+        status: receipt.status,
+        confidence: receipt.confidence,
+        parsedData: receipt.parsedData,
+      });
     } catch (error) {
       this.logger.error('OCR processing failed', error);
       await receipt.update({ status: ReceiptStatus.FAILED });
+
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      this.eventsGateway.emitToUser(userId, 'receipt:scanned', {
+        receiptId: receipt.id,
+        status: 'failed',
+        error: message,
+      });
     }
 
     const result = await receipt.reload();

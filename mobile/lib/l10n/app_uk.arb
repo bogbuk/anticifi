@@ -32,6 +32,7 @@
   "next": "Далі",
   "getStarted": "Почати",
   "failedToLoadDashboard": "Не вдалося завантажити дані",
+  "failedToLoadAccounts": "Не вдалося завантажити рахунки",
   "retry": "Повторити",
   "recentTransactions": "Останні транзакції",
   "noRecentTransactions": "Немає нещодавніх транзакцій",
@@ -288,5 +289,17 @@
   "addAccount": "Додати рахунок",
   "noCategory": "Без категорії",
   "category": "Категорія",
-  "vsLastMonth": "порівняно з минулим місяцем"
+  "vsLastMonth": "порівняно з минулим місяцем",
+  "receiptDetails": "Деталі чека",
+  "scanInfo": "Інформація про сканування",
+  "filename": "Ім'я файлу",
+  "scannedOn": "Відскановано",
+  "receiptData": "Дані чека",
+  "totalAmount": "Загальна сума",
+  "receiptDate": "Дата чека",
+  "confidence": "Достовірність",
+  "completed": "Завершено",
+  "failed": "Помилка",
+  "processing": "Обробка",
+  "items": "Позиції"
 }

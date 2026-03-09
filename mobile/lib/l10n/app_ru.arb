@@ -37,6 +37,7 @@
   "getStarted": "Начать",
 
   "failedToLoadDashboard": "Не удалось загрузить данные",
+  "failedToLoadAccounts": "Не удалось загрузить счета",
   "retry": "Повторить",
   "recentTransactions": "Последние транзакции",
   "noRecentTransactions": "Нет недавних транзакций",
@@ -315,5 +316,17 @@
   "addAccount": "Добавить счёт",
   "noCategory": "Без категории",
   "category": "Категория",
-  "vsLastMonth": "по сравнению с прошлым месяцем"
+  "vsLastMonth": "по сравнению с прошлым месяцем",
+  "receiptDetails": "Детали чека",
+  "scanInfo": "Информация о сканировании",
+  "filename": "Имя файла",
+  "scannedOn": "Дата сканирования",
+  "receiptData": "Данные чека",
+  "totalAmount": "Общая сумма",
+  "receiptDate": "Дата чека",
+  "confidence": "Достоверность",
+  "completed": "Завершено",
+  "failed": "Ошибка",
+  "processing": "Обработка",
+  "items": "Позиции"
 }

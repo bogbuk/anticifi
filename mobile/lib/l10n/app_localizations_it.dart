@@ -109,6 +109,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get failedToLoadDashboard => 'Impossibile caricare il pannello';
 
   @override
+  String get failedToLoadAccounts => 'Impossibile caricare i conti';
+
+  @override
   String get retry => 'Riprova';
 
   @override
@@ -908,4 +911,40 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get vsLastMonth => 'rispetto al mese scorso';
+
+  @override
+  String get receiptDetails => 'Dettagli scontrino';
+
+  @override
+  String get scanInfo => 'Informazioni scansione';
+
+  @override
+  String get filename => 'Nome file';
+
+  @override
+  String get scannedOn => 'Scansionato il';
+
+  @override
+  String get receiptData => 'Dati scontrino';
+
+  @override
+  String get totalAmount => 'Importo totale';
+
+  @override
+  String get receiptDate => 'Data scontrino';
+
+  @override
+  String get confidence => 'Affidabilità';
+
+  @override
+  String get completed => 'Completato';
+
+  @override
+  String get failed => 'Fallito';
+
+  @override
+  String get processing => 'In elaborazione';
+
+  @override
+  String get items => 'Articoli';
 }

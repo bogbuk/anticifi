@@ -109,6 +109,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get failedToLoadDashboard => 'Nu s-a putut încărca panoul';
 
   @override
+  String get failedToLoadAccounts => 'Nu s-au putut încărca conturile';
+
+  @override
   String get retry => 'Reîncearcă';
 
   @override
@@ -904,4 +907,40 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get vsLastMonth => 'față de luna trecută';
+
+  @override
+  String get receiptDetails => 'Detalii chitanță';
+
+  @override
+  String get scanInfo => 'Informații scanare';
+
+  @override
+  String get filename => 'Nume fișier';
+
+  @override
+  String get scannedOn => 'Scanat pe';
+
+  @override
+  String get receiptData => 'Date chitanță';
+
+  @override
+  String get totalAmount => 'Sumă totală';
+
+  @override
+  String get receiptDate => 'Data chitanței';
+
+  @override
+  String get confidence => 'Încredere';
+
+  @override
+  String get completed => 'Finalizat';
+
+  @override
+  String get failed => 'Eșuat';
+
+  @override
+  String get processing => 'Se procesează';
+
+  @override
+  String get items => 'Articole';
 }

@@ -105,6 +105,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get failedToLoadDashboard => 'ダッシュボードの読み込みに失敗しました';
 
   @override
+  String get failedToLoadAccounts => 'アカウントの読み込みに失敗しました';
+
+  @override
   String get retry => '再試行';
 
   @override
@@ -888,4 +891,40 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get vsLastMonth => '先月比';
+
+  @override
+  String get receiptDetails => 'レシート詳細';
+
+  @override
+  String get scanInfo => 'スキャン情報';
+
+  @override
+  String get filename => 'ファイル名';
+
+  @override
+  String get scannedOn => 'スキャン日';
+
+  @override
+  String get receiptData => 'レシートデータ';
+
+  @override
+  String get totalAmount => '合計金額';
+
+  @override
+  String get receiptDate => 'レシート日付';
+
+  @override
+  String get confidence => '信頼度';
+
+  @override
+  String get completed => '完了';
+
+  @override
+  String get failed => '失敗';
+
+  @override
+  String get processing => '処理中';
+
+  @override
+  String get items => '項目';
 }

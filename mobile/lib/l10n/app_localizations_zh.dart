@@ -105,6 +105,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get failedToLoadDashboard => '无法加载仪表盘';
 
   @override
+  String get failedToLoadAccounts => '无法加载账户';
+
+  @override
   String get retry => '重试';
 
   @override
@@ -887,4 +890,40 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get vsLastMonth => '与上月相比';
+
+  @override
+  String get receiptDetails => '收据详情';
+
+  @override
+  String get scanInfo => '扫描信息';
+
+  @override
+  String get filename => '文件名';
+
+  @override
+  String get scannedOn => '扫描日期';
+
+  @override
+  String get receiptData => '收据数据';
+
+  @override
+  String get totalAmount => '总金额';
+
+  @override
+  String get receiptDate => '收据日期';
+
+  @override
+  String get confidence => '置信度';
+
+  @override
+  String get completed => '已完成';
+
+  @override
+  String get failed => '失败';
+
+  @override
+  String get processing => '处理中';
+
+  @override
+  String get items => '项目';
 }

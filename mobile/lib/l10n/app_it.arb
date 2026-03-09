@@ -32,6 +32,7 @@
   "next": "Avanti",
   "getStarted": "Inizia",
   "failedToLoadDashboard": "Impossibile caricare il pannello",
+  "failedToLoadAccounts": "Impossibile caricare i conti",
   "retry": "Riprova",
   "recentTransactions": "Transazioni recenti",
   "noRecentTransactions": "Nessuna transazione recente",
@@ -288,5 +289,17 @@
   "addAccount": "Aggiungi conto",
   "noCategory": "Nessuna categoria",
   "category": "Categoria",
-  "vsLastMonth": "rispetto al mese scorso"
+  "vsLastMonth": "rispetto al mese scorso",
+  "receiptDetails": "Dettagli scontrino",
+  "scanInfo": "Informazioni scansione",
+  "filename": "Nome file",
+  "scannedOn": "Scansionato il",
+  "receiptData": "Dati scontrino",
+  "totalAmount": "Importo totale",
+  "receiptDate": "Data scontrino",
+  "confidence": "Affidabilità",
+  "completed": "Completato",
+  "failed": "Fallito",
+  "processing": "In elaborazione",
+  "items": "Articoli"
 }

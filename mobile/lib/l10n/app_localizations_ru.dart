@@ -109,6 +109,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get failedToLoadDashboard => 'Не удалось загрузить данные';
 
   @override
+  String get failedToLoadAccounts => 'Не удалось загрузить счета';
+
+  @override
   String get retry => 'Повторить';
 
   @override
@@ -904,4 +907,40 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get vsLastMonth => 'по сравнению с прошлым месяцем';
+
+  @override
+  String get receiptDetails => 'Детали чека';
+
+  @override
+  String get scanInfo => 'Информация о сканировании';
+
+  @override
+  String get filename => 'Имя файла';
+
+  @override
+  String get scannedOn => 'Дата сканирования';
+
+  @override
+  String get receiptData => 'Данные чека';
+
+  @override
+  String get totalAmount => 'Общая сумма';
+
+  @override
+  String get receiptDate => 'Дата чека';
+
+  @override
+  String get confidence => 'Достоверность';
+
+  @override
+  String get completed => 'Завершено';
+
+  @override
+  String get failed => 'Ошибка';
+
+  @override
+  String get processing => 'Обработка';
+
+  @override
+  String get items => 'Позиции';
 }

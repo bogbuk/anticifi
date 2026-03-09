@@ -109,6 +109,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failedToLoadDashboard => 'Failed to load dashboard';
 
   @override
+  String get failedToLoadAccounts => 'Failed to load accounts';
+
+  @override
   String get retry => 'Retry';
 
   @override
@@ -901,4 +904,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vsLastMonth => 'vs last month';
+
+  @override
+  String get receiptDetails => 'Receipt Details';
+
+  @override
+  String get scanInfo => 'Scan Info';
+
+  @override
+  String get filename => 'Filename';
+
+  @override
+  String get scannedOn => 'Scanned On';
+
+  @override
+  String get receiptData => 'Receipt Data';
+
+  @override
+  String get totalAmount => 'Total Amount';
+
+  @override
+  String get receiptDate => 'Receipt Date';
+
+  @override
+  String get confidence => 'Confidence';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get failed => 'Failed';
+
+  @override
+  String get processing => 'Processing';
+
+  @override
+  String get items => 'Items';
 }

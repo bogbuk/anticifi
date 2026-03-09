@@ -31,12 +31,14 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
   final _merchantController = TextEditingController();
 
   File? _selectedImage;
+  File? _previewImage;
   List<AccountEntity> _accounts = [];
   List<Map<String, dynamic>> _categories = [];
   String? _selectedAccountId;
   String? _selectedCategoryId;
   String _selectedType = 'expense';
   DateTime _selectedDate = DateTime.now();
+  String? _accountsError;
 
   @override
   void initState() {
@@ -47,6 +49,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
 
   Future<void> _loadAccounts() async {
     try {
+      setState(() => _accountsError = null);
       final accounts = await getIt<AccountsRepository>().getAccounts();
       if (mounted) {
         setState(() {
@@ -55,7 +58,13 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
               accounts.isNotEmpty ? accounts.first.id : null;
         });
       }
-    } catch (_) {}
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _accountsError = AppLocalizations.of(context)!.failedToLoadAccounts;
+        });
+      }
+    }
   }
 
   Future<void> _loadCategories() async {
@@ -88,9 +97,22 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
       imageQuality: 70,
     );
     if (picked != null && mounted) {
-      setState(() => _selectedImage = File(picked.path));
-      context.read<ReceiptCubit>().scanReceipt(File(picked.path));
+      setState(() => _previewImage = File(picked.path));
     }
+  }
+
+  void _startScan() {
+    if (_previewImage == null) return;
+    final file = _previewImage!;
+    setState(() {
+      _selectedImage = file;
+      _previewImage = null;
+    });
+    context.read<ReceiptCubit>().scanReceipt(file);
+  }
+
+  void _cancelPreview() {
+    setState(() => _previewImage = null);
   }
 
   void _fillFromScan(ReceiptScanEntity scan) {
@@ -170,6 +192,9 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           }
         },
         builder: (context, state) {
+          if (state is ReceiptInitial && _previewImage != null) {
+            return _buildImagePreview();
+          }
           if (state is ReceiptInitial) {
             return _buildImagePicker();
           }
@@ -204,6 +229,9 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           }
           if (state is ReceiptConfirming) {
             return _buildConfirmForm(state.scan, isLoading: true);
+          }
+          if (state is ReceiptError && _previewImage != null) {
+            return _buildImagePreview();
           }
           if (state is ReceiptError) {
             return _buildImagePicker();
@@ -259,6 +287,51 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildImagePreview() {
+    final l10n = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.file(
+                _previewImage!,
+                width: double.infinity,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          GradientButton(
+            text: l10n.scanReceipt,
+            onPressed: _startScan,
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: OutlinedButton(
+              onPressed: _cancelPreview,
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: context.appColors.border),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                l10n.cancel,
+                style: TextStyle(color: context.appColors.textSecondary),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -347,6 +420,50 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                     Icon(Icons.account_balance, color: context.appColors.textMuted),
               ),
               dropdownColor: context.appColors.card,
+            )
+          else if (_accountsError != null)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    color: Theme.of(context).colorScheme.error,
+                    size: 32,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _accountsError!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    icon: Icon(Icons.refresh, color: Theme.of(context).colorScheme.primary),
+                    label: Text(
+                      l10n.retry,
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: _loadAccounts,
+                  ),
+                ],
+              ),
             )
           else
             Container(

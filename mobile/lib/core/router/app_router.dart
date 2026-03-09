@@ -46,7 +46,9 @@ import '../../features/debts/domain/entities/debt_entity.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/receipts/presentation/pages/receipt_scan_page.dart';
 import '../../features/receipts/presentation/pages/receipt_history_page.dart';
+import '../../features/receipts/presentation/pages/receipt_detail_page.dart';
 import '../../features/receipts/presentation/bloc/receipt_cubit.dart';
+import '../../features/receipts/domain/entities/receipt_scan_entity.dart';
 import '../../features/export/presentation/pages/export_page.dart';
 import '../../features/export/presentation/bloc/export_cubit.dart';
 import '../../features/subscription/presentation/pages/paywall_page.dart';
@@ -355,6 +357,13 @@ GoRouter createAppRouter(AuthBloc authBloc) {
           create: (_) => getIt<ReceiptCubit>(),
           child: const ReceiptHistoryPage(),
         ),
+      ),
+      GoRoute(
+        path: '/receipts/detail',
+        builder: (context, state) {
+          final receipt = state.extra as ReceiptScanEntity;
+          return ReceiptDetailPage(receipt: receipt);
+        },
       ),
 
       // ── Export route ──────────────────────────────────

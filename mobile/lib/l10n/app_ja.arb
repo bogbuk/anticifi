@@ -32,6 +32,7 @@
   "next": "次へ",
   "getStarted": "始める",
   "failedToLoadDashboard": "ダッシュボードの読み込みに失敗しました",
+  "failedToLoadAccounts": "アカウントの読み込みに失敗しました",
   "retry": "再試行",
   "recentTransactions": "最近の取引",
   "noRecentTransactions": "最近の取引はありません",
@@ -288,5 +289,17 @@
   "addAccount": "口座を追加",
   "noCategory": "カテゴリーなし",
   "category": "カテゴリー",
-  "vsLastMonth": "先月比"
+  "vsLastMonth": "先月比",
+  "receiptDetails": "レシート詳細",
+  "scanInfo": "スキャン情報",
+  "filename": "ファイル名",
+  "scannedOn": "スキャン日",
+  "receiptData": "レシートデータ",
+  "totalAmount": "合計金額",
+  "receiptDate": "レシート日付",
+  "confidence": "信頼度",
+  "completed": "完了",
+  "failed": "失敗",
+  "processing": "処理中",
+  "items": "項目"
 }

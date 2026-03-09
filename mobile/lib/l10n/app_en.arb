@@ -37,6 +37,7 @@
   "getStarted": "Get Started",
 
   "failedToLoadDashboard": "Failed to load dashboard",
+  "failedToLoadAccounts": "Failed to load accounts",
   "retry": "Retry",
   "recentTransactions": "Recent Transactions",
   "noRecentTransactions": "No recent transactions",
@@ -357,5 +358,18 @@
   "addAccount": "Add Account",
   "noCategory": "No category",
   "category": "Category",
-  "vsLastMonth": "vs last month"
+  "vsLastMonth": "vs last month",
+
+  "receiptDetails": "Receipt Details",
+  "scanInfo": "Scan Info",
+  "filename": "Filename",
+  "scannedOn": "Scanned On",
+  "receiptData": "Receipt Data",
+  "totalAmount": "Total Amount",
+  "receiptDate": "Receipt Date",
+  "confidence": "Confidence",
+  "completed": "Completed",
+  "failed": "Failed",
+  "processing": "Processing",
+  "items": "Items"
 }

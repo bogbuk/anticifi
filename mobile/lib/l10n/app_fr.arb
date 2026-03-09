@@ -37,6 +37,7 @@
   "getStarted": "Commencer",
 
   "failedToLoadDashboard": "Échec du chargement du tableau de bord",
+  "failedToLoadAccounts": "Échec du chargement des comptes",
   "retry": "Réessayer",
   "recentTransactions": "Transactions récentes",
   "noRecentTransactions": "Aucune transaction récente",
@@ -315,5 +316,17 @@
   "addAccount": "Ajouter un compte",
   "noCategory": "Sans catégorie",
   "category": "Catégorie",
-  "vsLastMonth": "par rapport au mois dernier"
+  "vsLastMonth": "par rapport au mois dernier",
+  "receiptDetails": "Détails du reçu",
+  "scanInfo": "Informations de scan",
+  "filename": "Nom du fichier",
+  "scannedOn": "Scanné le",
+  "receiptData": "Données du reçu",
+  "totalAmount": "Montant total",
+  "receiptDate": "Date du reçu",
+  "confidence": "Confiance",
+  "completed": "Terminé",
+  "failed": "Échoué",
+  "processing": "En cours",
+  "items": "Articles"
 }

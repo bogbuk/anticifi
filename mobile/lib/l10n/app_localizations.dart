@@ -310,6 +310,12 @@ abstract class AppLocalizations {
   /// **'Failed to load dashboard'**
   String get failedToLoadDashboard;
 
+  /// No description provided for @failedToLoadAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load accounts'**
+  String get failedToLoadAccounts;
+
   /// No description provided for @retry.
   ///
   /// In en, this message translates to:
@@ -1845,6 +1851,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'vs last month'**
   String get vsLastMonth;
+
+  /// No description provided for @receiptDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt Details'**
+  String get receiptDetails;
+
+  /// No description provided for @scanInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Info'**
+  String get scanInfo;
+
+  /// No description provided for @filename.
+  ///
+  /// In en, this message translates to:
+  /// **'Filename'**
+  String get filename;
+
+  /// No description provided for @scannedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned On'**
+  String get scannedOn;
+
+  /// No description provided for @receiptData.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt Data'**
+  String get receiptData;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get totalAmount;
+
+  /// No description provided for @receiptDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt Date'**
+  String get receiptDate;
+
+  /// No description provided for @confidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence'**
+  String get confidence;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
+
+  /// No description provided for @processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get processing;
+
+  /// No description provided for @items.
+  ///
+  /// In en, this message translates to:
+  /// **'Items'**
+  String get items;
 }
 
 class _AppLocalizationsDelegate

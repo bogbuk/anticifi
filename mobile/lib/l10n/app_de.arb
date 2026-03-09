@@ -32,6 +32,7 @@
   "next": "Weiter",
   "getStarted": "Loslegen",
   "failedToLoadDashboard": "Dashboard konnte nicht geladen werden",
+  "failedToLoadAccounts": "Konten konnten nicht geladen werden",
   "retry": "Wiederholen",
   "recentTransactions": "Letzte Transaktionen",
   "noRecentTransactions": "Keine aktuellen Transaktionen",
@@ -288,5 +289,17 @@
   "addAccount": "Konto hinzufügen",
   "noCategory": "Keine Kategorie",
   "category": "Kategorie",
-  "vsLastMonth": "im Vergleich zum Vormonat"
+  "vsLastMonth": "im Vergleich zum Vormonat",
+  "receiptDetails": "Belegdetails",
+  "scanInfo": "Scan-Informationen",
+  "filename": "Dateiname",
+  "scannedOn": "Gescannt am",
+  "receiptData": "Belegdaten",
+  "totalAmount": "Gesamtbetrag",
+  "receiptDate": "Belegdatum",
+  "confidence": "Zuverlässigkeit",
+  "completed": "Abgeschlossen",
+  "failed": "Fehlgeschlagen",
+  "processing": "Verarbeitung",
+  "items": "Artikel"
 }

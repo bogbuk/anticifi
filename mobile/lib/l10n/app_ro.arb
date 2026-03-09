@@ -37,6 +37,7 @@
   "getStarted": "Începe",
 
   "failedToLoadDashboard": "Nu s-a putut încărca panoul",
+  "failedToLoadAccounts": "Nu s-au putut încărca conturile",
   "retry": "Reîncearcă",
   "recentTransactions": "Tranzacții recente",
   "noRecentTransactions": "Nicio tranzacție recentă",
@@ -315,5 +316,17 @@
   "addAccount": "Adaugă cont",
   "noCategory": "Fără categorie",
   "category": "Categorie",
-  "vsLastMonth": "față de luna trecută"
+  "vsLastMonth": "față de luna trecută",
+  "receiptDetails": "Detalii chitanță",
+  "scanInfo": "Informații scanare",
+  "filename": "Nume fișier",
+  "scannedOn": "Scanat pe",
+  "receiptData": "Date chitanță",
+  "totalAmount": "Sumă totală",
+  "receiptDate": "Data chitanței",
+  "confidence": "Încredere",
+  "completed": "Finalizat",
+  "failed": "Eșuat",
+  "processing": "Se procesează",
+  "items": "Articole"
 }

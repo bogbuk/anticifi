@@ -109,6 +109,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get failedToLoadDashboard => 'Dashboard konnte nicht geladen werden';
 
   @override
+  String get failedToLoadAccounts => 'Konten konnten nicht geladen werden';
+
+  @override
   String get retry => 'Wiederholen';
 
   @override
@@ -911,4 +914,40 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get vsLastMonth => 'im Vergleich zum Vormonat';
+
+  @override
+  String get receiptDetails => 'Belegdetails';
+
+  @override
+  String get scanInfo => 'Scan-Informationen';
+
+  @override
+  String get filename => 'Dateiname';
+
+  @override
+  String get scannedOn => 'Gescannt am';
+
+  @override
+  String get receiptData => 'Belegdaten';
+
+  @override
+  String get totalAmount => 'Gesamtbetrag';
+
+  @override
+  String get receiptDate => 'Belegdatum';
+
+  @override
+  String get confidence => 'Zuverlässigkeit';
+
+  @override
+  String get completed => 'Abgeschlossen';
+
+  @override
+  String get failed => 'Fehlgeschlagen';
+
+  @override
+  String get processing => 'Verarbeitung';
+
+  @override
+  String get items => 'Artikel';
 }
