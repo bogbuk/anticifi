@@ -38,6 +38,18 @@ export class AdminController {
     return this.adminService.promoteToAdmin(body.email);
   }
 
+  @Post('reset-password')
+  async resetPassword(
+    @Body() body: { email: string; password: string },
+    @Headers('x-admin-secret') secret: string,
+  ) {
+    const adminSecret = this.configService.get<string>('ADMIN_SETUP_SECRET');
+    if (!adminSecret || secret !== adminSecret) {
+      throw new ForbiddenException('Invalid setup secret');
+    }
+    return this.adminService.resetPassword(body.email, body.password);
+  }
+
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get('stats')
   getStats() {

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, literal, Sequelize } from 'sequelize';
+import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.model.js';
 import { Subscription } from '../subscriptions/subscription.model.js';
 import { Account } from '../accounts/account.model.js';
@@ -56,6 +57,19 @@ export class AdminService {
       email: user.email,
       role: 'ADMIN',
     };
+  }
+
+  async resetPassword(email: string, newPassword: string) {
+    const user = await this.userModel.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException(`User with email "${email}" not found`);
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+    await user.update({ passwordHash });
+    this.logger.log(`Password reset for ${email}`);
+
+    return { message: `Password reset for ${email}` };
   }
 
   async getStats() {
