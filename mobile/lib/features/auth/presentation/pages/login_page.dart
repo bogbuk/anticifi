@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
 import '../bloc/auth_bloc.dart';
@@ -30,6 +31,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoginSuccessState) {
@@ -71,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 40),
                   // Title
                   Text(
-                    'Welcome back',
+                    l10n.welcomeBack,
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -80,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Sign in to continue',
+                    l10n.signInToContinue,
                     style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).inputDecorationTheme.labelStyle?.color,
@@ -90,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                   // Email field
                   AuthTextField(
                     controller: _emailController,
-                    label: 'Email',
+                    label: l10n.email,
                     prefixIcon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -98,14 +101,14 @@ class _LoginPageState extends State<LoginPage> {
                   // Password field
                   AuthTextField(
                     controller: _passwordController,
-                    label: 'Password',
+                    label: l10n.password,
                     prefixIcon: Icons.lock_outline,
                     isPassword: true,
                   ),
                   const SizedBox(height: 24),
                   // Sign In button
                   GradientButton(
-                    text: 'Sign In',
+                    text: l10n.signIn,
                     isLoading: isLoading,
                     onPressed: () {
                       context.read<AuthBloc>().add(
@@ -122,12 +125,12 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () => context.go('/auth/register'),
                     child: RichText(
                       text: TextSpan(
-                        text: "Don't have an account? ",
+                        text: '${l10n.dontHaveAccount} ',
                         style: TextStyle(color: context.appColors.textSecondary),
-                        children: const [
+                        children: [
                           TextSpan(
-                            text: 'Sign Up',
-                            style: TextStyle(
+                            text: l10n.signUp,
+                            style: const TextStyle(
                               color: AppColors.primary,
                               fontWeight: FontWeight.w600,
                             ),
@@ -147,6 +150,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _showBiometricDialog(
       BuildContext context, dynamic user) async {
+    final l10n = AppLocalizations.of(context)!;
     final authBloc = context.read<AuthBloc>();
     final biometricService = authBloc.biometricService;
 
@@ -162,26 +166,26 @@ class _LoginPageState extends State<LoginPage> {
         builder: (ctx) => AlertDialog(
           backgroundColor: Theme.of(context).colorScheme.surface,
           title: Text(
-            'Enable Biometric Login?',
+            l10n.enableBiometricTitle,
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
           content: Text(
-            'Use Face ID or Touch ID for faster access next time.',
+            l10n.enableBiometricContent,
             style: TextStyle(color: context.appColors.textSecondary),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
               child: Text(
-                'Not Now',
+                l10n.notNow,
                 style: TextStyle(color: context.appColors.textSecondary),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text(
-                'Enable',
-                style: TextStyle(color: AppColors.primary),
+              child: Text(
+                l10n.enable,
+                style: const TextStyle(color: AppColors.primary),
               ),
             ),
           ],

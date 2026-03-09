@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/transaction_entity.dart';
 
 class TransactionTile extends StatelessWidget {
@@ -26,6 +27,7 @@ class TransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isIncome = transaction.type == 'income';
     final color = isIncome ? AppColors.success : AppColors.error;
     final icon = isIncome ? Icons.arrow_upward : Icons.arrow_downward;
@@ -39,19 +41,19 @@ class TransactionTile extends StatelessWidget {
                 context: context,
                 builder: (ctx) => AlertDialog(
                   backgroundColor: context.appColors.card,
-                  title: Text('Delete Transaction',
+                  title: Text(l10n.deleteTransaction,
                       style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                   content: Text(
-                      'Are you sure you want to delete this transaction?',
+                      l10n.deleteTransactionConfirm,
                       style: TextStyle(color: context.appColors.textSecondary)),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(ctx).pop(false),
-                      child: const Text('Cancel'),
+                      child: Text(l10n.cancel),
                     ),
                     TextButton(
                       onPressed: () => Navigator.of(ctx).pop(true),
-                      child: const Text('Delete',
+                      child: Text(l10n.delete,
                           style: TextStyle(color: AppColors.error)),
                     ),
                   ],

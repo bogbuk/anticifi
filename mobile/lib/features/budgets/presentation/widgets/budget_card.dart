@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/budget_entity.dart';
 import 'budget_progress_bar.dart';
 
@@ -17,14 +18,14 @@ class BudgetCard extends StatelessWidget {
     this.onDelete,
   });
 
-  String get _periodLabel {
+  String _periodLabel(AppLocalizations l10n) {
     switch (budget.period) {
       case 'weekly':
-        return 'Weekly';
+        return l10n.weekly;
       case 'monthly':
-        return 'Monthly';
+        return l10n.monthly;
       case 'yearly':
-        return 'Yearly';
+        return l10n.yearly;
       default:
         return budget.period;
     }
@@ -32,6 +33,7 @@ class BudgetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -114,7 +116,7 @@ class BudgetCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    _periodLabel,
+                    _periodLabel(l10n),
                     style: const TextStyle(
                       color: AppColors.primaryLight,
                       fontSize: 11,

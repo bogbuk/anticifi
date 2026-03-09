@@ -830,4 +830,75 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Select Language';
+
+  @override
+  String get totalBalance => 'Total Balance';
+
+  @override
+  String get spendingByCategory => 'Spending by Category';
+
+  @override
+  String get noSpendingDataYet => 'No spending data yet';
+
+  @override
+  String get pleaseSelectAccount => 'Please select an account';
+
+  @override
+  String get editScheduledPayment => 'Edit Scheduled Payment';
+
+  @override
+  String get newScheduledPayment => 'New Scheduled Payment';
+
+  @override
+  String get paymentName => 'Payment Name';
+
+  @override
+  String get pleaseEnterPaymentName => 'Please enter payment name';
+
+  @override
+  String get frequency => 'Frequency';
+
+  @override
+  String get descriptionOptional => 'Description (optional)';
+
+  @override
+  String get updatePayment => 'Update Payment';
+
+  @override
+  String get createPayment => 'Create Payment';
+
+  @override
+  String get deleteScheduledPayment => 'Delete Scheduled Payment';
+
+  @override
+  String get executePayment => 'Execute Payment';
+
+  @override
+  String executePaymentConfirm(String name) {
+    return 'Execute \"$name\" now?';
+  }
+
+  @override
+  String get execute => 'Execute';
+
+  @override
+  String get receiptHistory => 'Receipt History';
+
+  @override
+  String get noReceiptScansYet => 'No receipt scans yet';
+
+  @override
+  String get scanReceiptToGetStarted => 'Scan a receipt to get started';
+
+  @override
+  String get addAccount => 'Add Account';
+
+  @override
+  String get noCategory => 'No category';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get vsLastMonth => 'vs last month';
 }

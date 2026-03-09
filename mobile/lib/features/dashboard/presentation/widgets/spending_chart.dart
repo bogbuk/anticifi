@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/dashboard_entity.dart';
 
 class SpendingChart extends StatefulWidget {
@@ -44,6 +45,7 @@ class _SpendingChartState extends State<SpendingChart> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (widget.spendingByCategory.isEmpty) {
       return Container(
         width: double.infinity,
@@ -62,7 +64,7 @@ class _SpendingChartState extends State<SpendingChart> {
             ),
             const SizedBox(height: 12),
             Text(
-              'No spending data yet',
+              l10n.noSpendingDataYet,
               style: TextStyle(
                 fontSize: 14,
                 color: context.appColors.textSecondary,
@@ -88,7 +90,7 @@ class _SpendingChartState extends State<SpendingChart> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Spending by Category',
+            l10n.spendingByCategory,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,

@@ -13,6 +13,7 @@ import '../../../accounts/domain/repositories/accounts_repository.dart';
 import '../../../accounts/domain/entities/account_entity.dart';
 import '../../../subscription/presentation/bloc/subscription_cubit.dart';
 import '../../../subscription/presentation/bloc/subscription_state.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/transaction_entity.dart';
 import '../bloc/transactions_bloc.dart';
 import '../bloc/transactions_event.dart';
@@ -84,6 +85,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
 
   Future<void> _startVoiceInput() async {
     final speechService = getIt<SpeechService>();
+    final l10n = AppLocalizations.of(context)!;
 
     // Check premium status
     final subCubit = getIt<SubscriptionCubit>();
@@ -97,10 +99,10 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Voice input limit reached. Upgrade to Pro for unlimited access'),
+            content: Text(l10n.voiceLimitReached),
             backgroundColor: AppColors.warning,
             action: SnackBarAction(
-              label: 'Upgrade',
+              label: l10n.upgrade,
               textColor: Colors.white,
               onPressed: () => context.push('/subscription'),
             ),
@@ -114,8 +116,8 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
     if (!available) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Speech recognition is not available'),
+          SnackBar(
+            content: Text(l10n.speechNotAvailable),
             backgroundColor: AppColors.error,
           ),
         );
@@ -206,9 +208,10 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
     setState(() => _isSaving = true);
 
     if (_selectedAccountId == null) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please create an account first'),
+        SnackBar(
+          content: Text(l10n.pleaseCreateAccountFirst),
           backgroundColor: AppColors.error,
         ),
       );
@@ -254,6 +257,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<TransactionsBloc, TransactionsState>(
       listener: (context, state) {
         if (state is TransactionsError) {
@@ -265,7 +269,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_isEditing ? 'Edit Transaction' : 'New Transaction'),
+          title: Text(_isEditing ? l10n.editTransaction : l10n.newTransaction),
           actions: [
             if (_isEditing)
               IconButton(
@@ -275,19 +279,19 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                     context: context,
                     builder: (ctx) => AlertDialog(
                       backgroundColor: context.appColors.card,
-                      title: Text('Delete Transaction',
+                      title: Text(l10n.deleteTransaction,
                           style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                       content: Text(
-                          'Are you sure you want to delete this transaction?',
+                          l10n.deleteTransactionConfirm,
                           style: TextStyle(color: context.appColors.textSecondary)),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(ctx).pop(false),
-                          child: const Text('Cancel'),
+                          child: Text(l10n.cancel),
                         ),
                         TextButton(
                           onPressed: () => Navigator.of(ctx).pop(true),
-                          child: const Text('Delete',
+                          child: Text(l10n.delete,
                               style: TextStyle(color: AppColors.error)),
                         ),
                       ],
@@ -342,7 +346,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Expense',
+                                l10n.expense,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: _selectedType == 'expense'
@@ -385,7 +389,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Income',
+                                l10n.income,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: _selectedType == 'income'
@@ -419,7 +423,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                       setState(() => _selectedAccountId = value);
                     },
                     decoration: InputDecoration(
-                      labelText: 'Account',
+                      labelText: l10n.account,
                       prefixIcon: Icon(Icons.account_balance, color: context.appColors.textMuted),
                     ),
                     dropdownColor: context.appColors.card,
@@ -438,18 +442,18 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                       const TextInputType.numberWithOptions(decimal: true),
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
-                    labelText: 'Amount',
+                    labelText: l10n.amount,
                     prefixIcon: Icon(Icons.attach_money, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter an amount';
+                      return l10n.pleaseEnterAmount;
                     }
                     if (double.tryParse(value.trim()) == null) {
-                      return 'Please enter a valid number';
+                      return l10n.pleaseEnterValidNumber;
                     }
                     if (double.parse(value.trim()) <= 0) {
-                      return 'Amount must be greater than 0';
+                      return l10n.amountMustBeGreaterThanZero;
                     }
                     return null;
                   },
@@ -465,7 +469,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                         controller: _descriptionController,
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                         decoration: InputDecoration(
-                          labelText: 'Description',
+                          labelText: l10n.description,
                           prefixIcon:
                               Icon(Icons.notes_outlined, color: context.appColors.textMuted),
                         ),
@@ -592,7 +596,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
 
                 // Save button
                 GradientButton(
-                  text: _isEditing ? 'Update Transaction' : 'Add Transaction',
+                  text: _isEditing ? l10n.updateTransaction : l10n.addTransaction,
                   isLoading: _isSaving,
                   onPressed: _save,
                 ),

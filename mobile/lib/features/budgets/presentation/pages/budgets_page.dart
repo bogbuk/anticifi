@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/budget_entity.dart';
 import '../bloc/budgets_cubit.dart';
 import '../bloc/budgets_state.dart';
@@ -31,9 +32,10 @@ class _BudgetsPageState extends State<BudgetsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Budgets'),
+        title: Text(l10n.budgets),
       ),
       body: Column(
         children: [
@@ -60,7 +62,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          'Active',
+                          l10n.active,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14,
@@ -85,7 +87,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          'Inactive',
+                          l10n.inactive,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14,
@@ -140,8 +142,8 @@ class _BudgetsPageState extends State<BudgetsPage> {
                           const SizedBox(height: 16),
                           Text(
                             _showActive
-                                ? 'No active budgets'
-                                : 'No inactive budgets',
+                                ? l10n.noActiveBudgets
+                                : l10n.noInactiveBudgets,
                             style: TextStyle(
                               fontSize: 18,
                               color: context.appColors.textSecondary,
@@ -150,7 +152,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                           if (_showActive) ...[
                             const SizedBox(height: 8),
                             Text(
-                              'Tap + to create your first budget',
+                              l10n.tapPlusToCreateBudget,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: context.appColors.textMuted,
@@ -212,23 +214,24 @@ class _BudgetsPageState extends State<BudgetsPage> {
   }
 
   void _showDeleteConfirmation(BuildContext context, BudgetEntity budget) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(
-          'Delete Budget',
+          l10n.deleteBudget,
           style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         ),
         content: Text(
-          'Are you sure you want to delete "${budget.name}"?',
+          l10n.deleteBudgetConfirm(budget.name),
           style: TextStyle(color: context.appColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Cancel',
+              l10n.cancel,
               style: TextStyle(color: context.appColors.textSecondary),
             ),
           ),
@@ -237,8 +240,8 @@ class _BudgetsPageState extends State<BudgetsPage> {
               Navigator.pop(ctx);
               context.read<BudgetsCubit>().deleteBudget(budget.id);
             },
-            child: const Text(
-              'Delete',
+            child: Text(
+              l10n.delete,
               style: TextStyle(color: AppColors.error),
             ),
           ),

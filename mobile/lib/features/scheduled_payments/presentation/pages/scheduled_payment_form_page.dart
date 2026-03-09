@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../../accounts/presentation/bloc/accounts_cubit.dart';
 import '../../../accounts/presentation/bloc/accounts_state.dart';
@@ -108,8 +109,8 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
 
     if (_selectedAccountId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select an account'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseSelectAccount),
           backgroundColor: AppColors.error,
         ),
       );
@@ -166,6 +167,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('MMM d, yyyy');
 
     return BlocListener<ScheduledPaymentsCubit, ScheduledPaymentsState>(
@@ -178,8 +180,8 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
         appBar: AppBar(
           title: Text(
             _isEditing
-                ? 'Edit Scheduled Payment'
-                : 'New Scheduled Payment',
+                ? l10n.editScheduledPayment
+                : l10n.newScheduledPayment,
           ),
         ),
         body: SingleChildScrollView(
@@ -194,7 +196,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                   controller: _nameController,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Payment Name',
+                    labelText: l10n.paymentName,
                     prefixIcon: Icon(
                       Icons.label_outline,
                       color: context.appColors.textMuted,
@@ -202,7 +204,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter payment name';
+                      return l10n.pleaseEnterPaymentName;
                     }
                     return null;
                   },
@@ -217,7 +219,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                     decimal: true,
                   ),
                   decoration: InputDecoration(
-                    labelText: 'Amount',
+                    labelText: l10n.amount,
                     prefixIcon: Icon(
                       Icons.attach_money,
                       color: context.appColors.textMuted,
@@ -225,10 +227,10 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter amount';
+                      return l10n.pleaseEnterAmount;
                     }
                     if (double.tryParse(value.trim()) == null) {
-                      return 'Please enter a valid number';
+                      return l10n.pleaseEnterValidNumber;
                     }
                     return null;
                   },
@@ -258,7 +260,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              'Expense',
+                              l10n.expense,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,
@@ -285,7 +287,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              'Income',
+                              l10n.income,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,
@@ -309,7 +311,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                   dropdownColor: context.appColors.card,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Frequency',
+                    labelText: l10n.frequency,
                     prefixIcon: Icon(
                       Icons.event_repeat,
                       color: context.appColors.textMuted,
@@ -368,7 +370,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                         decoration: InputDecoration(
-                          labelText: 'Account',
+                          labelText: l10n.account,
                           prefixIcon: Icon(
                             Icons.account_balance_wallet_outlined,
                             color: context.appColors.textMuted,
@@ -388,7 +390,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                         },
                         validator: (value) {
                           if (value == null) {
-                            return 'Please select an account';
+                            return l10n.pleaseSelectAccount;
                           }
                           return null;
                         },
@@ -441,7 +443,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Start Date',
+                              l10n.startDate,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: context.appColors.textMuted,
@@ -490,7 +492,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                                 CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'End Date (optional)',
+                                l10n.endDateOptional,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: context.appColors.textMuted,
@@ -500,7 +502,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                               Text(
                                 _endDate != null
                                     ? dateFormat.format(_endDate!)
-                                    : 'No end date',
+                                    : l10n.noEndDate,
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: _endDate != null
@@ -533,7 +535,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   maxLines: 3,
                   decoration: InputDecoration(
-                    labelText: 'Description (optional)',
+                    labelText: l10n.descriptionOptional,
                     alignLabelWithHint: true,
                     prefixIcon: Padding(
                       padding: const EdgeInsets.only(bottom: 40),
@@ -563,7 +565,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
                           MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Active',
+                          l10n.active,
                           style: TextStyle(
                             fontSize: 15,
                             color: Theme.of(context).colorScheme.onSurface,
@@ -584,7 +586,7 @@ class _ScheduledPaymentFormPageState extends State<ScheduledPaymentFormPage> {
 
                 // Save button
                 GradientButton(
-                  text: _isEditing ? 'Update Payment' : 'Create Payment',
+                  text: _isEditing ? l10n.updatePayment : l10n.createPayment,
                   isLoading: _isSaving,
                   onPressed: _save,
                 ),

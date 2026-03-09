@@ -291,5 +291,29 @@
 
   "offlineMode": "Офлайн режим",
 
-  "selectLanguage": "Выберите язык"
+  "selectLanguage": "Выберите язык",
+
+  "totalBalance": "Общий баланс",
+  "spendingByCategory": "Расходы по категориям",
+  "noSpendingDataYet": "Данных о расходах пока нет",
+  "pleaseSelectAccount": "Пожалуйста, выберите счёт",
+  "editScheduledPayment": "Редактировать платёж",
+  "newScheduledPayment": "Новый запланированный платёж",
+  "paymentName": "Название платежа",
+  "pleaseEnterPaymentName": "Введите название платежа",
+  "frequency": "Частота",
+  "descriptionOptional": "Описание (необязательно)",
+  "updatePayment": "Обновить платёж",
+  "createPayment": "Создать платёж",
+  "deleteScheduledPayment": "Удалить запланированный платёж",
+  "executePayment": "Выполнить платёж",
+  "executePaymentConfirm": "Выполнить \"{name}\" сейчас?",
+  "execute": "Выполнить",
+  "receiptHistory": "История чеков",
+  "noReceiptScansYet": "Сканов чеков пока нет",
+  "scanReceiptToGetStarted": "Отсканируйте чек, чтобы начать",
+  "addAccount": "Добавить счёт",
+  "noCategory": "Без категории",
+  "category": "Категория",
+  "vsLastMonth": "по сравнению с прошлым месяцем"
 }

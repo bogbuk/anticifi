@@ -1707,6 +1707,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Language'**
   String get selectLanguage;
+
+  /// No description provided for @totalBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Balance'**
+  String get totalBalance;
+
+  /// No description provided for @spendingByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending by Category'**
+  String get spendingByCategory;
+
+  /// No description provided for @noSpendingDataYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No spending data yet'**
+  String get noSpendingDataYet;
+
+  /// No description provided for @pleaseSelectAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an account'**
+  String get pleaseSelectAccount;
+
+  /// No description provided for @editScheduledPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Scheduled Payment'**
+  String get editScheduledPayment;
+
+  /// No description provided for @newScheduledPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'New Scheduled Payment'**
+  String get newScheduledPayment;
+
+  /// No description provided for @paymentName.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Name'**
+  String get paymentName;
+
+  /// No description provided for @pleaseEnterPaymentName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter payment name'**
+  String get pleaseEnterPaymentName;
+
+  /// No description provided for @frequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency'**
+  String get frequency;
+
+  /// No description provided for @descriptionOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get descriptionOptional;
+
+  /// No description provided for @updatePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Payment'**
+  String get updatePayment;
+
+  /// No description provided for @createPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Payment'**
+  String get createPayment;
+
+  /// No description provided for @deleteScheduledPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Scheduled Payment'**
+  String get deleteScheduledPayment;
+
+  /// No description provided for @executePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Execute Payment'**
+  String get executePayment;
+
+  /// No description provided for @executePaymentConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Execute \"{name}\" now?'**
+  String executePaymentConfirm(String name);
+
+  /// No description provided for @execute.
+  ///
+  /// In en, this message translates to:
+  /// **'Execute'**
+  String get execute;
+
+  /// No description provided for @receiptHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt History'**
+  String get receiptHistory;
+
+  /// No description provided for @noReceiptScansYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No receipt scans yet'**
+  String get noReceiptScansYet;
+
+  /// No description provided for @scanReceiptToGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a receipt to get started'**
+  String get scanReceiptToGetStarted;
+
+  /// No description provided for @addAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Account'**
+  String get addAccount;
+
+  /// No description provided for @noCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'No category'**
+  String get noCategory;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @vsLastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'vs last month'**
+  String get vsLastMonth;
 }
 
 class _AppLocalizationsDelegate

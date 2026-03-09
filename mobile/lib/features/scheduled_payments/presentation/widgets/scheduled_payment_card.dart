@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/scheduled_payment_entity.dart';
 
 class ScheduledPaymentCard extends StatelessWidget {
@@ -40,6 +41,7 @@ class ScheduledPaymentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isIncome = payment.type == 'income';
     final amountColor = isIncome ? AppColors.success : AppColors.error;
     final amountPrefix = isIncome ? '+' : '-';
@@ -70,7 +72,7 @@ class ScheduledPaymentCard extends StatelessWidget {
             builder: (ctx) => AlertDialog(
               backgroundColor: context.appColors.card,
               title: Text(
-                'Delete Scheduled Payment',
+                l10n.deleteScheduledPayment,
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
               content: Text(
@@ -80,12 +82,12 @@ class ScheduledPaymentCard extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(ctx).pop(false),
-                  child: const Text('Cancel'),
+                  child: Text(l10n.cancel),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(ctx).pop(true),
-                  child: const Text(
-                    'Delete',
+                  child: Text(
+                    l10n.delete,
                     style: TextStyle(color: AppColors.error),
                   ),
                 ),
@@ -242,30 +244,31 @@ class ScheduledPaymentCard extends StatelessWidget {
   }
 
   void _showExecuteDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: context.appColors.card,
         title: Text(
-          'Execute Payment',
+          l10n.executePayment,
           style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         ),
         content: Text(
-          'Execute "${payment.name}" now?',
+          l10n.executePaymentConfirm(payment.name),
           style: TextStyle(color: context.appColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
               onExecute?.call();
             },
-            child: const Text(
-              'Execute',
+            child: Text(
+              l10n.execute,
               style: TextStyle(color: AppColors.success),
             ),
           ),

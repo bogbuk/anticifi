@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/account_entity.dart';
 
 class AccountCard extends StatelessWidget {
@@ -50,6 +51,7 @@ class AccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isPositive = account.balance >= 0;
 
     return Dismissible(
@@ -74,7 +76,7 @@ class AccountCard extends StatelessWidget {
           builder: (ctx) => AlertDialog(
             backgroundColor: context.appColors.card,
             title: Text(
-              'Delete Account',
+              l10n.deleteAccount,
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             ),
             content: Text(
@@ -84,12 +86,12 @@ class AccountCard extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
-                child: const Text('Cancel'),
+                child: Text(l10n.cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(true),
-                child: const Text(
-                  'Delete',
+                child: Text(
+                  l10n.delete,
                   style: TextStyle(color: AppColors.error),
                 ),
               ),

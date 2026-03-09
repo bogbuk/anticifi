@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/debt_entity.dart';
 import '../bloc/debts_cubit.dart';
 import '../bloc/debts_state.dart';
@@ -39,8 +40,9 @@ class _DebtsPageState extends State<DebtsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Debts')),
+      appBar: AppBar(title: Text(l10n.debts)),
       body: Column(
         children: [
           // Tabs
@@ -54,7 +56,7 @@ class _DebtsPageState extends State<DebtsPage> {
               ),
               child: Row(
                 children: List.generate(3, (index) {
-                  final labels = ['Active', 'Paid Off', 'All'];
+                  final labels = [l10n.active, l10n.paidOff, l10n.all];
                   final isSelected = _tabIndex == index;
                   return Expanded(
                     child: GestureDetector(
@@ -123,16 +125,16 @@ class _DebtsPageState extends State<DebtsPage> {
                                   const SizedBox(height: 16),
                                   Text(
                                     _tabIndex == 0
-                                        ? 'No active debts'
+                                        ? l10n.noActiveDebts
                                         : _tabIndex == 1
-                                            ? 'No paid off debts'
-                                            : 'No debts',
+                                            ? l10n.noPaidOffDebts
+                                            : l10n.noDebts,
                                     style: TextStyle(fontSize: 18, color: context.appColors.textSecondary),
                                   ),
                                   if (_tabIndex == 0) ...[
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Tap + to add your first debt',
+                                      l10n.tapPlusToAddDebt,
                                       style: TextStyle(fontSize: 14, color: context.appColors.textMuted),
                                     ),
                                   ],

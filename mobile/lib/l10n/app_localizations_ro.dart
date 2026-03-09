@@ -833,4 +833,75 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Selectează limba';
+
+  @override
+  String get totalBalance => 'Sold total';
+
+  @override
+  String get spendingByCategory => 'Cheltuieli pe categorii';
+
+  @override
+  String get noSpendingDataYet => 'Nu există date despre cheltuieli încă';
+
+  @override
+  String get pleaseSelectAccount => 'Te rugăm să selectezi un cont';
+
+  @override
+  String get editScheduledPayment => 'Editează plata programată';
+
+  @override
+  String get newScheduledPayment => 'Plată programată nouă';
+
+  @override
+  String get paymentName => 'Numele plății';
+
+  @override
+  String get pleaseEnterPaymentName => 'Introdu numele plății';
+
+  @override
+  String get frequency => 'Frecvență';
+
+  @override
+  String get descriptionOptional => 'Descriere (opțional)';
+
+  @override
+  String get updatePayment => 'Actualizează plata';
+
+  @override
+  String get createPayment => 'Creează plată';
+
+  @override
+  String get deleteScheduledPayment => 'Șterge plata programată';
+
+  @override
+  String get executePayment => 'Execută plata';
+
+  @override
+  String executePaymentConfirm(String name) {
+    return 'Executați \"$name\" acum?';
+  }
+
+  @override
+  String get execute => 'Execută';
+
+  @override
+  String get receiptHistory => 'Istoric chitanțe';
+
+  @override
+  String get noReceiptScansYet => 'Nu există scanări de chitanțe încă';
+
+  @override
+  String get scanReceiptToGetStarted => 'Scanează o chitanță pentru a începe';
+
+  @override
+  String get addAccount => 'Adaugă cont';
+
+  @override
+  String get noCategory => 'Fără categorie';
+
+  @override
+  String get category => 'Categorie';
+
+  @override
+  String get vsLastMonth => 'față de luna trecută';
 }

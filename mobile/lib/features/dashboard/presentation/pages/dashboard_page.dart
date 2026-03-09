@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../transactions/presentation/widgets/transaction_tile.dart';
 import '../bloc/dashboard_cubit.dart';
 import '../bloc/dashboard_state.dart';
@@ -31,6 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -65,7 +67,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Failed to load dashboard',
+                      l10n.failedToLoadDashboard,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -85,7 +87,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ElevatedButton.icon(
                       onPressed: _onRefresh,
                       icon: const Icon(Icons.refresh),
-                      label: const Text('Retry'),
+                      label: Text(l10n.retry),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
@@ -149,6 +151,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildRecentTransactions(
       BuildContext context, dynamic dashboard) {
+    final l10n = AppLocalizations.of(context)!;
     final transactions = dashboard.recentTransactions;
 
     return Container(
@@ -163,7 +166,7 @@ class _DashboardPageState extends State<DashboardPage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
-              'Recent Transactions',
+              l10n.recentTransactions,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -176,7 +179,7 @@ class _DashboardPageState extends State<DashboardPage> {
               padding: const EdgeInsets.all(24),
               child: Center(
                 child: Text(
-                  'No recent transactions',
+                  l10n.noRecentTransactions,
                   style: TextStyle(
                     fontSize: 14,
                     color: context.appColors.textSecondary,

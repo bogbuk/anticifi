@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/debt_summary_entity.dart';
 import 'debt_progress_bar.dart';
 
@@ -12,6 +13,7 @@ class DebtSummaryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       padding: const EdgeInsets.all(16),
@@ -79,9 +81,9 @@ class DebtSummaryHeader extends StatelessWidget {
             children: [
               _buildStatChip(context, '${summary.totalDebts}', 'Total'),
               const SizedBox(width: 8),
-              _buildStatChip(context, '${summary.activeDebts}', 'Active'),
+              _buildStatChip(context, '${summary.activeDebts}', l10n.active),
               const SizedBox(width: 8),
-              _buildStatChip(context, '${summary.paidOffDebts}', 'Paid Off'),
+              _buildStatChip(context, '${summary.paidOffDebts}', l10n.paidOff),
               const SizedBox(width: 8),
               _buildStatChip(context, '${summary.overallProgress.toStringAsFixed(0)}%', 'Progress'),
             ],

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../di/injection.dart';
 import '../services/connectivity_service.dart';
 
@@ -50,9 +51,9 @@ class _OfflineBannerState extends State<OfflineBanner> {
                   width: double.infinity,
                   color: Colors.orange.shade700,
                   alignment: Alignment.center,
-                  child: const Text(
-                    'Offline mode',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.offlineMode,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,

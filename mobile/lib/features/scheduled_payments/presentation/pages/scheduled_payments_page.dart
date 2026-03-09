@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/scheduled_payment_entity.dart';
 import '../bloc/scheduled_payments_cubit.dart';
 import '../bloc/scheduled_payments_state.dart';
@@ -32,9 +33,10 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scheduled Payments'),
+        title: Text(l10n.scheduledPayments),
       ),
       body: Column(
         children: [
@@ -61,7 +63,7 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          'Active',
+                          l10n.active,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14,
@@ -86,7 +88,7 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          'Inactive',
+                          l10n.inactive,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14,
@@ -142,8 +144,8 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
                           const SizedBox(height: 16),
                           Text(
                             _showActive
-                                ? 'No active scheduled payments'
-                                : 'No inactive scheduled payments',
+                                ? l10n.noActiveScheduledPayments
+                                : l10n.noInactiveScheduledPayments,
                             style: TextStyle(
                               fontSize: 18,
                               color: context.appColors.textSecondary,
@@ -152,7 +154,7 @@ class _ScheduledPaymentsPageState extends State<ScheduledPaymentsPage> {
                           if (_showActive) ...[
                             const SizedBox(height: 8),
                             Text(
-                              'Tap + to add your first scheduled payment',
+                              l10n.tapPlusToAddScheduledPayment,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: context.appColors.textMuted,

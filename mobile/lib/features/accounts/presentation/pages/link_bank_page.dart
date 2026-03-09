@@ -7,6 +7,7 @@ import 'package:plaid_flutter/plaid_flutter.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../bloc/accounts_cubit.dart';
 import '../bloc/accounts_state.dart';
@@ -51,7 +52,7 @@ class _LinkBankPageState extends State<LinkBankPage> {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to start bank connection: $e'),
+            content: Text(AppLocalizations.of(context)!.failedToStartBankConnection(e.toString())),
             backgroundColor: AppColors.error,
           ),
         );
@@ -81,7 +82,7 @@ class _LinkBankPageState extends State<LinkBankPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Connection cancelled: ${exit.error?.displayMessage ?? "Unknown error"}'),
+              AppLocalizations.of(context)!.connectionCancelled(exit.error?.displayMessage ?? "Unknown error")),
           backgroundColor: AppColors.error,
         ),
       );
@@ -90,9 +91,10 @@ class _LinkBankPageState extends State<LinkBankPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Connect Bank'),
+        title: Text(l10n.connectBank),
       ),
       body: BlocListener<AccountsCubit, AccountsState>(
         listener: (context, state) {
@@ -101,7 +103,7 @@ class _LinkBankPageState extends State<LinkBankPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  'Successfully linked ${state.linkedAccounts.length} account(s)',
+                  AppLocalizations.of(context)!.successfullyLinkedAccounts(state.linkedAccounts.length),
                 ),
                 backgroundColor: AppColors.success,
               ),
@@ -137,7 +139,7 @@ class _LinkBankPageState extends State<LinkBankPage> {
               ),
               const SizedBox(height: 32),
               Text(
-                'Connect your bank account',
+                l10n.connectYourBank,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -147,7 +149,7 @@ class _LinkBankPageState extends State<LinkBankPage> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Securely link your bank to automatically import transactions and keep your balances up to date.',
+                l10n.connectBankDescription,
                 style: TextStyle(
                   fontSize: 15,
                   color: context.appColors.textSecondary,
@@ -163,7 +165,7 @@ class _LinkBankPageState extends State<LinkBankPage> {
                       size: 16, color: context.appColors.textMuted),
                   const SizedBox(width: 6),
                   Text(
-                    'Bank-level encryption powered by Plaid',
+                    l10n.bankLevelEncryption,
                     style: TextStyle(
                       fontSize: 13,
                       color: context.appColors.textMuted,
@@ -173,7 +175,7 @@ class _LinkBankPageState extends State<LinkBankPage> {
               ),
               const Spacer(),
               GradientButton(
-                text: 'Connect Bank',
+                text: l10n.connectBank,
                 isLoading: _isLoading,
                 onPressed: _startPlaidLink,
               ),

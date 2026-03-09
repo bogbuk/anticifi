@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../bloc/notifications_cubit.dart';
 import '../bloc/notifications_state.dart';
 import '../widgets/notification_card.dart';
@@ -24,9 +25,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: Text(l10n.notifications),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: IconButton(
@@ -41,9 +43,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   onPressed: () {
                     context.read<NotificationsCubit>().markAllAsRead();
                   },
-                  child: const Text(
-                    'Mark all as read',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.markAllAsRead,
+                    style: const TextStyle(
                       color: AppColors.primary,
                       fontSize: 13,
                     ),
@@ -77,7 +79,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Failed to load notifications',
+                    l10n.failedToLoadNotifications,
                     style: TextStyle(
                       color: context.appColors.textSecondary,
                       fontSize: 16,
@@ -88,9 +90,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     onPressed: () {
                       context.read<NotificationsCubit>().loadNotifications();
                     },
-                    child: const Text(
-                      'Retry',
-                      style: TextStyle(color: AppColors.primary),
+                    child: Text(
+                      l10n.retry,
+                      style: const TextStyle(color: AppColors.primary),
                     ),
                   ),
                 ],
@@ -136,6 +138,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -155,7 +158,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No notifications yet',
+            l10n.noNotificationsYet,
             style: TextStyle(
               color: context.appColors.textSecondary,
               fontSize: 18,
@@ -164,7 +167,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            'You\'ll see your alerts and updates here',
+            l10n.notificationsHint,
             style: TextStyle(
               color: context.appColors.textMuted,
               fontSize: 14,

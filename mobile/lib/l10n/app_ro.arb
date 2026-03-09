@@ -291,5 +291,29 @@
 
   "offlineMode": "Mod offline",
 
-  "selectLanguage": "Selectează limba"
+  "selectLanguage": "Selectează limba",
+
+  "totalBalance": "Sold total",
+  "spendingByCategory": "Cheltuieli pe categorii",
+  "noSpendingDataYet": "Nu există date despre cheltuieli încă",
+  "pleaseSelectAccount": "Te rugăm să selectezi un cont",
+  "editScheduledPayment": "Editează plata programată",
+  "newScheduledPayment": "Plată programată nouă",
+  "paymentName": "Numele plății",
+  "pleaseEnterPaymentName": "Introdu numele plății",
+  "frequency": "Frecvență",
+  "descriptionOptional": "Descriere (opțional)",
+  "updatePayment": "Actualizează plata",
+  "createPayment": "Creează plată",
+  "deleteScheduledPayment": "Șterge plata programată",
+  "executePayment": "Execută plata",
+  "executePaymentConfirm": "Executați \"{name}\" acum?",
+  "execute": "Execută",
+  "receiptHistory": "Istoric chitanțe",
+  "noReceiptScansYet": "Nu există scanări de chitanțe încă",
+  "scanReceiptToGetStarted": "Scanează o chitanță pentru a începe",
+  "addAccount": "Adaugă cont",
+  "noCategory": "Fără categorie",
+  "category": "Categorie",
+  "vsLastMonth": "față de luna trecută"
 }

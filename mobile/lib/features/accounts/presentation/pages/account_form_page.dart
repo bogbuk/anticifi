@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../domain/entities/account_entity.dart';
 import '../bloc/accounts_cubit.dart';
@@ -28,13 +29,6 @@ class _AccountFormPageState extends State<AccountFormPage> {
   bool _isSaving = false;
 
   bool get _isEditing => widget.account != null;
-
-  static const _accountTypes = [
-    {'value': 'checking', 'label': 'Checking'},
-    {'value': 'savings', 'label': 'Savings'},
-    {'value': 'credit', 'label': 'Credit Card'},
-    {'value': 'cash', 'label': 'Cash'},
-  ];
 
   static const _currencies = [
     {'value': 'USD', 'label': 'USD (\$)'},
@@ -107,6 +101,13 @@ class _AccountFormPageState extends State<AccountFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final accountTypes = [
+      {'value': 'checking', 'label': l10n.checking},
+      {'value': 'savings', 'label': l10n.savings},
+      {'value': 'credit', 'label': l10n.creditCard},
+      {'value': 'cash', 'label': l10n.cash},
+    ];
     return BlocListener<AccountsCubit, AccountsState>(
       listener: (context, state) {
         if (state is AccountsError) {
@@ -115,7 +116,7 @@ class _AccountFormPageState extends State<AccountFormPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_isEditing ? 'Edit Account' : 'New Account'),
+          title: Text(_isEditing ? l10n.editAccount : l10n.newAccount),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -129,13 +130,13 @@ class _AccountFormPageState extends State<AccountFormPage> {
                   controller: _nameController,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Account Name',
+                    labelText: l10n.accountName,
                     prefixIcon:
                         Icon(Icons.label_outline, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter account name';
+                      return l10n.pleaseEnterAccountName;
                     }
                     return null;
                   },
@@ -148,11 +149,11 @@ class _AccountFormPageState extends State<AccountFormPage> {
                   dropdownColor: context.appColors.card,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Account Type',
+                    labelText: l10n.accountType,
                     prefixIcon: Icon(Icons.category_outlined,
                         color: context.appColors.textMuted),
                   ),
-                  items: _accountTypes
+                  items: accountTypes
                       .map((t) => DropdownMenuItem(
                             value: t['value'],
                             child: Text(t['label']!),
@@ -171,7 +172,7 @@ class _AccountFormPageState extends State<AccountFormPage> {
                   controller: _bankController,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Bank (optional)',
+                    labelText: l10n.bankOptional,
                     prefixIcon: Icon(Icons.account_balance_outlined,
                         color: context.appColors.textMuted),
                   ),
@@ -184,7 +185,7 @@ class _AccountFormPageState extends State<AccountFormPage> {
                   dropdownColor: context.appColors.card,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Currency',
+                    labelText: l10n.currency,
                     prefixIcon: Icon(Icons.attach_money_outlined,
                         color: context.appColors.textMuted),
                   ),
@@ -209,7 +210,7 @@ class _AccountFormPageState extends State<AccountFormPage> {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Initial Balance',
+                    labelText: l10n.initialBalance,
                     prefixIcon:
                         Icon(Icons.money_outlined, color: context.appColors.textMuted),
                   ),
@@ -226,7 +227,7 @@ class _AccountFormPageState extends State<AccountFormPage> {
 
                 // Save button
                 GradientButton(
-                  text: _isEditing ? 'Update Account' : 'Create Account',
+                  text: _isEditing ? l10n.updateAccount : l10n.createAccount,
                   isLoading: _isSaving,
                   onPressed: _save,
                 ),

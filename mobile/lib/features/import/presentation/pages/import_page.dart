@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../accounts/domain/entities/account_entity.dart';
 import '../../../accounts/presentation/bloc/accounts_cubit.dart';
 import '../../../accounts/presentation/bloc/accounts_state.dart';
@@ -28,9 +29,10 @@ class _ImportPageState extends State<ImportPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Import CSV'),
+        title: Text(l10n.importCsv),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -54,7 +56,7 @@ class _ImportPageState extends State<ImportPage> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Import Transactions',
+                    l10n.importTransactionsTitle,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -63,7 +65,7 @@ class _ImportPageState extends State<ImportPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Upload a CSV file to import transactions into your account',
+                    l10n.importDescription,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -88,7 +90,7 @@ class _ImportPageState extends State<ImportPage> {
                   dropdownColor: context.appColors.card,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Select Account',
+                    labelText: l10n.selectAccount,
                     prefixIcon: Icon(Icons.account_balance_wallet_outlined,
                         color: context.appColors.textMuted),
                   ),
@@ -102,7 +104,7 @@ class _ImportPageState extends State<ImportPage> {
                     setState(() => _selectedAccountId = value);
                   },
                   hint: Text(
-                    'Choose an account',
+                    l10n.chooseAnAccount,
                     style: TextStyle(color: context.appColors.textMuted),
                   ),
                 );
@@ -136,7 +138,7 @@ class _ImportPageState extends State<ImportPage> {
                           : () => cubit.pickCSVFile(),
                       icon: const Icon(Icons.attach_file),
                       label: Text(
-                        fileName ?? 'Pick CSV File',
+                        fileName ?? l10n.pickCsvFile,
                         overflow: TextOverflow.ellipsis,
                       ),
                       style: OutlinedButton.styleFrom(
@@ -161,7 +163,7 @@ class _ImportPageState extends State<ImportPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${(state.progress * 100).toInt()}% uploaded',
+                        l10n.percentUploaded((state.progress * 100).toInt()),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: context.appColors.textSecondary,
@@ -189,9 +191,9 @@ class _ImportPageState extends State<ImportPage> {
                               color: AppColors.success,
                             ),
                             const SizedBox(height: 12),
-                            const Text(
-                              'Import Complete!',
-                              style: TextStyle(
+                            Text(
+                              l10n.importComplete,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.success,
@@ -199,19 +201,19 @@ class _ImportPageState extends State<ImportPage> {
                             ),
                             const SizedBox(height: 16),
                             _ResultRow(
-                              label: 'Imported',
+                              label: l10n.imported,
                               value: '${state.job.importedCount}',
                               color: AppColors.success,
                             ),
                             const SizedBox(height: 8),
                             _ResultRow(
-                              label: 'Skipped',
+                              label: l10n.skipped,
                               value: '${state.job.skippedCount}',
                               color: AppColors.warning,
                             ),
                             const SizedBox(height: 8),
                             _ResultRow(
-                              label: 'Errors',
+                              label: l10n.errors,
                               value: '${state.job.errorCount}',
                               color: AppColors.error,
                             ),
@@ -229,7 +231,7 @@ class _ImportPageState extends State<ImportPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text('Import Another File'),
+                        child: Text(l10n.importAnotherFile),
                       ),
                     ],
 
@@ -237,7 +239,7 @@ class _ImportPageState extends State<ImportPage> {
                     if (state is! ImportCompleted &&
                         state is! ImportUploading) ...[
                       GradientButton(
-                        text: 'Upload & Import',
+                        text: l10n.uploadAndImport,
                         isLoading: state is ImportPicking,
                         onPressed: (fileName != null &&
                                 _selectedAccountId != null)

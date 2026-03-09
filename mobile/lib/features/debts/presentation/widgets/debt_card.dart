@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/debt_entity.dart';
 import 'debt_progress_bar.dart';
 
@@ -31,6 +32,7 @@ class DebtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -89,8 +91,8 @@ class DebtCard extends StatelessWidget {
                       color: AppColors.success.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text(
-                      'Paid Off',
+                    child: Text(
+                      l10n.paidOff,
                       style: TextStyle(
                         color: AppColors.success,
                         fontSize: 11,

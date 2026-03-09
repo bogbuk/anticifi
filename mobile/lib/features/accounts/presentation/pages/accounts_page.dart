@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../bloc/accounts_cubit.dart';
 import '../bloc/accounts_state.dart';
 import '../widgets/account_card.dart';
@@ -27,13 +28,14 @@ class _AccountsPageState extends State<AccountsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Accounts'),
+        title: Text(l10n.accounts),
         actions: [
           IconButton(
             icon: const Icon(Icons.account_balance),
-            tooltip: 'Connect Bank',
+            tooltip: l10n.connectBank,
             onPressed: () async {
               final result = await context.push('/accounts/link-bank');
               if (result == true && mounted) {
@@ -76,7 +78,7 @@ class _AccountsPageState extends State<AccountsPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'No accounts yet',
+                      l10n.noAccountsYet,
                       style: TextStyle(
                         fontSize: 18,
                         color: context.appColors.textSecondary,
@@ -84,7 +86,7 @@ class _AccountsPageState extends State<AccountsPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Tap + to add your first account',
+                      l10n.tapPlusToAddAccount,
                       style: TextStyle(
                         fontSize: 14,
                         color: context.appColors.textMuted,

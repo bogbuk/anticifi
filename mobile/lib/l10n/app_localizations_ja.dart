@@ -817,4 +817,75 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get selectLanguage => '言語を選択';
+
+  @override
+  String get totalBalance => '合計残高';
+
+  @override
+  String get spendingByCategory => 'カテゴリー別支出';
+
+  @override
+  String get noSpendingDataYet => '支出データはまだありません';
+
+  @override
+  String get pleaseSelectAccount => '口座を選択してください';
+
+  @override
+  String get editScheduledPayment => '定期支払いを編集';
+
+  @override
+  String get newScheduledPayment => '新しい定期支払い';
+
+  @override
+  String get paymentName => '支払い名';
+
+  @override
+  String get pleaseEnterPaymentName => '支払い名を入力してください';
+
+  @override
+  String get frequency => '頻度';
+
+  @override
+  String get descriptionOptional => '説明（任意）';
+
+  @override
+  String get updatePayment => '支払いを更新';
+
+  @override
+  String get createPayment => '支払いを作成';
+
+  @override
+  String get deleteScheduledPayment => '定期支払いを削除';
+
+  @override
+  String get executePayment => '支払いを実行';
+
+  @override
+  String executePaymentConfirm(String name) {
+    return '「$name」を今すぐ実行しますか？';
+  }
+
+  @override
+  String get execute => '実行';
+
+  @override
+  String get receiptHistory => 'レシート履歴';
+
+  @override
+  String get noReceiptScansYet => 'スキャンしたレシートはまだありません';
+
+  @override
+  String get scanReceiptToGetStarted => 'レシートをスキャンして始めましょう';
+
+  @override
+  String get addAccount => '口座を追加';
+
+  @override
+  String get noCategory => 'カテゴリーなし';
+
+  @override
+  String get category => 'カテゴリー';
+
+  @override
+  String get vsLastMonth => '先月比';
 }

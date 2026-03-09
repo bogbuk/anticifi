@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class IncomeExpenseRow extends StatelessWidget {
   final double income;
@@ -15,11 +16,12 @@ class IncomeExpenseRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Expanded(
           child: _SummaryCard(
-            label: 'Income',
+            label: l10n.income,
             amount: income,
             icon: Icons.arrow_upward,
             color: AppColors.success,
@@ -28,7 +30,7 @@ class IncomeExpenseRow extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: _SummaryCard(
-            label: 'Expense',
+            label: l10n.expense,
             amount: expense,
             icon: Icons.arrow_downward,
             color: AppColors.error,

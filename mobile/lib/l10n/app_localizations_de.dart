@@ -840,4 +840,75 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Sprache auswählen';
+
+  @override
+  String get totalBalance => 'Gesamtsaldo';
+
+  @override
+  String get spendingByCategory => 'Ausgaben nach Kategorie';
+
+  @override
+  String get noSpendingDataYet => 'Noch keine Ausgabendaten';
+
+  @override
+  String get pleaseSelectAccount => 'Bitte wähle ein Konto aus';
+
+  @override
+  String get editScheduledPayment => 'Geplante Zahlung bearbeiten';
+
+  @override
+  String get newScheduledPayment => 'Neue geplante Zahlung';
+
+  @override
+  String get paymentName => 'Zahlungsname';
+
+  @override
+  String get pleaseEnterPaymentName => 'Bitte Zahlungsnamen eingeben';
+
+  @override
+  String get frequency => 'Häufigkeit';
+
+  @override
+  String get descriptionOptional => 'Beschreibung (optional)';
+
+  @override
+  String get updatePayment => 'Zahlung aktualisieren';
+
+  @override
+  String get createPayment => 'Zahlung erstellen';
+
+  @override
+  String get deleteScheduledPayment => 'Geplante Zahlung löschen';
+
+  @override
+  String get executePayment => 'Zahlung ausführen';
+
+  @override
+  String executePaymentConfirm(String name) {
+    return '\"$name\" jetzt ausführen?';
+  }
+
+  @override
+  String get execute => 'Ausführen';
+
+  @override
+  String get receiptHistory => 'Belegverlauf';
+
+  @override
+  String get noReceiptScansYet => 'Noch keine Belege gescannt';
+
+  @override
+  String get scanReceiptToGetStarted => 'Scanne einen Beleg, um zu beginnen';
+
+  @override
+  String get addAccount => 'Konto hinzufügen';
+
+  @override
+  String get noCategory => 'Keine Kategorie';
+
+  @override
+  String get category => 'Kategorie';
+
+  @override
+  String get vsLastMonth => 'im Vergleich zum Vormonat';
 }

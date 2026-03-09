@@ -816,4 +816,75 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get selectLanguage => '选择语言';
+
+  @override
+  String get totalBalance => '总余额';
+
+  @override
+  String get spendingByCategory => '按类别支出';
+
+  @override
+  String get noSpendingDataYet => '暂无支出数据';
+
+  @override
+  String get pleaseSelectAccount => '请选择一个账户';
+
+  @override
+  String get editScheduledPayment => '编辑定期付款';
+
+  @override
+  String get newScheduledPayment => '新定期付款';
+
+  @override
+  String get paymentName => '付款名称';
+
+  @override
+  String get pleaseEnterPaymentName => '请输入付款名称';
+
+  @override
+  String get frequency => '频率';
+
+  @override
+  String get descriptionOptional => '描述（可选）';
+
+  @override
+  String get updatePayment => '更新付款';
+
+  @override
+  String get createPayment => '创建付款';
+
+  @override
+  String get deleteScheduledPayment => '删除定期付款';
+
+  @override
+  String get executePayment => '执行付款';
+
+  @override
+  String executePaymentConfirm(String name) {
+    return '立即执行「$name」？';
+  }
+
+  @override
+  String get execute => '执行';
+
+  @override
+  String get receiptHistory => '收据历史';
+
+  @override
+  String get noReceiptScansYet => '暂无收据扫描';
+
+  @override
+  String get scanReceiptToGetStarted => '扫描收据以开始';
+
+  @override
+  String get addAccount => '添加账户';
+
+  @override
+  String get noCategory => '无类别';
+
+  @override
+  String get category => '类别';
+
+  @override
+  String get vsLastMonth => '与上月相比';
 }

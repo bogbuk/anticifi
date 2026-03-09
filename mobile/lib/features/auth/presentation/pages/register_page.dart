@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
 import '../bloc/auth_bloc.dart';
@@ -34,6 +35,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoginSuccessState) {
@@ -75,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 40),
                   // Title
                   Text(
-                    'Create Account',
+                    l10n.createAccount,
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -84,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Sign up to get started',
+                    l10n.signUpToGetStarted,
                     style: TextStyle(
                       fontSize: 16,
                       color: context.appColors.textSecondary,
@@ -94,14 +97,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   // Name field
                   AuthTextField(
                     controller: _nameController,
-                    label: 'Full Name',
+                    label: l10n.fullName,
                     prefixIcon: Icons.person_outline,
                   ),
                   const SizedBox(height: 16),
                   // Email field
                   AuthTextField(
                     controller: _emailController,
-                    label: 'Email',
+                    label: l10n.email,
                     prefixIcon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -109,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   // Password field
                   AuthTextField(
                     controller: _passwordController,
-                    label: 'Password',
+                    label: l10n.password,
                     prefixIcon: Icons.lock_outline,
                     isPassword: true,
                   ),
@@ -117,21 +120,21 @@ class _RegisterPageState extends State<RegisterPage> {
                   // Confirm Password field
                   AuthTextField(
                     controller: _confirmPasswordController,
-                    label: 'Confirm Password',
+                    label: l10n.confirmPassword,
                     prefixIcon: Icons.lock_outline,
                     isPassword: true,
                   ),
                   const SizedBox(height: 24),
                   // Create Account button
                   GradientButton(
-                    text: 'Create Account',
+                    text: l10n.signUp,
                     isLoading: isLoading,
                     onPressed: () {
                       if (_passwordController.text !=
                           _confirmPasswordController.text) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Passwords do not match'),
+                          SnackBar(
+                            content: Text(l10n.passwordsDoNotMatch),
                             backgroundColor: AppColors.error,
                           ),
                         );
@@ -152,12 +155,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     onPressed: () => context.go('/auth/login'),
                     child: RichText(
                       text: TextSpan(
-                        text: 'Already have an account? ',
+                        text: '${l10n.alreadyHaveAccount} ',
                         style: TextStyle(color: context.appColors.textSecondary),
-                        children: const [
+                        children: [
                           TextSpan(
-                            text: 'Sign In',
-                            style: TextStyle(
+                            text: l10n.signIn,
+                            style: const TextStyle(
                               color: AppColors.primary,
                               fontWeight: FontWeight.w600,
                             ),
@@ -177,6 +180,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _showBiometricDialog(
       BuildContext context, dynamic user) async {
+    final l10n = AppLocalizations.of(context)!;
     final authBloc = context.read<AuthBloc>();
     final biometricService = authBloc.biometricService;
 
@@ -192,26 +196,26 @@ class _RegisterPageState extends State<RegisterPage> {
         builder: (ctx) => AlertDialog(
           backgroundColor: Theme.of(context).colorScheme.surface,
           title: Text(
-            'Enable Biometric Login?',
+            l10n.enableBiometricTitle,
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
           content: Text(
-            'Use Face ID or Touch ID for faster access next time.',
+            l10n.enableBiometricContent,
             style: TextStyle(color: context.appColors.textSecondary),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
               child: Text(
-                'Not Now',
+                l10n.notNow,
                 style: TextStyle(color: context.appColors.textSecondary),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text(
-                'Enable',
-                style: TextStyle(color: AppColors.primary),
+              child: Text(
+                l10n.enable,
+                style: const TextStyle(color: AppColors.primary),
               ),
             ),
           ],

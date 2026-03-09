@@ -291,5 +291,29 @@
 
   "offlineMode": "Modo sin conexión",
 
-  "selectLanguage": "Seleccionar idioma"
+  "selectLanguage": "Seleccionar idioma",
+
+  "totalBalance": "Saldo total",
+  "spendingByCategory": "Gastos por categoría",
+  "noSpendingDataYet": "Aún no hay datos de gastos",
+  "pleaseSelectAccount": "Por favor, selecciona una cuenta",
+  "editScheduledPayment": "Editar pago programado",
+  "newScheduledPayment": "Nuevo pago programado",
+  "paymentName": "Nombre del pago",
+  "pleaseEnterPaymentName": "Ingresa el nombre del pago",
+  "frequency": "Frecuencia",
+  "descriptionOptional": "Descripción (opcional)",
+  "updatePayment": "Actualizar pago",
+  "createPayment": "Crear pago",
+  "deleteScheduledPayment": "Eliminar pago programado",
+  "executePayment": "Ejecutar pago",
+  "executePaymentConfirm": "¿Ejecutar \"{name}\" ahora?",
+  "execute": "Ejecutar",
+  "receiptHistory": "Historial de recibos",
+  "noReceiptScansYet": "Aún no hay escaneos de recibos",
+  "scanReceiptToGetStarted": "Escanea un recibo para comenzar",
+  "addAccount": "Añadir cuenta",
+  "noCategory": "Sin categoría",
+  "category": "Categoría",
+  "vsLastMonth": "respecto al mes pasado"
 }

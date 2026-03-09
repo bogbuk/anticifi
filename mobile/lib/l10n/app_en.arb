@@ -326,5 +326,36 @@
 
   "offlineMode": "Offline mode",
 
-  "selectLanguage": "Select Language"
+  "selectLanguage": "Select Language",
+
+  "totalBalance": "Total Balance",
+  "spendingByCategory": "Spending by Category",
+  "noSpendingDataYet": "No spending data yet",
+
+  "pleaseSelectAccount": "Please select an account",
+  "editScheduledPayment": "Edit Scheduled Payment",
+  "newScheduledPayment": "New Scheduled Payment",
+  "paymentName": "Payment Name",
+  "pleaseEnterPaymentName": "Please enter payment name",
+  "frequency": "Frequency",
+  "descriptionOptional": "Description (optional)",
+  "updatePayment": "Update Payment",
+  "createPayment": "Create Payment",
+  "deleteScheduledPayment": "Delete Scheduled Payment",
+  "executePayment": "Execute Payment",
+  "executePaymentConfirm": "Execute \"{name}\" now?",
+  "@executePaymentConfirm": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "execute": "Execute",
+
+  "receiptHistory": "Receipt History",
+  "noReceiptScansYet": "No receipt scans yet",
+  "scanReceiptToGetStarted": "Scan a receipt to get started",
+  "addAccount": "Add Account",
+  "noCategory": "No category",
+  "category": "Category",
+  "vsLastMonth": "vs last month"
 }

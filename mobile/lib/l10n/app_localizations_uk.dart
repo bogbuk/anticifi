@@ -832,4 +832,75 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Оберіть мову';
+
+  @override
+  String get totalBalance => 'Загальний баланс';
+
+  @override
+  String get spendingByCategory => 'Витрати за категоріями';
+
+  @override
+  String get noSpendingDataYet => 'Даних про витрати поки немає';
+
+  @override
+  String get pleaseSelectAccount => 'Будь ласка, оберіть рахунок';
+
+  @override
+  String get editScheduledPayment => 'Редагувати запланований платіж';
+
+  @override
+  String get newScheduledPayment => 'Новий запланований платіж';
+
+  @override
+  String get paymentName => 'Назва платежу';
+
+  @override
+  String get pleaseEnterPaymentName => 'Введіть назву платежу';
+
+  @override
+  String get frequency => 'Частота';
+
+  @override
+  String get descriptionOptional => 'Опис (необов\'язково)';
+
+  @override
+  String get updatePayment => 'Оновити платіж';
+
+  @override
+  String get createPayment => 'Створити платіж';
+
+  @override
+  String get deleteScheduledPayment => 'Видалити запланований платіж';
+
+  @override
+  String get executePayment => 'Виконати платіж';
+
+  @override
+  String executePaymentConfirm(String name) {
+    return 'Виконати \"$name\" зараз?';
+  }
+
+  @override
+  String get execute => 'Виконати';
+
+  @override
+  String get receiptHistory => 'Історія чеків';
+
+  @override
+  String get noReceiptScansYet => 'Сканів чеків поки немає';
+
+  @override
+  String get scanReceiptToGetStarted => 'Скануйте чек, щоб почати';
+
+  @override
+  String get addAccount => 'Додати рахунок';
+
+  @override
+  String get noCategory => 'Без категорії';
+
+  @override
+  String get category => 'Категорія';
+
+  @override
+  String get vsLastMonth => 'порівняно з минулим місяцем';
 }

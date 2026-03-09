@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../domain/entities/budget_entity.dart';
 import '../bloc/budgets_cubit.dart';
@@ -30,12 +31,6 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
   bool _isSaving = false;
 
   bool get _isEditing => widget.budget != null;
-
-  static const _periods = [
-    {'value': 'weekly', 'label': 'Weekly'},
-    {'value': 'monthly', 'label': 'Monthly'},
-    {'value': 'yearly', 'label': 'Yearly'},
-  ];
 
   @override
   void initState() {
@@ -134,7 +129,13 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('MMM d, yyyy');
+    final periods = [
+      {'value': 'weekly', 'label': l10n.weekly},
+      {'value': 'monthly', 'label': l10n.monthly},
+      {'value': 'yearly', 'label': l10n.yearly},
+    ];
 
     return BlocListener<BudgetsCubit, BudgetsState>(
       listener: (context, state) {
@@ -144,7 +145,7 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_isEditing ? 'Edit Budget' : 'New Budget'),
+          title: Text(_isEditing ? l10n.editBudget : l10n.newBudget),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -158,7 +159,7 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
                   controller: _nameController,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Budget Name',
+                    labelText: l10n.budgetName,
                     prefixIcon: Icon(
                       Icons.label_outline,
                       color: context.appColors.textMuted,
@@ -166,7 +167,7 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter budget name';
+                      return l10n.pleaseEnterBudgetName;
                     }
                     return null;
                   },
@@ -181,7 +182,7 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
                     decimal: true,
                   ),
                   decoration: InputDecoration(
-                    labelText: 'Budget Limit',
+                    labelText: l10n.budgetLimit,
                     prefixIcon: Icon(
                       Icons.attach_money,
                       color: context.appColors.textMuted,
@@ -189,11 +190,11 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter budget limit';
+                      return l10n.pleaseEnterBudgetLimit;
                     }
                     final parsed = double.tryParse(value.trim());
                     if (parsed == null || parsed <= 0) {
-                      return 'Please enter a valid positive number';
+                      return l10n.pleaseEnterValidPositiveNumber;
                     }
                     return null;
                   },
@@ -206,13 +207,13 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
                   dropdownColor: context.appColors.card,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Period',
+                    labelText: l10n.period,
                     prefixIcon: Icon(
                       Icons.calendar_view_month,
                       color: context.appColors.textMuted,
                     ),
                   ),
-                  items: _periods
+                  items: periods
                       .map((p) => DropdownMenuItem(
                             value: p['value'],
                             child: Text(p['label']!),
@@ -251,7 +252,7 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Start Date',
+                              l10n.startDate,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: context.appColors.textMuted,
@@ -299,7 +300,7 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'End Date (optional)',
+                                l10n.endDateOptional,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: context.appColors.textMuted,
@@ -309,7 +310,7 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
                               Text(
                                 _endDate != null
                                     ? dateFormat.format(_endDate!)
-                                    : 'No end date',
+                                    : l10n.noEndDate,
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: _endDate != null
@@ -351,7 +352,7 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Active',
+                          l10n.active,
                           style: TextStyle(
                             fontSize: 15,
                             color: Theme.of(context).colorScheme.onSurface,
@@ -372,7 +373,7 @@ class _BudgetFormPageState extends State<BudgetFormPage> {
 
                 // Save button
                 GradientButton(
-                  text: _isEditing ? 'Update Budget' : 'Create Budget',
+                  text: _isEditing ? l10n.updateBudget : l10n.createBudget,
                   isLoading: _isSaving,
                   onPressed: _save,
                 ),

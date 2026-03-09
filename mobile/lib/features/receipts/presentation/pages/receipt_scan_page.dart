@@ -10,6 +10,7 @@ import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../accounts/domain/entities/account_entity.dart';
 import '../../../accounts/domain/repositories/accounts_repository.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
@@ -115,8 +116,8 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
     final amount = double.tryParse(_amountController.text.trim());
     if (amount == null || amount <= 0 || _selectedAccountId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all required fields'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseFillRequiredFields),
           backgroundColor: AppColors.error,
         ),
       );
@@ -138,9 +139,10 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan Receipt'),
+        title: Text(l10n.scanReceipt),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -151,8 +153,8 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           }
           if (state is ReceiptConfirmed) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Transaction created from receipt'),
+              SnackBar(
+                content: Text(l10n.transactionCreatedFromReceipt),
                 backgroundColor: AppColors.success,
               ),
             );
@@ -190,7 +192,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                   const CircularProgressIndicator(color: AppColors.primary),
                   const SizedBox(height: 16),
                   Text(
-                    'Processing receipt...',
+                    l10n.processingReceipt,
                     style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
                 ],
@@ -213,6 +215,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
   }
 
   Widget _buildImagePicker() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -226,7 +229,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Scan a receipt to auto-fill\ntransaction details',
+              l10n.scanReceiptAutoFill,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: context.appColors.textSecondary,
@@ -235,14 +238,14 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
             ),
             const SizedBox(height: 32),
             GradientButton(
-              text: 'Take Photo',
+              text: l10n.takePhoto,
               onPressed: () => _pickImage(ImageSource.camera),
             ),
             const SizedBox(height: 12),
             OutlinedButton.icon(
               icon: const Icon(Icons.photo_library, color: AppColors.primary),
-              label: const Text(
-                'Choose from Gallery',
+              label: Text(
+                l10n.chooseFromGallery,
                 style: TextStyle(color: AppColors.primary),
               ),
               style: OutlinedButton.styleFrom(
@@ -261,6 +264,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
   }
 
   Widget _buildConfirmForm(ReceiptScanEntity scan, {bool isLoading = false}) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -295,7 +299,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                           color: AppColors.success, size: 20),
                       const SizedBox(width: 8),
                       Text(
-                        'Confidence: ${(scan.confidence).toStringAsFixed(0)}%',
+                        l10n.confidencePercent((scan.confidence).toStringAsFixed(0)),
                         style: const TextStyle(
                           color: AppColors.success,
                           fontWeight: FontWeight.w600,
@@ -312,12 +316,12 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           Row(
             children: [
               Expanded(
-                child: _buildTypeButton('expense', 'Expense',
+                child: _buildTypeButton('expense', l10n.expense,
                     Icons.arrow_downward, AppColors.error),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildTypeButton('income', 'Income',
+                child: _buildTypeButton('income', l10n.income,
                     Icons.arrow_upward, AppColors.success),
               ),
             ],
@@ -338,7 +342,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
               }).toList(),
               onChanged: (value) => setState(() => _selectedAccountId = value),
               decoration: InputDecoration(
-                labelText: 'Account',
+                labelText: l10n.account,
                 prefixIcon:
                     Icon(Icons.account_balance, color: context.appColors.textMuted),
               ),
@@ -363,7 +367,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Please create an account first',
+                    l10n.pleaseCreateAccountFirst,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
@@ -373,7 +377,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                   OutlinedButton.icon(
                     icon: Icon(Icons.add, color: Theme.of(context).colorScheme.primary),
                     label: Text(
-                      'Add Account',
+                      l10n.addAccount,
                       style: TextStyle(color: Theme.of(context).colorScheme.primary),
                     ),
                     style: OutlinedButton.styleFrom(
@@ -403,7 +407,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                 const TextInputType.numberWithOptions(decimal: true),
             textAlign: TextAlign.center,
             decoration: InputDecoration(
-              labelText: 'Amount',
+              labelText: l10n.amount,
               prefixIcon:
                   Icon(Icons.attach_money, color: context.appColors.textMuted),
             ),
@@ -414,7 +418,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
             controller: _merchantController,
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             decoration: InputDecoration(
-              labelText: 'Merchant',
+              labelText: l10n.merchant,
               prefixIcon:
                   Icon(Icons.store_outlined, color: context.appColors.textMuted),
             ),
@@ -428,7 +432,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                 DropdownMenuItem<String>(
                   value: null,
                   child: Text(
-                    'No category',
+                    l10n.noCategory,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                     ),
@@ -446,7 +450,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
               ],
               onChanged: (value) => setState(() => _selectedCategoryId = value),
               decoration: InputDecoration(
-                labelText: 'Category',
+                labelText: l10n.category,
                 prefixIcon:
                     Icon(Icons.category_outlined, color: context.appColors.textMuted),
               ),
@@ -507,7 +511,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           ),
           const SizedBox(height: 32),
           GradientButton(
-            text: 'Create Transaction',
+            text: l10n.createTransaction,
             isLoading: isLoading,
             onPressed: _accounts.isEmpty ? null : () => _confirm(scan),
           ),
@@ -515,7 +519,7 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
           TextButton(
             onPressed: () => context.read<ReceiptCubit>().reset(),
             child: Text(
-              'Scan Another Receipt',
+              l10n.scanAnotherReceipt,
               style: TextStyle(color: context.appColors.textSecondary),
             ),
           ),

@@ -834,4 +834,75 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Dil seç';
+
+  @override
+  String get totalBalance => 'Toplam bakiye';
+
+  @override
+  String get spendingByCategory => 'Kategoriye göre harcamalar';
+
+  @override
+  String get noSpendingDataYet => 'Henüz harcama verisi yok';
+
+  @override
+  String get pleaseSelectAccount => 'Lütfen bir hesap seçin';
+
+  @override
+  String get editScheduledPayment => 'Zamanlanmış ödemeyi düzenle';
+
+  @override
+  String get newScheduledPayment => 'Yeni zamanlanmış ödeme';
+
+  @override
+  String get paymentName => 'Ödeme adı';
+
+  @override
+  String get pleaseEnterPaymentName => 'Ödeme adını girin';
+
+  @override
+  String get frequency => 'Sıklık';
+
+  @override
+  String get descriptionOptional => 'Açıklama (isteğe bağlı)';
+
+  @override
+  String get updatePayment => 'Ödemeyi güncelle';
+
+  @override
+  String get createPayment => 'Ödeme oluştur';
+
+  @override
+  String get deleteScheduledPayment => 'Zamanlanmış ödemeyi sil';
+
+  @override
+  String get executePayment => 'Ödemeyi gerçekleştir';
+
+  @override
+  String executePaymentConfirm(String name) {
+    return '\"$name\" şimdi gerçekleştirilsin mi?';
+  }
+
+  @override
+  String get execute => 'Gerçekleştir';
+
+  @override
+  String get receiptHistory => 'Fiş geçmişi';
+
+  @override
+  String get noReceiptScansYet => 'Henüz taranan fiş yok';
+
+  @override
+  String get scanReceiptToGetStarted => 'Başlamak için bir fiş tarayın';
+
+  @override
+  String get addAccount => 'Hesap ekle';
+
+  @override
+  String get noCategory => 'Kategorisiz';
+
+  @override
+  String get category => 'Kategori';
+
+  @override
+  String get vsLastMonth => 'geçen aya göre';
 }

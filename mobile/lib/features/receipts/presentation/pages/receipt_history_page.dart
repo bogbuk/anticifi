@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/receipt_scan_entity.dart';
 import '../bloc/receipt_cubit.dart';
 import '../bloc/receipt_state.dart';
@@ -27,10 +28,11 @@ class _ReceiptHistoryPageState extends State<ReceiptHistoryPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Receipt History'),
+        title: Text(l10n.receiptHistory),
       ),
       body: BlocConsumer<ReceiptCubit, ReceiptState>(
         listener: (context, state) {
@@ -74,6 +76,7 @@ class _ReceiptHistoryPageState extends State<ReceiptHistoryPage> {
   }
 
   Widget _buildEmptyState(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +88,7 @@ class _ReceiptHistoryPageState extends State<ReceiptHistoryPage> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No receipt scans yet',
+            l10n.noReceiptScansYet,
             style: TextStyle(
               fontSize: 18,
               color: theme.colorScheme.onSurface.withOpacity(0.6),
@@ -93,7 +96,7 @@ class _ReceiptHistoryPageState extends State<ReceiptHistoryPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Scan a receipt to get started',
+            l10n.scanReceiptToGetStarted,
             style: TextStyle(
               fontSize: 14,
               color: theme.colorScheme.onSurface.withOpacity(0.4),

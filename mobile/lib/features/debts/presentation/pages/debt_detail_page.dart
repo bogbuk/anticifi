@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/debt_entity.dart';
 import '../bloc/debts_cubit.dart';
 import '../bloc/debts_state.dart';
@@ -29,11 +30,12 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('MMM d, yyyy');
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Debt Details'),
+        title: Text(l10n.debtDetails),
         actions: [
           BlocBuilder<DebtsCubit, DebtsState>(
             builder: (context, state) {
@@ -116,7 +118,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                                   color: AppColors.success.withOpacity(0.15),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Text('Paid Off',
+                                child: Text(l10n.paidOff,
                                     style: TextStyle(color: AppColors.success, fontSize: 12, fontWeight: FontWeight.w600)),
                               ),
                           ],
@@ -152,15 +154,15 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                       spacing: 8,
                       runSpacing: 8,
                       children: [
-                        _buildInfoTile('Original', '\$${debt.originalAmount.toStringAsFixed(2)}'),
-                        _buildInfoTile('Remaining', '\$${debt.currentBalance.toStringAsFixed(2)}'),
-                        _buildInfoTile('Interest', '${debt.interestRate.toStringAsFixed(1)}%'),
-                        _buildInfoTile('Min Payment', '\$${debt.minimumPayment.toStringAsFixed(2)}'),
+                        _buildInfoTile(l10n.original, '\$${debt.originalAmount.toStringAsFixed(2)}'),
+                        _buildInfoTile(l10n.remaining, '\$${debt.currentBalance.toStringAsFixed(2)}'),
+                        _buildInfoTile(l10n.interest, '${debt.interestRate.toStringAsFixed(1)}%'),
+                        _buildInfoTile(l10n.minPayment, '\$${debt.minimumPayment.toStringAsFixed(2)}'),
                         if (debt.dueDay != null)
                           _buildInfoTile('Due Day', '${debt.dueDay}'),
-                        _buildInfoTile('Start', dateFormat.format(debt.startDate)),
+                        _buildInfoTile(l10n.start, dateFormat.format(debt.startDate)),
                         if (debt.expectedPayoffDate != null)
-                          _buildInfoTile('Expected Payoff', dateFormat.format(debt.expectedPayoffDate!)),
+                          _buildInfoTile(l10n.expectedPayoff, dateFormat.format(debt.expectedPayoffDate!)),
                       ],
                     ),
                   ),
@@ -177,7 +179,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Notes',
+                          Text(l10n.notes,
                               style: TextStyle(color: context.appColors.textMuted, fontSize: 12, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 4),
                           Text(debt.notes!,
@@ -212,7 +214,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                 }
               },
               icon: Icon(Icons.payment, color: Theme.of(context).colorScheme.onSurface),
-              label: Text('Record Payment', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+              label: Text(l10n.recordPayment, style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
             );
           }
           return const SizedBox.shrink();
@@ -244,17 +246,18 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
   }
 
   void _showDeleteConfirmation(BuildContext context, DebtEntity debt) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Delete Debt', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
-        content: Text('Are you sure you want to delete "${debt.name}"?',
+        title: Text(l10n.delete, style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+        content: Text(l10n.deleteBudgetConfirm(debt.name),
             style: TextStyle(color: context.appColors.textSecondary)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel', style: TextStyle(color: context.appColors.textSecondary)),
+            child: Text(l10n.cancel, style: TextStyle(color: context.appColors.textSecondary)),
           ),
           TextButton(
             onPressed: () {
@@ -262,7 +265,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
               context.read<DebtsCubit>().deleteDebt(debt.id);
               context.pop(true);
             },
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: Text(l10n.delete, style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),

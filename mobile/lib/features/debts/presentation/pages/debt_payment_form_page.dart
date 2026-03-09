@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../domain/entities/debt_entity.dart';
 import '../bloc/debts_cubit.dart';
@@ -95,6 +96,7 @@ class _DebtPaymentFormPageState extends State<DebtPaymentFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('MMM d, yyyy');
 
     return BlocListener<DebtsCubit, DebtsState>(
@@ -102,7 +104,7 @@ class _DebtPaymentFormPageState extends State<DebtPaymentFormPage> {
         if (state is DebtsError) setState(() => _isSaving = false);
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Record Payment')),
+        appBar: AppBar(title: Text(l10n.recordPayment)),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Form(
@@ -139,13 +141,13 @@ class _DebtPaymentFormPageState extends State<DebtPaymentFormPage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Payment Amount',
+                    labelText: l10n.paymentAmount,
                     prefixIcon: Icon(Icons.attach_money, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) return 'Please enter payment amount';
+                    if (value == null || value.trim().isEmpty) return l10n.pleaseEnterPaymentAmount;
                     final parsed = double.tryParse(value.trim());
-                    if (parsed == null || parsed <= 0) return 'Please enter a valid positive number';
+                    if (parsed == null || parsed <= 0) return l10n.pleaseEnterValidPositiveNumber;
                     return null;
                   },
                 ),
@@ -167,7 +169,7 @@ class _DebtPaymentFormPageState extends State<DebtPaymentFormPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Payment Date', style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
+                            Text(l10n.paymentDate, style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
                             const SizedBox(height: 2),
                             Text(dateFormat.format(_paymentDate),
                                 style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.onSurface)),
@@ -184,7 +186,7 @@ class _DebtPaymentFormPageState extends State<DebtPaymentFormPage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   maxLines: 3,
                   decoration: InputDecoration(
-                    labelText: 'Notes (optional)',
+                    labelText: l10n.notesOptional,
                     prefixIcon: Icon(Icons.notes, color: context.appColors.textMuted),
                     alignLabelWithHint: true,
                   ),
@@ -192,7 +194,7 @@ class _DebtPaymentFormPageState extends State<DebtPaymentFormPage> {
                 const SizedBox(height: 24),
                 // Save button
                 GradientButton(
-                  text: 'Record Payment',
+                  text: l10n.recordPayment,
                   isLoading: _isSaving,
                   onPressed: _save,
                 ),

@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../domain/entities/export_entity.dart';
 import '../bloc/export_cubit.dart';
@@ -69,9 +70,10 @@ class _ExportPageState extends State<ExportPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Export Data'),
+        title: Text(l10n.exportData),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
@@ -102,7 +104,7 @@ class _ExportPageState extends State<ExportPage> {
               children: [
                 // Format selection
                 Text(
-                  'Export Format',
+                  l10n.exportFormat,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 16,
@@ -115,7 +117,7 @@ class _ExportPageState extends State<ExportPage> {
                     Expanded(
                       child: _buildFormatOption(
                         ExportFormat.csv,
-                        'CSV',
+                        l10n.csv,
                         Icons.table_chart_outlined,
                       ),
                     ),
@@ -123,7 +125,7 @@ class _ExportPageState extends State<ExportPage> {
                     Expanded(
                       child: _buildFormatOption(
                         ExportFormat.pdf,
-                        'PDF',
+                        l10n.pdf,
                         Icons.picture_as_pdf_outlined,
                       ),
                     ),
@@ -133,7 +135,7 @@ class _ExportPageState extends State<ExportPage> {
 
                 // Date range
                 Text(
-                  'Date Range (Optional)',
+                  l10n.dateRangeOptional,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 16,
@@ -147,7 +149,7 @@ class _ExportPageState extends State<ExportPage> {
                       child: _buildDateButton(
                         label: _startDate != null
                             ? _formatDate(_startDate!)
-                            : 'Start Date',
+                            : l10n.startDate,
                         onTap: () => _pickDate(isStart: true),
                       ),
                     ),
@@ -162,7 +164,7 @@ class _ExportPageState extends State<ExportPage> {
                       child: _buildDateButton(
                         label: _endDate != null
                             ? _formatDate(_endDate!)
-                            : 'End Date',
+                            : l10n.endDate,
                         onTap: () => _pickDate(isStart: false),
                       ),
                     ),
@@ -177,7 +179,7 @@ class _ExportPageState extends State<ExportPage> {
                         _endDate = null;
                       }),
                       child: Text(
-                        'Clear dates',
+                        l10n.clearDates,
                         style: TextStyle(
                           color: context.appColors.textMuted,
                           fontSize: 12,
@@ -202,8 +204,8 @@ class _ExportPageState extends State<ExportPage> {
                       Expanded(
                         child: Text(
                           _selectedFormat == ExportFormat.csv
-                              ? 'CSV file with columns: Date, Description, Amount, Type, Category, Account'
-                              : 'PDF report with summary and transaction table',
+                              ? l10n.csvDescription
+                              : l10n.pdfDescription,
                           style: TextStyle(
                             color: context.appColors.textSecondary,
                             fontSize: 13,
@@ -216,7 +218,7 @@ class _ExportPageState extends State<ExportPage> {
                 const SizedBox(height: 24),
 
                 GradientButton(
-                  text: 'Export ${_selectedFormat.label}',
+                  text: l10n.exportFormat2(_selectedFormat.label),
                   isLoading: isLoading,
                   onPressed: _export,
                 ),

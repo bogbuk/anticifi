@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../subscription/presentation/widgets/premium_gate.dart';
 import '../bloc/oracle_cubit.dart';
 import '../bloc/oracle_state.dart';
@@ -53,6 +54,7 @@ class _OraclePageState extends State<OraclePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -82,7 +84,7 @@ class _OraclePageState extends State<OraclePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Oracle',
+                  l10n.oracle,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 18,
@@ -90,7 +92,7 @@ class _OraclePageState extends State<OraclePage> {
                   ),
                 ),
                 Text(
-                  'AI Financial Advisor',
+                  l10n.aiFinancialAdvisor,
                   style: TextStyle(
                     color: context.appColors.textMuted,
                     fontSize: 12,
@@ -141,6 +143,7 @@ class _OraclePageState extends State<OraclePage> {
   }
 
   Widget _buildWelcome() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -173,7 +176,7 @@ class _OraclePageState extends State<OraclePage> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Hi! I\'m Oracle, your AI\nfinancial advisor.',
+              l10n.oracleWelcome,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface,
@@ -184,7 +187,7 @@ class _OraclePageState extends State<OraclePage> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Ask me anything about your\nfuture finances.',
+              l10n.oracleAsk,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: context.appColors.textSecondary,
@@ -278,6 +281,7 @@ class _OraclePageState extends State<OraclePage> {
   }
 
   Widget _buildInput(bool isLoading) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -297,7 +301,7 @@ class _OraclePageState extends State<OraclePage> {
                   fontSize: 14,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Ask Oracle about your finances...',
+                  hintText: l10n.oracleHint,
                   hintStyle: TextStyle(
                     color: context.appColors.textMuted,
                     fontSize: 14,

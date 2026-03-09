@@ -837,4 +837,75 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Selecionar idioma';
+
+  @override
+  String get totalBalance => 'Saldo total';
+
+  @override
+  String get spendingByCategory => 'Gastos por categoria';
+
+  @override
+  String get noSpendingDataYet => 'Ainda sem dados de gastos';
+
+  @override
+  String get pleaseSelectAccount => 'Por favor, selecione uma conta';
+
+  @override
+  String get editScheduledPayment => 'Editar pagamento agendado';
+
+  @override
+  String get newScheduledPayment => 'Novo pagamento agendado';
+
+  @override
+  String get paymentName => 'Nome do pagamento';
+
+  @override
+  String get pleaseEnterPaymentName => 'Insira o nome do pagamento';
+
+  @override
+  String get frequency => 'Frequência';
+
+  @override
+  String get descriptionOptional => 'Descrição (opcional)';
+
+  @override
+  String get updatePayment => 'Atualizar pagamento';
+
+  @override
+  String get createPayment => 'Criar pagamento';
+
+  @override
+  String get deleteScheduledPayment => 'Excluir pagamento agendado';
+
+  @override
+  String get executePayment => 'Executar pagamento';
+
+  @override
+  String executePaymentConfirm(String name) {
+    return 'Executar \"$name\" agora?';
+  }
+
+  @override
+  String get execute => 'Executar';
+
+  @override
+  String get receiptHistory => 'Histórico de recibos';
+
+  @override
+  String get noReceiptScansYet => 'Nenhum recibo escaneado ainda';
+
+  @override
+  String get scanReceiptToGetStarted => 'Escaneie um recibo para começar';
+
+  @override
+  String get addAccount => 'Adicionar conta';
+
+  @override
+  String get noCategory => 'Sem categoria';
+
+  @override
+  String get category => 'Categoria';
+
+  @override
+  String get vsLastMonth => 'em relação ao mês passado';
 }

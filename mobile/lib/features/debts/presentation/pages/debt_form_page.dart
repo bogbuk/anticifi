@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/gradient_button.dart';
 import '../../domain/entities/debt_entity.dart';
 import '../bloc/debts_cubit.dart';
@@ -35,16 +36,6 @@ class _DebtFormPageState extends State<DebtFormPage> {
   bool _isSaving = false;
 
   bool get _isEditing => widget.debt != null;
-
-  static const _debtTypes = [
-    {'value': 'credit_card', 'label': 'Credit Card'},
-    {'value': 'personal_loan', 'label': 'Personal Loan'},
-    {'value': 'mortgage', 'label': 'Mortgage'},
-    {'value': 'auto_loan', 'label': 'Auto Loan'},
-    {'value': 'student_loan', 'label': 'Student Loan'},
-    {'value': 'personal', 'label': 'Personal'},
-    {'value': 'other', 'label': 'Other'},
-  ];
 
   @override
   void initState() {
@@ -161,14 +152,24 @@ class _DebtFormPageState extends State<DebtFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('MMM d, yyyy');
+    final debtTypes = [
+      {'value': 'credit_card', 'label': l10n.creditCard},
+      {'value': 'personal_loan', 'label': l10n.personalLoan},
+      {'value': 'mortgage', 'label': l10n.mortgage},
+      {'value': 'auto_loan', 'label': l10n.autoLoan},
+      {'value': 'student_loan', 'label': l10n.studentLoan},
+      {'value': 'personal', 'label': l10n.personal},
+      {'value': 'other', 'label': l10n.other},
+    ];
 
     return BlocListener<DebtsCubit, DebtsState>(
       listener: (context, state) {
         if (state is DebtsError) setState(() => _isSaving = false);
       },
       child: Scaffold(
-        appBar: AppBar(title: Text(_isEditing ? 'Edit Debt' : 'New Debt')),
+        appBar: AppBar(title: Text(_isEditing ? l10n.editDebt : l10n.newDebt)),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Form(
@@ -181,11 +182,11 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   controller: _nameController,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Debt Name',
+                    labelText: l10n.debtName,
                     prefixIcon: Icon(Icons.label_outline, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) return 'Please enter debt name';
+                    if (value == null || value.trim().isEmpty) return l10n.pleaseEnterDebtName;
                     return null;
                   },
                 ),
@@ -196,10 +197,10 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   dropdownColor: context.appColors.card,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Debt Type',
+                    labelText: l10n.debtType,
                     prefixIcon: Icon(Icons.category_outlined, color: context.appColors.textMuted),
                   ),
-                  items: _debtTypes
+                  items: debtTypes
                       .map((t) => DropdownMenuItem(value: t['value'], child: Text(t['label']!)))
                       .toList(),
                   onChanged: (value) {
@@ -213,13 +214,13 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Original Amount',
+                    labelText: l10n.originalAmount,
                     prefixIcon: Icon(Icons.attach_money, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) return 'Please enter original amount';
+                    if (value == null || value.trim().isEmpty) return l10n.pleaseEnterOriginalAmount;
                     final parsed = double.tryParse(value.trim());
-                    if (parsed == null || parsed <= 0) return 'Please enter a valid positive number';
+                    if (parsed == null || parsed <= 0) return l10n.pleaseEnterValidPositiveNumber;
                     return null;
                   },
                 ),
@@ -230,13 +231,13 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Current Balance',
+                    labelText: l10n.currentBalance,
                     prefixIcon: Icon(Icons.account_balance, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) return 'Please enter current balance';
+                    if (value == null || value.trim().isEmpty) return l10n.pleaseEnterCurrentBalance;
                     final parsed = double.tryParse(value.trim());
-                    if (parsed == null || parsed < 0) return 'Please enter a valid number';
+                    if (parsed == null || parsed < 0) return l10n.pleaseEnterValidNumber;
                     return null;
                   },
                 ),
@@ -247,7 +248,7 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Interest Rate (%)',
+                    labelText: l10n.interestRate,
                     prefixIcon: Icon(Icons.percent, color: context.appColors.textMuted),
                   ),
                 ),
@@ -258,7 +259,7 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Minimum Payment',
+                    labelText: l10n.minimumPayment,
                     prefixIcon: Icon(Icons.payment, color: context.appColors.textMuted),
                   ),
                 ),
@@ -269,14 +270,14 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: 'Due Day (1-31)',
+                    labelText: l10n.dueDay,
                     prefixIcon: Icon(Icons.calendar_today, color: context.appColors.textMuted),
                   ),
                   validator: (value) {
                     if (value != null && value.trim().isNotEmpty) {
                       final parsed = int.tryParse(value.trim());
                       if (parsed == null || parsed < 1 || parsed > 31) {
-                        return 'Please enter a day between 1 and 31';
+                        return l10n.pleaseEnterValidDay;
                       }
                     }
                     return null;
@@ -288,7 +289,7 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   controller: _creditorController,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Creditor Name (optional)',
+                    labelText: l10n.creditorNameOptional,
                     prefixIcon: Icon(Icons.business, color: context.appColors.textMuted),
                   ),
                 ),
@@ -310,7 +311,7 @@ class _DebtFormPageState extends State<DebtFormPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Start Date', style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
+                            Text(l10n.startDate, style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
                             const SizedBox(height: 2),
                             Text(dateFormat.format(_startDate),
                                 style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.onSurface)),
@@ -339,13 +340,13 @@ class _DebtFormPageState extends State<DebtFormPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Expected Payoff Date (optional)',
+                              Text(l10n.expectedPayoffDateOptional,
                                   style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
                               const SizedBox(height: 2),
                               Text(
                                 _expectedPayoffDate != null
                                     ? dateFormat.format(_expectedPayoffDate!)
-                                    : 'No date set',
+                                    : l10n.noDateSet,
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: _expectedPayoffDate != null ? Theme.of(context).colorScheme.onSurface : context.appColors.textMuted,
@@ -370,7 +371,7 @@ class _DebtFormPageState extends State<DebtFormPage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   maxLines: 3,
                   decoration: InputDecoration(
-                    labelText: 'Notes (optional)',
+                    labelText: l10n.notesOptional,
                     prefixIcon: Icon(Icons.notes, color: context.appColors.textMuted),
                     alignLabelWithHint: true,
                   ),
@@ -378,7 +379,7 @@ class _DebtFormPageState extends State<DebtFormPage> {
                 const SizedBox(height: 24),
                 // Save button
                 GradientButton(
-                  text: _isEditing ? 'Update Debt' : 'Add Debt',
+                  text: _isEditing ? l10n.updateDebt : l10n.addDebt,
                   isLoading: _isSaving,
                   onPressed: _save,
                 ),

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../bloc/transactions_bloc.dart';
 import '../bloc/transactions_event.dart';
 import '../bloc/transactions_state.dart';
@@ -67,6 +68,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transactions'),
@@ -85,19 +87,19 @@ class _TransactionsPageState extends State<TransactionsPage> {
             child: Row(
               children: [
                 _FilterChip(
-                  label: 'All',
+                  label: l10n.all,
                   isSelected: _selectedFilter == null,
                   onTap: () => _onFilterChanged(null),
                 ),
                 const SizedBox(width: 8),
                 _FilterChip(
-                  label: 'Income',
+                  label: l10n.income,
                   isSelected: _selectedFilter == 'income',
                   onTap: () => _onFilterChanged('income'),
                 ),
                 const SizedBox(width: 8),
                 _FilterChip(
-                  label: 'Expense',
+                  label: l10n.expense,
                   isSelected: _selectedFilter == 'expense',
                   onTap: () => _onFilterChanged('expense'),
                 ),
@@ -140,7 +142,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No transactions yet',
+                            l10n.noTransactionsYet,
                             style: TextStyle(
                               fontSize: 18,
                               color: context.appColors.textSecondary,
@@ -148,7 +150,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Tap + to add your first transaction',
+                            l10n.tapPlusToAddTransaction,
                             style: TextStyle(
                               fontSize: 14,
                               color: context.appColors.textMuted,
@@ -200,23 +202,23 @@ class _TransactionsPageState extends State<TransactionsPage> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 backgroundColor: context.appColors.card,
-                                title: Text('Delete Transaction',
+                                title: Text(l10n.deleteTransaction,
                                     style: TextStyle(
                                         color: Theme.of(context).colorScheme.onSurface)),
                                 content: Text(
-                                    'Are you sure you want to delete this transaction?',
+                                    l10n.deleteTransactionConfirm,
                                     style: TextStyle(
                                         color: context.appColors.textSecondary)),
                                 actions: [
                                   TextButton(
                                     onPressed: () =>
                                         Navigator.of(ctx).pop(false),
-                                    child: const Text('Cancel'),
+                                    child: Text(l10n.cancel),
                                   ),
                                   TextButton(
                                     onPressed: () =>
                                         Navigator.of(ctx).pop(true),
-                                    child: const Text('Delete',
+                                    child: Text(l10n.delete,
                                         style:
                                             TextStyle(color: AppColors.error)),
                                   ),

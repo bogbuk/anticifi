@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class BalanceCard extends StatelessWidget {
   final double totalBalance;
@@ -20,6 +21,7 @@ class BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final previousBalance = previousMonthIncome - previousMonthExpense;
     final currentBalance = monthlyIncome - monthlyExpense;
     final change = previousBalance != 0
@@ -51,8 +53,8 @@ class BalanceCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Total Balance',
+              Text(
+                l10n.totalBalance,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -103,7 +105,7 @@ class BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'vs last month',
+            l10n.vsLastMonth,
             style: TextStyle(
               fontSize: 12,
               color: Colors.white.withOpacity(0.6),
