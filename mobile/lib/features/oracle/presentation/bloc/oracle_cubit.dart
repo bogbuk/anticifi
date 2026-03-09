@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/prediction_entity.dart';
@@ -39,6 +40,14 @@ class OracleCubit extends Cubit<OracleState> {
         isLoading: false,
       ));
     } catch (e) {
+      if (e is DioException && e.response?.statusCode == 403) {
+        emit(state.copyWith(
+          isLoading: false,
+          requiresPremium: true,
+        ));
+        return;
+      }
+
       final errorMessage = ChatMessage(
         id: (DateTime.now().millisecondsSinceEpoch + 1).toString(),
         content:
@@ -77,6 +86,14 @@ class OracleCubit extends Cubit<OracleState> {
         isLoading: false,
       ));
     } catch (e) {
+      if (e is DioException && e.response?.statusCode == 403) {
+        emit(state.copyWith(
+          isLoading: false,
+          requiresPremium: true,
+        ));
+        return;
+      }
+
       final errorMessage = ChatMessage(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         content:

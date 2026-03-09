@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_colors_extension.dart';
+import '../../../subscription/presentation/widgets/premium_gate.dart';
 import '../bloc/oracle_cubit.dart';
 import '../bloc/oracle_state.dart';
 import '../widgets/chat_bubble.dart';
@@ -107,6 +108,14 @@ class _OraclePageState extends State<OraclePage> {
           }
         },
         builder: (context, state) {
+          if (state.requiresPremium) {
+            return const PremiumGate(
+              featureName: 'Oracle AI',
+              isPremium: false,
+              child: SizedBox.shrink(),
+            );
+          }
+
           return Column(
             children: [
               Expanded(
