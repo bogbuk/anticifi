@@ -8,10 +8,17 @@ import {
   Unique,
   AllowNull,
   HasMany,
+  HasOne,
   CreatedAt,
   UpdatedAt,
   DeletedAt,
 } from 'sequelize-typescript';
+import { Subscription } from '../subscriptions/subscription.model.js';
+
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+}
 
 export enum UserTheme {
   DARK = 'dark',
@@ -72,6 +79,11 @@ export class User extends Model {
   @Column(DataType.ENUM(...Object.values(UserTheme)))
   declare theme: UserTheme;
 
+  @Default(UserRole.USER)
+  @AllowNull(false)
+  @Column(DataType.ENUM(...Object.values(UserRole)))
+  declare role: UserRole;
+
   @Default(false)
   @AllowNull(false)
   @Column(DataType.BOOLEAN)
@@ -98,4 +110,7 @@ export class User extends Model {
 
   @DeletedAt
   declare deletedAt: Date | null;
+
+  @HasOne(() => Subscription)
+  declare subscription: Subscription;
 }

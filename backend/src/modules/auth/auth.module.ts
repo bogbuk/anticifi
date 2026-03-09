@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
+import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
 import { UsersModule } from '../users/users.module.js';
+import { User } from '../users/user.model.js';
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { UsersModule } from '../users/users.module.js';
         signOptions: { expiresIn: '15m' },
       }),
     }),
+    SequelizeModule.forFeature([User]),
     UsersModule,
   ],
   controllers: [AuthController],

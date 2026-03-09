@@ -23,6 +23,7 @@ import { ReceiptsModule } from './modules/receipts/receipt.module.js';
 import { ExportModule } from './modules/export/export.module.js';
 import { CategorizationModule } from './modules/categorization/categorization.module.js';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module.js';
+import { AdminModule } from './modules/admin/admin.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 
 @Module({
@@ -48,6 +49,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
     CurrencyModule,
     ReceiptsModule,
     ExportModule,
+    AdminModule,
     HealthModule,
   ],
   providers: [
