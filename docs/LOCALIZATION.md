@@ -30,7 +30,7 @@ mobile/
 ├── l10n.yaml                          # L10n generation config
 ├── lib/
 │   ├── l10n/
-│   │   ├── app_en.arb                 # Template ARB (English, ~200 keys)
+│   │   ├── app_en.arb                 # Template ARB (English, ~220 keys)
 │   │   ├── app_ru.arb                 # Russian translations
 │   │   ├── app_ro.arb                 # Romanian translations
 │   │   ├── app_es.arb                 # Spanish translations
@@ -122,20 +122,22 @@ This regenerates `app_localizations.dart` and per-locale files in `lib/l10n/`. T
 
 ## Current Localization Coverage
 
+All pages are fully localized with ~220 translation keys across 12 languages.
+
 | Area | Status |
 |------|--------|
 | Settings page | Fully localized |
-| Auth pages (login, register, onboarding) | ARB keys ready, hardcoded strings in code |
-| Dashboard | ARB keys ready, hardcoded strings in code |
-| Transactions | ARB keys ready, hardcoded strings in code |
-| Accounts | ARB keys ready, hardcoded strings in code |
-| Budgets | ARB keys ready, hardcoded strings in code |
-| Debts | ARB keys ready, hardcoded strings in code |
-| Oracle | ARB keys ready, hardcoded strings in code |
-| Notifications | ARB keys ready, hardcoded strings in code |
-| Subscription/Paywall | ARB keys ready, hardcoded strings in code |
-| Import/Export | ARB keys ready, hardcoded strings in code |
-| Receipt scan | ARB keys ready, hardcoded strings in code |
-| Offline banner | ARB keys ready, hardcoded strings in code |
-
-> All ~200 translation keys exist in all 12 ARB files. Remaining work is replacing hardcoded `'String'` with `l10n.key` calls in each page widget.
+| Auth pages (login, register) | Fully localized |
+| Onboarding | Fully localized |
+| Dashboard (page + widgets) | Fully localized |
+| Transactions (page + form + widgets) | Fully localized |
+| Accounts (page + form + bank link) | Fully localized |
+| Budgets (page + form + widgets) | Fully localized |
+| Debts (page + form + detail + widgets) | Fully localized |
+| Oracle | Fully localized |
+| Notifications | Fully localized |
+| Subscription/Paywall | Fully localized |
+| Import/Export | Fully localized |
+| Receipt scan + history + detail | Fully localized |
+| Scheduled payments (page + form + widgets) | Fully localized |
+| Offline banner | Fully localized |
