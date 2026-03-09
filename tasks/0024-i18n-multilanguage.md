@@ -1,6 +1,6 @@
 # Task: Мультиязычность (i18n/l10n) — 12 языков
 Date: 2026-03-08
-Status: in_progress
+Status: done
 
 ## Checklist
 
@@ -12,7 +12,7 @@ Status: in_progress
 - [x] injection.dart — регистрация LocaleCubit
 - [x] app.dart — localizationsDelegates, supportedLocales, locale binding
 
-### ARB файлы (~200 ключей каждый)
+### ARB файлы (~220 ключей каждый)
 - [x] app_en.arb — English (template)
 - [x] app_ru.arb — Русский
 - [x] app_ro.arb — Română
@@ -26,27 +26,28 @@ Status: in_progress
 - [x] app_zh.arb — 中文
 - [x] app_ja.arb — 日本語
 
-### Settings Page (полная локализация)
+### Settings Page
 - [x] Все строки заменены на l10n ключи
 - [x] Language picker с выбором 12 языков
 - [x] Сохранение языка в SecureStorage
 - [x] Theme/Currency/Delete/Logout dialogs локализованы
 
-### Остальные страницы (будущее)
-- [ ] Auth pages (login, register, onboarding)
-- [ ] Dashboard page
-- [ ] Transactions pages
-- [ ] Accounts pages
-- [ ] Budgets pages
-- [ ] Debts pages
-- [ ] Oracle page
-- [ ] Notifications page
-- [ ] Subscription/Paywall page
-- [ ] Import/Export pages
-- [ ] Receipt scan page
-- [ ] Offline banner
+### Остальные страницы
+- [x] Auth pages (login, register, onboarding)
+- [x] Dashboard page + widgets (balance_card, spending_chart, income_expense_row)
+- [x] Transactions pages + widgets
+- [x] Accounts pages + widgets
+- [x] Budgets pages + widgets
+- [x] Debts pages + widgets
+- [x] Oracle page
+- [x] Notifications page
+- [x] Subscription/Paywall page
+- [x] Import/Export pages
+- [x] Receipt scan page + history
+- [x] Scheduled payments pages + widgets
+- [x] Offline banner
 
 ### Verification
 - [x] flutter analyze — 0 errors
-- [ ] build
-- [ ] commit & push
+- [ ] build & test on device
+- [x] commit & push

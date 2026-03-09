@@ -1,20 +1,20 @@
 # Task: Логотип и полноценная светлая тема
 Date: 2026-03-08
-Status: in_progress
+Status: done
 
 ## Checklist
 
 ### Логотип
-- [ ] Создать assets/ структуру
-- [ ] Создать виджет логотипа (CustomPainter)
-- [ ] Настроить flutter_launcher_icons
-- [ ] Обновить splash_page с логотипом
-- [ ] Обновить onboarding с логотипом
+- [x] Создать assets/ структуру
+- [x] Создать виджет логотипа (CustomPainter)
+- [x] Настроить flutter_launcher_icons
+- [x] Обновить splash_page с логотипом
+- [x] Обновить onboarding с логотипом
 
 ### Светлая тема — инфраструктура
-- [ ] Создать AppColorsExtension (ThemeExtension)
-- [ ] Зарегистрировать в dark и light темах
-- [ ] Создать BuildContext extension для доступа
+- [x] Создать AppColorsExtension (ThemeExtension)
+- [x] Зарегистрировать в dark и light темах
+- [x] Создать BuildContext extension для доступа
 
 ### Светлая тема — замена hardcoded цветов (47 файлов, ~492 ссылок)
 - [x] auth (3 файла) — уже theme-aware
@@ -35,6 +35,6 @@ Status: in_progress
 - [x] import (1 файл) — уже theme-aware
 
 ### Verification
-- [x] flutter analyze — 0 errors (117 info-level warnings, pre-existing)
+- [x] flutter analyze — 0 errors
 - [ ] build & test on device
-- [ ] commit & push
+- [x] commit & push

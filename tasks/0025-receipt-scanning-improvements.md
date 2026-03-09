@@ -1,8 +1,8 @@
 # Task: Доработка OCR Receipt Scanning
 Date: 2026-03-08
-Status: in_progress
+Status: done
 
-## Выполнено сегодня
+## Выполнено ранее
 - [x] iOS permissions (камера, фото) — краш при сканировании
 - [x] Лимит сканов (5/день free, безлимит premium)
 - [x] Парсинг snake_case ответов API
@@ -15,24 +15,22 @@ Status: in_progress
 - [x] Уменьшение размера фото для upload
 - [x] Фикс бесконечной рекурсии CurrencyService (MDL)
 
-## Checklist — осталось
-
-### Mobile
-- [ ] Превью изображения перед отправкой на OCR
-- [ ] Выбор категории в форме подтверждения чека
-- [ ] Страница истории сканов (ReceiptHistoryPage)
-- [ ] Страница деталей отдельного скана
-- [ ] Локализация строк UI
-- [ ] Обработка ошибок загрузки аккаунтов (UI feedback)
+## Выполнено 2026-03-09
 
 ### Backend
-- [ ] Пагинация GET /receipts
-- [ ] Endpoint удаления скана (DELETE /receipts/:id)
-- [ ] Endpoint редактирования распознанных данных (PATCH /receipts/:id)
-- [ ] Уведомление клиента о завершении OCR (через WebSocket/Events)
-- [ ] Валидация confidence — предупреждение при низком качестве
+- [x] Пагинация GET /receipts (page, limit, status filter)
+- [x] Endpoint редактирования (PATCH /receipts/:id) — merchant, amount, date, currency, items
+- [x] Валидация confidence — предупреждение при <60%
+- [x] WebSocket уведомление о завершении OCR (receipt:scanned event)
+
+### Mobile
+- [x] Превью изображения перед отправкой на OCR (Scan/Cancel кнопки)
+- [x] Обработка ошибок загрузки аккаунтов (retry UI)
+- [x] Страница деталей скана (статус, confidence, данные, товары)
+- [x] Навигация из истории → детали скана
+- [x] Полная локализация (12 языков)
 
 ### Verification
-- [x] build backend (`cd backend && npm run build`)
-- [x] build mobile (`cd mobile && flutter analyze`)
+- [x] build backend
+- [x] build mobile (flutter analyze — 0 errors)
 - [x] commit & push

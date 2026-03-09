@@ -1,6 +1,6 @@
 # Task: Mobile Polish — Theme, Animations, Offline Mode
 Date: 2026-03-05
-Status: in_progress
+Status: done
 
 ## Checklist
 
@@ -32,5 +32,5 @@ Status: in_progress
 
 ### Verification
 - [x] flutter analyze — No issues found
-- [ ] build
-- [ ] commit & push
+- [x] build
+- [x] commit & push
