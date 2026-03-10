@@ -1,11 +1,15 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, literal, Sequelize } from 'sequelize';
+import { Op, QueryTypes } from 'sequelize';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.model.js';
 import { Subscription } from '../subscriptions/subscription.model.js';
 import { Account } from '../accounts/account.model.js';
 import { Transaction } from '../transactions/transaction.model.js';
+import { Budget } from '../budgets/budget.model.js';
+import { Debt } from '../debts/debt.model.js';
+import { ReceiptScan } from '../receipts/receipt.model.js';
+import { Notification } from '../notifications/notification.model.js';
 import { QueryUsersDto } from './dto/query-users.dto.js';
 import { UpdateUserAdminDto } from './dto/update-user-admin.dto.js';
 import { UpdateSubscriptionAdminDto } from './dto/update-subscription-admin.dto.js';
@@ -19,10 +23,13 @@ export class AdminService {
     @InjectModel(Subscription) private readonly subscriptionModel: typeof Subscription,
     @InjectModel(Account) private readonly accountModel: typeof Account,
     @InjectModel(Transaction) private readonly transactionModel: typeof Transaction,
+    @InjectModel(Budget) private readonly budgetModel: typeof Budget,
+    @InjectModel(Debt) private readonly debtModel: typeof Debt,
+    @InjectModel(ReceiptScan) private readonly receiptModel: typeof ReceiptScan,
+    @InjectModel(Notification) private readonly notificationModel: typeof Notification,
   ) {}
 
   async promoteToAdmin(email: string) {
-    // Ensure role column exists (migration for production)
     const sequelize = this.userModel.sequelize!;
     try {
       await sequelize.query(`
@@ -51,12 +58,7 @@ export class AdminService {
     await user.update({ role: 'ADMIN' });
     this.logger.log(`User ${email} promoted to ADMIN`);
 
-    return {
-      message: `User ${email} promoted to ADMIN`,
-      userId: user.id,
-      email: user.email,
-      role: 'ADMIN',
-    };
+    return { message: `User ${email} promoted to ADMIN`, userId: user.id, email: user.email, role: 'ADMIN' };
   }
 
   async resetPassword(email: string, newPassword: string) {
@@ -76,18 +78,28 @@ export class AdminService {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const [totalUsers, premiumUsers, activeUsers, totalTransactions, totalAccounts] =
+    const [totalUsers, premiumUsers, activeUsers, totalTransactions, totalAccounts, totalBudgets, totalDebts, totalReceipts] =
       await Promise.all([
         this.userModel.count(),
-        this.subscriptionModel.count({
-          where: { tier: 'premium', status: 'active' },
-        }),
-        this.userModel.count({
-          where: { lastLoginAt: { [Op.gte]: thirtyDaysAgo } },
-        }),
+        this.subscriptionModel.count({ where: { tier: 'premium', status: 'active' } }),
+        this.userModel.count({ where: { lastLoginAt: { [Op.gte]: thirtyDaysAgo } } }),
         this.transactionModel.count(),
         this.accountModel.count(),
+        this.budgetModel.count(),
+        this.debtModel.count(),
+        this.receiptModel.count(),
       ]);
+
+    const sequelize = this.userModel.sequelize!;
+    const userGrowth = await sequelize.query<{ date: string; count: string }>(
+      `SELECT DATE(created_at) as date, COUNT(*) as count FROM users WHERE created_at >= NOW() - INTERVAL '30 days' GROUP BY DATE(created_at) ORDER BY date`,
+      { type: QueryTypes.SELECT },
+    );
+
+    const transactionVolume = await sequelize.query<{ date: string; count: string }>(
+      `SELECT DATE(date) as date, COUNT(*) as count FROM transactions WHERE date >= NOW() - INTERVAL '30 days' AND deleted_at IS NULL GROUP BY DATE(date) ORDER BY date`,
+      { type: QueryTypes.SELECT },
+    );
 
     return {
       totalUsers,
@@ -95,6 +107,11 @@ export class AdminService {
       activeUsers,
       totalTransactions,
       totalAccounts,
+      totalBudgets,
+      totalDebts,
+      totalReceipts,
+      userGrowth: userGrowth.map(r => ({ date: r.date, count: Number(r.count) })),
+      transactionVolume: transactionVolume.map(r => ({ date: r.date, count: Number(r.count) })),
     };
   }
 
@@ -137,13 +154,7 @@ export class AdminService {
       attributes: { exclude: ['passwordHash'] },
     });
 
-    return {
-      data: rows,
-      total: count,
-      page,
-      limit,
-      totalPages: Math.ceil(count / limit),
-    };
+    return { data: rows, total: count, page, limit, totalPages: Math.ceil(count / limit) };
   }
 
   async getUserById(id: string) {
@@ -156,16 +167,14 @@ export class AdminService {
       throw new NotFoundException('User not found');
     }
 
-    const [accountsCount, transactionsCount] = await Promise.all([
+    const [accountsCount, transactionsCount, budgetsCount, debtsCount] = await Promise.all([
       this.accountModel.count({ where: { userId: id } }),
       this.transactionModel.count({ where: { userId: id } }),
+      this.budgetModel.count({ where: { userId: id } }),
+      this.debtModel.count({ where: { userId: id } }),
     ]);
 
-    return {
-      ...user.toJSON(),
-      accountsCount,
-      transactionsCount,
-    };
+    return { ...user.toJSON(), accountsCount, transactionsCount, budgetsCount, debtsCount };
   }
 
   async updateUser(id: string, dto: UpdateUserAdminDto) {
@@ -173,9 +182,7 @@ export class AdminService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
     await user.update(dto as any);
-
     return this.getUserById(id);
   }
 
@@ -184,9 +191,7 @@ export class AdminService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
     await user.destroy();
-
     return { message: 'User deleted successfully' };
   }
 
@@ -196,19 +201,133 @@ export class AdminService {
       throw new NotFoundException('User not found');
     }
 
-    let subscription = await this.subscriptionModel.findOne({
-      where: { userId },
-    });
+    let subscription = await this.subscriptionModel.findOne({ where: { userId } });
 
     if (!subscription) {
-      subscription = await this.subscriptionModel.create({
-        userId,
-        ...dto,
-      } as any);
+      subscription = await this.subscriptionModel.create({ userId, ...dto } as any);
     } else {
       await subscription.update(dto as any);
     }
 
     return subscription;
+  }
+
+  // --- User data access ---
+
+  async getUserTransactions(userId: string, query: { page?: number; limit?: number; type?: string; startDate?: string; endDate?: string }) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const offset = (page - 1) * limit;
+    const where: any = { userId };
+    if (query.type) where.type = query.type;
+    if (query.startDate || query.endDate) {
+      where.date = {};
+      if (query.startDate) where.date[Op.gte] = query.startDate;
+      if (query.endDate) where.date[Op.lte] = query.endDate;
+    }
+
+    const { rows, count } = await this.transactionModel.findAndCountAll({
+      where,
+      order: [['date', 'DESC']],
+      limit,
+      offset,
+    });
+
+    return { data: rows, total: count, page, limit, totalPages: Math.ceil(count / limit) };
+  }
+
+  async getUserAccounts(userId: string) {
+    return this.accountModel.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
+  }
+
+  async getUserBudgets(userId: string) {
+    return this.budgetModel.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
+  }
+
+  async getUserDebts(userId: string) {
+    return this.debtModel.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
+  }
+
+  // --- Global views ---
+
+  async getAllTransactions(query: { page?: number; limit?: number; type?: string; startDate?: string; endDate?: string; userId?: string }) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const offset = (page - 1) * limit;
+    const where: any = {};
+    if (query.userId) where.userId = query.userId;
+    if (query.type) where.type = query.type;
+    if (query.startDate || query.endDate) {
+      where.date = {};
+      if (query.startDate) where.date[Op.gte] = query.startDate;
+      if (query.endDate) where.date[Op.lte] = query.endDate;
+    }
+
+    const { rows, count } = await this.transactionModel.findAndCountAll({
+      where,
+      include: [{ model: User, attributes: ['id', 'email', 'firstName', 'lastName'] }],
+      order: [['date', 'DESC']],
+      limit,
+      offset,
+    });
+
+    return { data: rows, total: count, page, limit, totalPages: Math.ceil(count / limit) };
+  }
+
+  async getAllSubscriptions(query: { page?: number; limit?: number; tier?: string; status?: string }) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const offset = (page - 1) * limit;
+    const where: any = {};
+    if (query.tier) where.tier = query.tier;
+    if (query.status) where.status = query.status;
+
+    const { rows, count } = await this.subscriptionModel.findAndCountAll({
+      where,
+      include: [{ model: User, attributes: ['id', 'email', 'firstName', 'lastName'] }],
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset,
+    });
+
+    return { data: rows, total: count, page, limit, totalPages: Math.ceil(count / limit) };
+  }
+
+  async getReceipts(query: { page?: number; limit?: number; status?: string }) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const offset = (page - 1) * limit;
+    const where: any = {};
+    if (query.status) where.status = query.status;
+
+    const { rows, count } = await this.receiptModel.findAndCountAll({
+      where,
+      include: [{ model: User, attributes: ['id', 'email', 'firstName', 'lastName'] }],
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset,
+    });
+
+    return { data: rows, total: count, page, limit, totalPages: Math.ceil(count / limit) };
+  }
+
+  async broadcastNotification(params: { title: string; body: string; userIds?: string[] }) {
+    const users = params.userIds?.length
+      ? await this.userModel.findAll({ where: { id: { [Op.in]: params.userIds } } })
+      : await this.userModel.findAll();
+
+    const notifications = users.map(u => ({
+      userId: u.id,
+      title: params.title,
+      body: params.body,
+      type: 'system',
+      isRead: false,
+    }));
+
+    if (notifications.length > 0) {
+      await this.notificationModel.bulkCreate(notifications as any[]);
+    }
+
+    return { sent: notifications.length };
   }
 }

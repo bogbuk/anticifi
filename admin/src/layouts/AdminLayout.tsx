@@ -4,6 +4,13 @@ import { Layout, Menu, Button, Typography, Space, Avatar, Dropdown } from 'antd'
 import {
   DashboardOutlined,
   UserOutlined,
+  TransactionOutlined,
+  CrownOutlined,
+  LineChartOutlined,
+  BellOutlined,
+  ScanOutlined,
+  AuditOutlined,
+  SettingOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -16,16 +23,17 @@ const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
 
 const menuItems: MenuProps['items'] = [
-  {
-    key: '/dashboard',
-    icon: <DashboardOutlined />,
-    label: 'Dashboard',
-  },
-  {
-    key: '/users',
-    icon: <UserOutlined />,
-    label: 'Users',
-  },
+  { key: '/dashboard', icon: <DashboardOutlined />, label: 'Dashboard' },
+  { key: '/users', icon: <UserOutlined />, label: 'Users' },
+  { key: '/transactions', icon: <TransactionOutlined />, label: 'Transactions' },
+  { key: '/subscriptions', icon: <CrownOutlined />, label: 'Subscriptions' },
+  { key: '/analytics', icon: <LineChartOutlined />, label: 'Analytics' },
+  { type: 'divider' },
+  { key: '/notifications', icon: <BellOutlined />, label: 'Notifications' },
+  { key: '/receipts', icon: <ScanOutlined />, label: 'Receipts (OCR)' },
+  { type: 'divider' },
+  { key: '/audit-logs', icon: <AuditOutlined />, label: 'Audit Logs' },
+  { key: '/system', icon: <SettingOutlined />, label: 'System' },
 ];
 
 export default function AdminLayout() {
@@ -53,6 +61,7 @@ export default function AdminLayout() {
         collapsible
         collapsed={collapsed}
         theme="dark"
+        width={220}
         style={{ overflow: 'auto', height: '100vh', position: 'sticky', top: 0, left: 0 }}
       >
         <div
@@ -64,10 +73,7 @@ export default function AdminLayout() {
             borderBottom: '1px solid rgba(255,255,255,0.1)',
           }}
         >
-          <Text
-            strong
-            style={{ color: '#fff', fontSize: collapsed ? 14 : 18, whiteSpace: 'nowrap' }}
-          >
+          <Text strong style={{ color: '#fff', fontSize: collapsed ? 14 : 18, whiteSpace: 'nowrap' }}>
             {collapsed ? 'AF' : 'AnticiFi Admin'}
           </Text>
         </div>
