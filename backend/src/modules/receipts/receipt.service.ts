@@ -283,8 +283,11 @@ export class ReceiptService {
       new RegExp(`(?:gesamtbetrag|summe|gesamt|zu\\s*zahlen)[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*${cur}?`, 'i'),
       // ES: Total a pagar, Importe
       new RegExp(`(?:total\\s*a\\s*pagar|importe\\s*total|importe)[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*${cur}?`, 'i'),
-      // RO: Suma, Total de plata
+      // RO/MD: Total LEI, Total MDL, Suma, Total de plata
+      new RegExp(`total\\s*(?:LEI|MDL|RON)[:\\s|]*([\\d.,]+)`, 'i'),
       new RegExp(`(?:suma|total\\s*de\\s*plat[aă])[:\\s|]*${cur}?\\s*([\\d.,]+)\\s*(?:MDL|RON|LEI)?`, 'i'),
+      // Card payment line: VISA:100.00, CARD 100.00
+      new RegExp(`(?:visa|mastercard|card)[:\\s]*([\\d.,]+)`, 'i'),
     ];
 
     for (const pattern of totalPatterns) {

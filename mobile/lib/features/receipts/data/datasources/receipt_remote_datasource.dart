@@ -29,7 +29,10 @@ class ReceiptRemoteDataSource {
       ),
     );
     final data = response.data as Map<String, dynamic>;
-    return ReceiptScanModel.fromJson(data);
+    final receipt = data.containsKey('receipt')
+        ? data['receipt'] as Map<String, dynamic>
+        : data;
+    return ReceiptScanModel.fromJson(receipt);
   }
 
   Future<void> confirmReceipt(
