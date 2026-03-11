@@ -11,9 +11,10 @@ export class CurrencyCron {
   @Cron('0 6 * * *')
   async handleDailyRateUpdate(): Promise<void> {
     this.logger.log('Starting daily currency rate update');
-    await this.currencyService.fetchAndStoreRates('USD');
-    await this.currencyService.fetchAndStoreRates('EUR');
-    await this.currencyService.fetchAndStoreRates('GBP');
+    const bases = ['USD', 'EUR', 'GBP', 'MDL', 'RON', 'UAH', 'TRY', 'JPY', 'CNY', 'PLN', 'CZK', 'CHF'];
+    for (const base of bases) {
+      await this.currencyService.fetchAndStoreRates(base);
+    }
     this.logger.log('Daily currency rate update completed');
   }
 }

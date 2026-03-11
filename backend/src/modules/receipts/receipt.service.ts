@@ -244,6 +244,13 @@ export class ReceiptService {
     // --- Currency detection (¢ is common OCR misread of €) ---
     if (/\bMDL\b/.test(text)) result.currency = 'MDL';
     else if (/\bRON\b|\bLEI\b/i.test(text)) result.currency = 'RON';
+    else if (/\bUAH\b|\bгрн\b/i.test(text)) result.currency = 'UAH';
+    else if (/\bTRY\b|\bTL\b/.test(text) || text.includes('₺')) result.currency = 'TRY';
+    else if (/\bJPY\b|\b円\b/.test(text) || text.includes('¥')) result.currency = 'JPY';
+    else if (/\bCNY\b|\bRMB\b|\b元\b/.test(text)) result.currency = 'CNY';
+    else if (/\bPLN\b|\bzł\b/i.test(text)) result.currency = 'PLN';
+    else if (/\bCZK\b|\bKč\b/i.test(text)) result.currency = 'CZK';
+    else if (/\bCHF\b/.test(text)) result.currency = 'CHF';
     else if (text.includes('€') || text.includes('¢') || /\bEUR\b/.test(text)) result.currency = 'EUR';
     else if (text.includes('£') || /\bGBP\b/.test(text)) result.currency = 'GBP';
     else if (text.includes('$') || /\bUSD\b/.test(text)) result.currency = 'USD';

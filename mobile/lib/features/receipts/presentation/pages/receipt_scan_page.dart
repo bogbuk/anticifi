@@ -40,6 +40,13 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
   DateTime _selectedDate = DateTime.now();
   String? _accountsError;
 
+  // Currency conversion
+  String? _receiptCurrency;
+  double? _originalAmount;
+  double? _convertedAmount;
+  String? _accountCurrency;
+  bool _isConverting = false;
+
   @override
   void initState() {
     super.initState();
@@ -119,10 +126,67 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
     if (scan.parsedData != null) {
       if (scan.parsedData!.amount != null) {
         _amountController.text = scan.parsedData!.amount!.toStringAsFixed(2);
+        _originalAmount = scan.parsedData!.amount;
       }
       if (scan.parsedData!.merchant != null) {
         _merchantController.text = scan.parsedData!.merchant!;
       }
+      _receiptCurrency = scan.parsedData!.currency;
+      _checkCurrencyConversion();
+    }
+  }
+
+  Future<void> _checkCurrencyConversion() async {
+    if (_receiptCurrency == null || _originalAmount == null || _selectedAccountId == null) {
+      setState(() {
+        _convertedAmount = null;
+        _accountCurrency = null;
+      });
+      return;
+    }
+
+    final account = _accounts.firstWhere((a) => a.id == _selectedAccountId);
+    _accountCurrency = account.currency;
+
+    if (_receiptCurrency == _accountCurrency) {
+      setState(() => _convertedAmount = null);
+      return;
+    }
+
+    setState(() => _isConverting = true);
+    try {
+      final response = await getIt<DioClient>().dio.get(
+        ApiEndpoints.currencyConvert,
+        queryParameters: {
+          'amount': _originalAmount,
+          'from': _receiptCurrency,
+          'to': _accountCurrency,
+        },
+      );
+      final data = response.data as Map<String, dynamic>;
+      if (mounted) {
+        setState(() {
+          _convertedAmount = (data['result'] as num?)?.toDouble() ??
+              (data['converted'] as num?)?.toDouble();
+          _isConverting = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _convertedAmount = null;
+          _isConverting = false;
+        });
+      }
+    }
+  }
+
+  void _applyConversion() {
+    if (_convertedAmount != null) {
+      setState(() {
+        _amountController.text = _convertedAmount!.toStringAsFixed(2);
+        _convertedAmount = null;
+      });
     }
   }
 
@@ -413,7 +477,10 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
                   ),
                 );
               }).toList(),
-              onChanged: (value) => setState(() => _selectedAccountId = value),
+              onChanged: (value) {
+                setState(() => _selectedAccountId = value);
+                _checkCurrencyConversion();
+              },
               decoration: InputDecoration(
                 labelText: l10n.account,
                 prefixIcon:
@@ -512,6 +579,66 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
               ),
             ),
           const SizedBox(height: 16),
+          // Currency conversion banner
+          if (_isConverting)
+            Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+              ),
+              child: const Row(
+                children: [
+                  SizedBox(
+                    width: 16, height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
+                  ),
+                  SizedBox(width: 12),
+                  Text('Converting...', style: TextStyle(color: AppColors.primary)),
+                ],
+              ),
+            )
+          else if (_convertedAmount != null && _accountCurrency != null && _receiptCurrency != null)
+            GestureDetector(
+              onTap: _applyConversion,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.currency_exchange, color: AppColors.primary, size: 20),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        '${_originalAmount!.toStringAsFixed(2)} $_receiptCurrency ≈ ${_convertedAmount!.toStringAsFixed(2)} $_accountCurrency',
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'Apply',
+                        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           // Amount
           TextFormField(
             controller: _amountController,
