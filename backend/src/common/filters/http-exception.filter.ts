@@ -6,7 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import { Response } from 'express';
+import type { FastifyReply } from 'fastify';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -17,7 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       this.logger.error('Unhandled exception', exception instanceof Error ? exception.stack : exception);
     }
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
+    const response = ctx.getResponse<FastifyReply>();
 
     const status =
       exception instanceof HttpException
@@ -36,6 +36,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
     };
 
-    response.status(status).json(errorResponse);
+    response.status(status).send(errorResponse);
   }
 }

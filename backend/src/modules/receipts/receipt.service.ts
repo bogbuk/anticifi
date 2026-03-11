@@ -64,7 +64,7 @@ export class ReceiptService {
 
   async scanReceipt(
     userId: string,
-    file: Express.Multer.File,
+    file: { originalname: string; buffer: Buffer },
   ): Promise<{ receipt: ReceiptScan; warning?: string }> {
     await this.checkDailyLimit(userId);
     const filename = `${Date.now()}-${file.originalname}`;

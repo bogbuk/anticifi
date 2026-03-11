@@ -8,10 +8,11 @@ import {
   HttpCode,
   HttpStatus,
   UseInterceptors,
-  UploadedFile,
   BadRequestException,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileUpload } from '../../common/interceptors/file-upload.interceptor.js';
+import type { UploadedFile } from '../../common/interceptors/file-upload.interceptor.js';
+import { UploadedFileParam } from '../../common/decorators/uploaded-file.decorator.js';
 import { ImportService } from './import.service.js';
 import { ImportCsvDto } from './dto/import-csv.dto.js';
 import { ImportFormat } from './import-job.model.js';
@@ -28,9 +29,9 @@ export class ImportController {
 
   @Post('csv')
   @HttpCode(HttpStatus.CREATED)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileUpload('file'))
   async importCsv(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFileParam() file: UploadedFile,
     @Body() dto: ImportCsvDto,
     @CurrentUser() user: { userId: string },
   ) {
