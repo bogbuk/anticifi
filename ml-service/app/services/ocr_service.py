@@ -374,8 +374,15 @@ def _parse_ocr_text(text: str) -> dict:
     # --- Currency detection (explicit symbols/codes first) ---
     if re.search(r'\bMDL\b', text):
         result['currency'] = 'MDL'
-    elif re.search(r'\bRON\b|\bLEI\b', text, re.I):
+    elif re.search(r'\bRON\b', text):
         result['currency'] = 'RON'
+    elif re.search(r'\bLEI\b', text, re.I):
+        # "LEI" is ambiguous: RON (Romania) or MDL (Moldova)
+        # Detect Moldova by: IDNO (tax ID), Chisinau, +373 phone code
+        if re.search(r'IDNO|Chisinau|Chișinău|Chi[sș]in[aă]u|\+373|Moldova', text, re.I):
+            result['currency'] = 'MDL'
+        else:
+            result['currency'] = 'RON'
     elif re.search(r'\bUAH\b|\bгрн\b|厂PH|rPH|ГРН', text, re.I):
         result['currency'] = 'UAH'
     elif re.search(r'\bTRY\b|\bTL\b', text) or '₺' in text:

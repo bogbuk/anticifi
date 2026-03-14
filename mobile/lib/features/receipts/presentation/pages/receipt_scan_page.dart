@@ -131,6 +131,12 @@ class _ReceiptScanPageState extends State<ReceiptScanPage> {
       if (scan.parsedData!.merchant != null) {
         _merchantController.text = scan.parsedData!.merchant!;
       }
+      if (scan.parsedData!.date != null) {
+        final parsed = DateTime.tryParse(scan.parsedData!.date!);
+        if (parsed != null) {
+          _selectedDate = parsed;
+        }
+      }
       _receiptCurrency = scan.parsedData!.currency;
       _checkCurrencyConversion();
     }
