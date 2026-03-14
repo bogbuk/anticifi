@@ -1,10 +1,13 @@
 import { Injectable, NotFoundException, ForbiddenException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { ConfigService } from '@nestjs/config';
 import { Op, WhereOptions } from 'sequelize';
-import { createWorker } from 'tesseract.js';
+import axios from 'axios';
+import FormData from 'form-data';
 import * as path from 'path';
 import * as fs from 'fs';
 import { ReceiptScan, ReceiptStatus } from './receipt.model.js';
+import { Account } from '../accounts/account.model.js';
 import { TransactionsService } from '../transactions/transactions.service.js';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service.js';
 import { ConfirmReceiptDto } from './dto/confirm-receipt.dto.js';
@@ -28,14 +31,20 @@ const FREE_DAILY_SCAN_LIMIT = 5;
 export class ReceiptService {
   private readonly logger = new Logger(ReceiptService.name);
   private readonly uploadsDir = path.join(process.cwd(), 'uploads', 'receipts');
+  private readonly mlServiceUrl: string;
 
   constructor(
     @InjectModel(ReceiptScan)
     private readonly receiptModel: typeof ReceiptScan,
+    @InjectModel(Account)
+    private readonly accountModel: typeof Account,
     private readonly transactionsService: TransactionsService,
     private readonly subscriptionsService: SubscriptionsService,
     private readonly eventsGateway: EventsGateway,
+    private readonly configService: ConfigService,
   ) {
+    this.mlServiceUrl =
+      this.configService.get('ML_SERVICE_URL') || 'http://localhost:8001';
     if (!fs.existsSync(this.uploadsDir)) {
       fs.mkdirSync(this.uploadsDir, { recursive: true });
     }
@@ -81,12 +90,29 @@ export class ReceiptService {
     let warning: string | undefined;
 
     try {
-      const worker = await createWorker('eng+fra+deu+spa+ron');
-      const { data } = await worker.recognize(filePath);
-      await worker.terminate();
+      // Get user's default currency from their primary account
+      const primaryAccount = await this.accountModel.findOne({
+        where: { userId },
+        order: [['createdAt', 'ASC']],
+        attributes: ['currency'],
+      });
 
-      const parsedData = this.parseOcrText(data.text);
-      const confidence = data.confidence || 0;
+      const formData = new FormData();
+      formData.append('file', file.buffer, { filename: file.originalname });
+      formData.append('method', 'auto');
+      if (primaryAccount?.currency) {
+        formData.append('default_currency', primaryAccount.currency);
+      }
+
+      const response = await axios.post(
+        `${this.mlServiceUrl}/api/ocr/receipt`,
+        formData,
+        { timeout: 60000, headers: formData.getHeaders() },
+      );
+
+      const { merchant, amount, date, currency, items } = response.data;
+      const confidence = response.data.confidence || 0;
+      const parsedData = { merchant, amount, date, currency, items };
 
       await receipt.update({
         status: ReceiptStatus.COMPLETED,

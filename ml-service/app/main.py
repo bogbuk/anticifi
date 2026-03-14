@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.predictions import router as predictions_router
 from app.routers.categorization import router as categorization_router
+from app.routers.ocr import router as ocr_router
 from app.config import settings
 
 app = FastAPI(
@@ -21,6 +22,7 @@ app.add_middleware(
 
 app.include_router(predictions_router, prefix="/api/predict")
 app.include_router(categorization_router, prefix="/api")
+app.include_router(ocr_router, prefix="/api/ocr")
 
 
 @app.get("/health")
