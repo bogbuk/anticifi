@@ -25,8 +25,6 @@ _paddle_ocr_instance = None
 def _get_paddle_ocr():
     global _paddle_ocr_instance
     if _paddle_ocr_instance is None:
-        import paddle
-        paddle.set_flags({'FLAGS_use_mkldnn': False})
         from paddleocr import PaddleOCR
         _paddle_ocr_instance = PaddleOCR(
             lang='ch',
@@ -44,8 +42,6 @@ _paddle_ocr_cyrillic = None
 def _get_paddle_ocr_cyrillic():
     global _paddle_ocr_cyrillic
     if _paddle_ocr_cyrillic is None:
-        import paddle
-        paddle.set_flags({'FLAGS_use_mkldnn': False})
         from paddleocr import PaddleOCR
         _paddle_ocr_cyrillic = PaddleOCR(
             lang='uk',
