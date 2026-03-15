@@ -873,7 +873,15 @@ async def _ocr_auto(image_bytes: bytes, media_type: str) -> OcrReceiptResponse:
     except Exception as e:
         logger.warning("DeepSeek-OCR failed: %s, trying next", e)
 
-    # Step 5: Tesseract as last resort
+    # Step 5: Gemini vision (cloud API, works without Ollama)
+    try:
+        result = await _ocr_gemini(image_bytes, media_type)
+        if result.amount is not None:
+            return result
+    except Exception as e:
+        logger.warning("Gemini vision failed: %s, trying next", e)
+
+    # Step 6: Tesseract as last resort
     return await _ocr_tesseract(image_bytes)
 
 

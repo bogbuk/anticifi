@@ -21,6 +21,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/ ./app/
 
+# Disable oneDNN to avoid PaddlePaddle compatibility issues on some CPUs
+ENV FLAGS_use_mkldnn=0
+ENV MKLDNN_CACHE_CAPACITY=0
+
 EXPOSE 8001
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
