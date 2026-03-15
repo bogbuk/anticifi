@@ -372,7 +372,7 @@ def _parse_ocr_text(text: str) -> dict:
     result: dict = {}
 
     # --- Currency detection (explicit symbols/codes first) ---
-    if re.search(r'\bMDL\b', text):
+    if re.search(r'MDL\b', text):
         result['currency'] = 'MDL'
     elif re.search(r'\bRON\b', text):
         result['currency'] = 'RON'
