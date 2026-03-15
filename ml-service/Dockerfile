@@ -24,6 +24,8 @@ COPY app/ ./app/
 # Disable oneDNN to avoid PaddlePaddle compatibility issues on some CPUs
 ENV FLAGS_use_mkldnn=0
 ENV MKLDNN_CACHE_CAPACITY=0
+ENV DNNL_MAX_CPU_ISA=0
+ENV PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
 
 EXPOSE 8001
 
